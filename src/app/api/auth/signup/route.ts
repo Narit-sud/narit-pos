@@ -5,6 +5,7 @@ export async function POST(request: Request) {
     const signupData = await request.json();
     const { id, name, surname, username, password, email, phoneNumber } =
         signupData;
+    const hashedPassword = hashPassword(password);
     const query = `
     INSERT INTO 
         "user"
@@ -16,18 +17,19 @@ export async function POST(request: Request) {
         name.trim(),
         surname.trim(),
         username.trim(),
-        hashPassword(password),
+        hashedPassword,
         email.trim(),
         phoneNumber.trim(),
     ]);
+    console.log("password hashed as:", hashedPassword);
     if (!result.rowCount) {
         return Response.json(
             { message: "Signup new user failed" },
-            { status: 400 }
+            { status: 400 },
         );
     }
     return Response.json(
         { message: "Signup new user success" },
-        { status: 201 }
+        { status: 201 },
     );
 }

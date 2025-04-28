@@ -1,38 +1,41 @@
 "use client";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import FormControl from "@mui/material/FormControl";
 import Paper from "@mui/material/Paper";
-import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import FormControl from "@mui/material/FormControl";
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function CreateForm() {
     const nameRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
+    function handleCencelButton() {
+        router.back();
+    }
+    function handleCreateButton() {}
     return (
         <Container>
-            <Paper elevation={3} sx={{ padding: 2 }}>
+            <Paper elevation={2}>
                 <FormControl>
                     <Box
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 2,
-                            justifyItems: "center",
+                            margin: "auto",
                         }}
                     >
                         <TextField
                             type="text"
                             ref={nameRef}
-                            label="Store name"
+                            label="Store Name"
+                            placeholder="Enter your store name"
                         />
                     </Box>
                 </FormControl>
+                <Button variant="contained">Create</Button>
+                <Button variant="outlined">Cancel</Button>
             </Paper>
         </Container>
     );

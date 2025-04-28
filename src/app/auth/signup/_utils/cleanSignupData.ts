@@ -9,7 +9,7 @@ export function cleanSignupData(data: SignupInterface): SignupInterface {
         name: firstUpperCase(data.name.trim()),
         surname: firstUpperCase(data.surname.trim()),
         email: data.email.trim(),
-        username: data.username.trim(),
+        username: data.username.trim().toLowerCase(),
         password: data.password.trim(),
         phoneNumber: data.phoneNumber.trim(),
     };

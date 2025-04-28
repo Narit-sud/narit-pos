@@ -1,3 +1,10 @@
+import { hashPassword, comparePassword } from "@/_lib/encrypt";
 export async function GET() {
-    return Response.json({ message: "Hello from test route" }, { status: 200 });
+    const password = "thisIsTest";
+    const hashedPassword = hashPassword(password);
+    const isPasswordMatched = comparePassword(password, hashedPassword);
+    return Response.json(
+        { password, hashedPassword, isPasswordMatched },
+        { status: 200 },
+    );
 }

@@ -12,11 +12,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "./service";
 import { createLoginData, LoginInterface } from "./interface";
+import { isAxiosError } from "axios";
 
 export default function Page() {
     const router = useRouter();
     const [loginData, setLoginData] = useState<LoginInterface>(
-        createLoginData({} as LoginInterface)
+        createLoginData({} as LoginInterface),
     );
     const [snackbarAlert, setSnackbarAlert] = useState({
         open: false,
@@ -30,15 +31,6 @@ export default function Page() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // // const loginDataValid = validateLoginData(loginData);
-            // if (!loginDataValid.valid) {
-            //     setSnackbarAlert({
-            //         open: true,
-            //         severity: "error",
-            //         message: loginDataValid.message || "Something went wrong",
-            //     });
-            //     return;
-            // }
             await loginService(loginData);
             setSnackbarAlert({
                 open: true,
@@ -46,14 +38,23 @@ export default function Page() {
                 message: "Login success",
             });
             setTimeout(() => {
-                router.push("/store/new");
+                router.push("/store");
             }, 4000);
         } catch (error) {
-            setSnackbarAlert({
-                open: true,
-                severity: "error",
-                message: "Login failed",
-            });
+            if (isAxiosError(error)) {
+                console.log(error);
+                setSnackbarAlert({
+                    open: true,
+                    severity: "error",
+                    message: error,
+                });
+            } else {
+                setSnackbarAlert({
+                    open: true,
+                    severity: "error",
+                    message: "Unexpected Error",
+                });
+            }
         }
     };
 
@@ -67,6 +68,14 @@ export default function Page() {
             }}
         >
             <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 400 }}>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    color="primary"
+                    sx={{ textAlign: "center", mb: 2 }}
+                >
+                    Login
+                </Typography>
                 <form onSubmit={handleSubmit}>
                     <FormControl fullWidth sx={{ gap: 2 }}>
                         <Box
@@ -105,7 +114,8 @@ export default function Page() {
             </Paper>
             <Snackbar
                 open={snackbarAlert.open}
-                autoHideDuration={6000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={4000}
                 onClose={() =>
                     setSnackbarAlert((prev) => ({ ...prev, open: false }))
                 }
