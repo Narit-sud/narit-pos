@@ -17,7 +17,7 @@ import { isAxiosError } from "axios";
 export default function Page() {
     const router = useRouter();
     const [loginData, setLoginData] = useState<LoginInterface>(
-        createLoginData({} as LoginInterface),
+        createLoginData({} as LoginInterface)
     );
     const [snackbarAlert, setSnackbarAlert] = useState({
         open: false,

@@ -14,30 +14,36 @@ export async function GET(request: Request) {
                 message:
                     "User authentication failed during fetching store data",
             },
-            { status: 404 },
+            { status: 404 }
         );
     }
     const sql = `
-        SELECT
-            s.id AS "id",
-            s.name AS "name",
-            sp.id AS "permission",
-            u.username AS "username"
-        FROM
+        select
+            s.id as "id",
+            s.name as "name",
+            sp.name as "permission",
+            s.created_at as "createdAt",
+            s.updated_at as "updatedAt",
+            creator.username as "createdBy",
+            updater.username as "updatedBy"
+        from
             store s
-        JOIN store_user su ON
+        join store_user su on
             s.id = su.store_id
-        JOIN store_permission sp ON
+        join store_permission sp on
             su.permission_id = sp.id
-            JOIN "user" u ON
-            u.id = su.user_id
-        WHERE su.user_id = $1`;
+        join "user" creator on
+            creator.id = s.created_by_user_id
+        left join "user" updater on
+            updater.id = s.updated_by_user_id
+        where
+            su.user_id = $1`;
     try {
         const query = await db.query(sql, [userId]);
         if (!query.rowCount) {
             return Response.json(
                 { message: "Store not found" },
-                { status: 404 },
+                { status: 404 }
             );
         }
         const store = query.rows[0];
@@ -48,12 +54,16 @@ export async function GET(request: Request) {
                 message: "Get store data success",
                 data: query.rows,
             },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
+        console.error(
+            "Error fetching store data",
+            error instanceof Error ? error.message : error
+        );
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
@@ -71,7 +81,7 @@ export async function POST(request: Request) {
                 message:
                     "User authentication failed during creating new store.",
             },
-            { status: 401 },
+            { status: 401 }
         );
     }
     // get body data
@@ -83,7 +93,7 @@ export async function POST(request: Request) {
             {
                 message: "Name is required to be more than 3 charactors",
             },
-            { status: 400 },
+            { status: 400 }
         );
     }
     const sql1 = `insert into "store" (id, name, created_by, updated_by) values ($1, $2, $3, $4)`;
@@ -104,12 +114,12 @@ export async function POST(request: Request) {
         await client.query("commit");
         return Response.json(
             { message: "Store created successfully" },
-            { status: 201 },
+            { status: 201 }
         );
     } catch (error) {
         return Response.json(
             { message: "Error creating store", error },
-            { status: 500 },
+            { status: 500 }
         );
     } finally {
         client.release();
