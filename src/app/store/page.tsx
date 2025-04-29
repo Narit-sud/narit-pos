@@ -52,6 +52,7 @@ export default function Page() {
     useEffect(() => {
         initialize();
     }, []);
+
     return (
         <Container>
             <Paper elevation={3} sx={{ p: 2, mt: 5, textAlign: "center" }}>
