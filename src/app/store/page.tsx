@@ -3,6 +3,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Head from "next/head";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
@@ -15,6 +16,8 @@ import type { StoreUserInterface } from "@/app/store/interface";
 
 export default function Page() {
     const [store, setStore] = useState<StoreUserInterface[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [snackAlert, setSnackAlert] = useState({
         open: false,
         message: "",
@@ -23,7 +26,15 @@ export default function Page() {
     async function initialize() {
         try {
             const store = await getUserStore();
-            setStore(store);
+            if (!store) {
+                setSnackAlert({
+                    open: true,
+                    message: "Store not found",
+                    severity: "error",
+                });
+            }
+            setLoading(false);
+            if (store) setStore(store);
         } catch (error) {
             console.error(error);
         }
@@ -55,6 +66,9 @@ export default function Page() {
 
     return (
         <Container>
+            <Head>
+                <title>Store</title>
+            </Head>
             <Paper elevation={3} sx={{ p: 2, mt: 5, textAlign: "center" }}>
                 <Typography variant="h5">Select your store</Typography>
                 <Button variant="contained" onClick={testButton}>

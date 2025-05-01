@@ -14,7 +14,7 @@ export async function GET(request: Request) {
                 message:
                     "User authentication failed during fetching store data",
             },
-            { status: 404 }
+            { status: 401 }
         );
     }
     const sql = `
