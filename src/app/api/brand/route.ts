@@ -1,6 +1,6 @@
-import { getCookie } from "@/_lib/cookie";
-import { db } from "@/_lib/db";
-import { NewBrandInterface } from "@/app/brand/interface";
+import { getCookie } from "@/lib/cookie";
+import { db } from "@/lib/db";
+import { NewBrandInterface } from "@/model/brand.interface";
 
 export async function POST(request: Request): Promise<Response> {
     const newBrand: NewBrandInterface = await request.json();
@@ -8,7 +8,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!newBrand) {
         return Response.json(
             { message: "Brand data is required" },
-            { status: 400 }
+            { status: 400 },
         );
     }
     console.log("newBrand", newBrand);
@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!userId) {
         return Response.json(
             { message: "User not authenticated" },
-            { status: 401 }
+            { status: 401 },
         );
     }
 
@@ -64,19 +64,19 @@ export async function POST(request: Request): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Failed to create brand" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
         return Response.json(
             { message: "Brand created successfully" },
-            { status: 201 }
+            { status: 201 },
         );
     } catch (error) {
         console.error("Error creating brand", error);
         return Response.json(
             { message: "Error creating brand", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

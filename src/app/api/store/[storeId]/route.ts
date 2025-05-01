@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { decrypt } from "@/_lib/session";
-import { v4 as uuidv4 } from "uuid";
-import { db } from "@/_lib/db";
-import { getCookie, setCookie } from "@/_lib/cookie";
-import type { StoreInterface } from "@/app/store/interface";
-import type { StoreUserInterface } from "@/app/store/interface";
+import { db } from "@/lib/db";
+import { getCookie, setCookie } from "@/lib/cookie";
 
 /**
  * This function is created to set the store for the client.
@@ -25,20 +20,20 @@ import type { StoreUserInterface } from "@/app/store/interface";
  */
 export async function POST(
     request: Request,
-    { params }: { params: Promise<{ storeId: string }> }
+    { params }: { params: Promise<{ storeId: string }> },
 ): Promise<NextResponse> {
     const { storeId } = await params;
     if (!storeId) {
         return NextResponse.json(
             { error: "Store ID is required" },
-            { status: 400 }
+            { status: 400 },
         );
     }
     const { userId } = await getCookie("session");
     if (!userId) {
         return NextResponse.json(
             { error: "User authentication failed" },
-            { status: 401 }
+            { status: 401 },
         );
     }
     // validate if user is authorized to access the store
@@ -60,14 +55,14 @@ export async function POST(
         if (!store.isAuthorized) {
             return NextResponse.json(
                 { error: "Store not found" },
-                { status: 403 }
+                { status: 403 },
             );
         }
         console.log("storeId", storeId);
         await setCookie("storeData", { storeId });
         return NextResponse.json(
             { message: `Selected store id: ${storeId}` },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
         console.error("api/store/[storeId]/route.ts", error);
@@ -81,13 +76,13 @@ export async function POST(
         ) {
             return NextResponse.json(
                 { error: "Store ID is invalid" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         return NextResponse.json(
             { message: "Error fetching store data", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

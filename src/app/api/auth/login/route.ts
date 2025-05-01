@@ -1,7 +1,7 @@
-import { db } from "@/_lib/db";
-import { comparePassword } from "@/_lib/encrypt";
+import { db } from "@/lib/db";
+import { comparePassword } from "@/lib/encrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { createSession } from "@/_lib/session";
+import { createSession } from "@/lib/session";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const { username, password } = await request.json();

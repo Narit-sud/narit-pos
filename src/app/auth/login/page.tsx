@@ -17,7 +17,7 @@ import { isAxiosError } from "axios";
 export default function Page() {
     const router = useRouter();
     const [loginData, setLoginData] = useState<LoginInterface>(
-        createLoginData({} as LoginInterface)
+        createLoginData({} as LoginInterface),
     );
     const [snackbarAlert, setSnackbarAlert] = useState({
         open: false,
@@ -38,7 +38,7 @@ export default function Page() {
                 message: "Login success",
             });
             setTimeout(() => {
-                router.push("/store");
+                router.push("/app/store");
             }, 4000);
         } catch (error) {
             if (isAxiosError(error)) {

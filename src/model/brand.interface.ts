@@ -12,7 +12,7 @@ export interface BrandInterface {
 }
 
 export function createBrandInterface(
-    brand: Partial<BrandInterface>
+    brand: Partial<BrandInterface>,
 ): BrandInterface {
     return {
         id: brand.id || uuidv4(),
@@ -34,7 +34,7 @@ export interface NewBrandInterface {
 }
 
 export function createNewBrandInterface(
-    brand: Partial<NewBrandInterface>
+    brand: Partial<NewBrandInterface>,
 ): NewBrandInterface {
     return {
         id: brand.id || uuidv4(),

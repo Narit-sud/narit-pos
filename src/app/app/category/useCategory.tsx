@@ -6,7 +6,7 @@ import {
     useContext,
     ReactNode,
 } from "react";
-import { CategoryInterface } from "./interface";
+import type { CategoryInterface } from "@/model/category.interface";
 
 type CategoryContextType = {
     categories: CategoryInterface[];
@@ -17,16 +17,25 @@ type Props = {
 };
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
-    undefined
+    undefined,
 );
 
 export function CategoryContextProvider({ children }: Props) {
     const [categories, setCategories] = useState<CategoryInterface[]>([]);
-    function initialize() {}
-	useEffect(() => {
-		initialize();},[]
-	
-    return <CategoryContext.Provider value={categories}>{children}</CategoryContext.Provider>;
+
+    async function initialize() {
+        // load categories from api}
+
+        useEffect(() => {
+            initialize();
+        }, []);
+
+        return (
+            <CategoryContext.Provider value={{ categories }}>
+                {children}
+            </CategoryContext.Provider>
+        );
+    }
 }
 
 export function useCategoryContext() {

@@ -13,7 +13,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-import type { StoreUserInterface } from "@/app/store/interface";
+import type { StoreUserInterface } from "@/app/app/store/interface";
 import { setUserStore } from "../service";
 
 type Props = {
@@ -30,7 +30,7 @@ export default function StoreSelect({ store }: Props) {
         if (!selectedStore) return;
         await setUserStore(selectedStore.id);
         setDialobOpen(false);
-        window.location.href = "/dashboard";
+        window.location.href = "/app";
     };
 
     async function handleSelectButton(storeData: StoreUserInterface) {

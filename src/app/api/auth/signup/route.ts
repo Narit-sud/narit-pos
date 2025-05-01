@@ -1,5 +1,5 @@
-import { db } from "@/_lib/db";
-import { hashPassword } from "@/_lib/encrypt";
+import { db } from "@/lib/db";
+import { hashPassword } from "@/lib/encrypt";
 
 export async function POST(request: Request) {
     const signupData = await request.json();

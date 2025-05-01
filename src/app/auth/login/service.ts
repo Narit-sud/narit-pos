@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 import { LoginInterface } from "./interface";
-import axiosInstance from "@/_lib/axiosInstance";
+import axiosInstance from "@/lib/axiosInstance";
 
 export async function loginService(loginData: LoginInterface): Promise<void> {
     try {

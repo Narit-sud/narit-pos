@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/_lib/db";
-import { getCookie } from "@/_lib/cookie";
-import type { StoreInterface } from "@/app/store/interface";
+import { db } from "@/lib/db";
+import { getCookie } from "@/lib/cookie";
+import type { StoreInterface } from "@/app/app/store/interface";
 
 /**
  * /api/store/GET
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
                 message:
                     "User authentication failed during fetching store data",
             },
-            { status: 401 }
+            { status: 401 },
         );
     }
     const sql = `
@@ -48,25 +48,24 @@ export async function GET(request: Request) {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Store not found" },
-                { status: 404 }
+                { status: 404 },
             );
         }
-        console.log("api/store/route.ts/:GET", { stores: query.rows });
         return Response.json(
             {
                 message: "Get store data success",
                 data: query.rows,
             },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
         console.error(
             "Error fetching store data",
-            error instanceof Error ? error.message : error
+            error instanceof Error ? error.message : error,
         );
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -84,7 +83,7 @@ export async function POST(request: Request) {
                 message:
                     "User authentication failed during creating new store.",
             },
-            { status: 401 }
+            { status: 401 },
         );
     }
     // get body data
@@ -96,7 +95,7 @@ export async function POST(request: Request) {
             {
                 message: "Name is required to be more than 3 charactors",
             },
-            { status: 400 }
+            { status: 400 },
         );
     }
     const sql1 = `insert into "store" (id, name, created_by, updated_by) values ($1, $2, $3, $4)`;
@@ -117,12 +116,12 @@ export async function POST(request: Request) {
         await client.query("commit");
         return Response.json(
             { message: "Store created successfully" },
-            { status: 201 }
+            { status: 201 },
         );
     } catch (error) {
         return Response.json(
             { message: "Error creating store", error },
-            { status: 500 }
+            { status: 500 },
         );
     } finally {
         client.release();

@@ -1,4 +1,4 @@
-import { hashPassword, comparePassword } from "@/_lib/encrypt";
+import { hashPassword, comparePassword } from "@/lib/encrypt";
 export async function GET() {
     const password = "thisIsTest";
     const hashedPassword = hashPassword(password);

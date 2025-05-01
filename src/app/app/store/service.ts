@@ -1,4 +1,4 @@
-import axiosInstance from "@/_lib/axiosInstance";
+import axiosInstance from "@/lib/axiosInstance";
 import { isAxiosError } from "axios";
 import { StoreUserInterface } from "./interface";
 
@@ -21,7 +21,7 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
                     return null;
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
+                    error.response.data.message || "Failed to fetch store data",
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)
@@ -56,7 +56,7 @@ export async function setUserStore(storeId: string): Promise<void> {
                     throw new Error("Unauthorized access");
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
+                    error.response.data.message || "Failed to fetch store data",
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)

@@ -11,7 +11,7 @@ export interface CategoryInterface {
 }
 
 export function createCategoryInterface(
-    category: Partial<CategoryInterface>
+    category: Partial<CategoryInterface>,
 ): CategoryInterface {
     return {
         id: category.id || uuidv4(),
@@ -22,4 +22,10 @@ export function createCategoryInterface(
         createdBy: category.createdBy || "",
         updatedBy: category.updatedBy || "",
     };
+}
+
+export interface NewCategoryInterface {
+    id: string;
+    name: string;
+    detail: string;
 }

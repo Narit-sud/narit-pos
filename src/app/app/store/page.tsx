@@ -7,12 +7,12 @@ import Head from "next/head";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
-import StoreSelect from "@/app/store/_components/StoreSelect";
+import StoreSelect from "@/app/app/store/_components/StoreSelect";
 import { getUserStore } from "./service";
 import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { StoreUserInterface } from "@/app/store/interface";
+import type { StoreUserInterface } from "@/app/app/store/interface";
 
 export default function Page() {
     const [store, setStore] = useState<StoreUserInterface[]>([]);
@@ -23,6 +23,7 @@ export default function Page() {
         message: "",
         severity: "info",
     });
+
     async function initialize() {
         try {
             const store = await getUserStore();
@@ -40,7 +41,6 @@ export default function Page() {
         }
     }
 
-    const router = useRouter();
     async function testButton() {
         try {
             const res = await getUserStore();
@@ -53,9 +53,6 @@ export default function Page() {
                         message: "Store not found",
                         severity: "error",
                     });
-                    setTimeout(() => {
-                        router.push("/store/new");
-                    }, 4000);
                 }
             }
         }
