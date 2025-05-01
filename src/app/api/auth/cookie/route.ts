@@ -1,4 +1,8 @@
 import { cookies } from "next/headers";
+
+/**
+ * remove all cookies from the client
+ */
 export async function DELETE(request: Request): Promise<Response> {
     try {
         const cookieStore = await cookies();

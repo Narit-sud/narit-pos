@@ -26,7 +26,7 @@ export async function getCookie(name: string): Promise<JWTPayload> {
     }
 }
 
-export async function setCookie(name: string, payload: any): Promise<void> {
+export async function setCookie(name: string, payload: object): Promise<void> {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const newCookie = await encrypt({ ...payload, expiresAt });
     const cookieStore = await cookies();

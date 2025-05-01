@@ -63,7 +63,8 @@ export async function POST(
                 { status: 403 }
             );
         }
-        await setCookie("storeData", storeId);
+        console.log("storeId", storeId);
+        await setCookie("storeData", { storeId });
         return NextResponse.json(
             { message: `Selected store id: ${storeId}` },
             { status: 200 }

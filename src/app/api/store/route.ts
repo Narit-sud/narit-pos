@@ -1,10 +1,15 @@
-import { cookies } from "next/headers";
-import { decrypt } from "@/_lib/session";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/_lib/db";
-import { getCookie, setCookie } from "@/_lib/cookie";
+import { getCookie } from "@/_lib/cookie";
 import type { StoreInterface } from "@/app/store/interface";
 
+/**
+ * /api/store/GET
+ * return every store that the user is authorized to access.
+ * @User must be logged in to access this endpoint.
+ * @return: { message: string, data: StoreInterface[],status: number }
+ * @throws: { message: string, error: any }
+ * */
 export async function GET(request: Request) {
     const session = await getCookie("session");
     const userId = session?.userId;
@@ -46,9 +51,7 @@ export async function GET(request: Request) {
                 { status: 404 }
             );
         }
-        const store = query.rows[0];
-        console.log(store);
-        setCookie("store", store);
+        console.log("api/store/route.ts/:GET", { stores: query.rows });
         return Response.json(
             {
                 message: "Get store data success",
