@@ -1,11 +1,9 @@
 "use client";
 import AddIcon from "@mui/icons-material/Add";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import PopupModal from "@/components/PopupModal";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Snackbar from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import CategoryForm from "./CategoryForm";
 import { useCategory } from "@/app/app/category/useCategory";
@@ -14,9 +12,12 @@ import { Divider, FormControl, InputLabel } from "@mui/material";
 
 type Props = {
     getValue?: (categoryId: string) => void;
+    initialValue?: string;
 };
-export default function CategorySelect({ getValue }: Props) {
-    const [currentCategory, setCurrentCategory] = useState<string>(""); // categoryId
+export default function CategorySelect({ getValue, initialValue }: Props) {
+    const [currentCategory, setCurrentCategory] = useState<string>(
+        initialValue || "",
+    ); // categoryId
     const [createMode, setCreateMode] = useState<boolean>(false); // toggle create popup modal
     const { categories } = useCategory(); // get categories from context to display
 
@@ -46,7 +47,7 @@ export default function CategorySelect({ getValue }: Props) {
             )}
             <Divider />
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     onChange={handleChange}

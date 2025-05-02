@@ -5,7 +5,7 @@ export default function Page() {
     return (
         <Box>
             brand page
-            <BrandForm />
+            <BrandForm mode="create" />
         </Box>
     );
 }

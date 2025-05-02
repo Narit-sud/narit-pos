@@ -1,16 +1,12 @@
 "use client";
 import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Head from "next/head";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import StoreSelect from "@/app/app/store/_components/StoreSelect";
 import { getUserStore } from "./service";
-import { isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { StoreUserInterface } from "@/app/app/store/interface";
 
@@ -18,10 +14,14 @@ export default function Page() {
     const [store, setStore] = useState<StoreUserInterface[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [snackAlert, setSnackAlert] = useState({
+    const [snackAlert, setSnackAlert] = useState<{
+        open: boolean;
+        message: string;
+        severity: "success" | "error" | "info" | "warning";
+    }>({
         open: false,
         message: "",
-        severity: "info",
+        severity: "success",
     });
 
     async function initialize() {
@@ -41,38 +41,19 @@ export default function Page() {
         }
     }
 
-    async function testButton() {
-        try {
-            const res = await getUserStore();
-            console.log(res);
-        } catch (error) {
-            if (isAxiosError(error)) {
-                if (error.status === 404) {
-                    setSnackAlert({
-                        open: true,
-                        message: "Store not found",
-                        severity: "error",
-                    });
-                }
-            }
-        }
-    }
     useEffect(() => {
         initialize();
     }, []);
 
     return (
-        <Container>
-            <Head>
-                <title>Store</title>
-            </Head>
+        <>
             <Paper elevation={3} sx={{ p: 2, mt: 5, textAlign: "center" }}>
-                <Typography variant="h5">Select your store</Typography>
-                <Button variant="contained" onClick={testButton}>
-                    Test
-                </Button>
+                <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
+                    Select your store
+                </Typography>
                 <StoreSelect store={store} />
             </Paper>
+
             <Snackbar
                 open={snackAlert.open}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -85,6 +66,15 @@ export default function Page() {
                     {snackAlert.message}
                 </Alert>
             </Snackbar>
-        </Container>
+
+            <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="flex-end"
+                marginY={1}
+            >
+                <Button variant="outlined">Ask to join</Button>
+            </Stack>
+        </>
     );
 }

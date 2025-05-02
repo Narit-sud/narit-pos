@@ -1,9 +1,6 @@
 "use client";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
@@ -12,11 +9,10 @@ import Typography from "@mui/material/Typography";
 import {
     CategoryInterface,
     createCategoryInterface,
-    createNewCategoryInterface,
     NewCategoryInterface,
 } from "@/model/category.interface";
 import { useCategory } from "@/app/app/category/useCategory";
-import { createCategoryService } from "./service";
+import { createCategoryService } from "../service";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -55,11 +51,11 @@ export default function CategoryForm({
         const { name, value } = event.target;
         if (mode === "edit" && editCategory) {
             setEditCategory(
-                (prev) => ({ ...prev, [name]: value } as CategoryInterface)
+                (prev) => ({ ...prev, [name]: value }) as CategoryInterface,
             );
         } else if (mode === "create" && createCategory) {
             setCreateCategory(
-                (prev) => ({ ...prev, [name]: value } as NewCategoryInterface)
+                (prev) => ({ ...prev, [name]: value }) as NewCategoryInterface,
             );
         }
     }

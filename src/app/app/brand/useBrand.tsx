@@ -1,5 +1,5 @@
 "use client";
-import { getCategoryService } from "./service";
+import { getBrandService } from "./service";
 import {
     useState,
     useEffect,

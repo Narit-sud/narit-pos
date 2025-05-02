@@ -2,17 +2,28 @@ import { getCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import { NewBrandInterface } from "@/model/brand.interface";
 
+export async function GET():Promise<Response>{
+    const { storeId } = await getCookie("storeData");
+    if (!storeId) {
+        return Response.json({ message: "Store not found" }, { status: 404 });
+    }
+    const 
+   const sql = `` 
+try {
+
+} catch (error) {
+    
+}
+}
+
 export async function POST(request: Request): Promise<Response> {
     const newBrand: NewBrandInterface = await request.json();
-    return Response.json({ newBrand });
     if (!newBrand) {
         return Response.json(
             { message: "Brand data is required" },
             { status: 400 },
         );
     }
-    console.log("newBrand", newBrand);
-    return Response.json({ success: true });
 
     const { userId } = await getCookie("session");
     console.log("userId", userId);

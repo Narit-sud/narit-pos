@@ -6,30 +6,68 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import CategorySelect from "../../category/components/CategorySelect";
 import {
     createBrandInterface,
+    createNewBrandInterface,
     type BrandInterface,
+    type NewBrandInterface,
 } from "@/model/brand.interface";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
+    mode: "create" | "edit";
     brand?: BrandInterface;
 };
 
-export default function BrandForm({ brand }: Props) {
-    const [currentBrand, setCurrentBrand] = useState<BrandInterface>(
-        brand || createBrandInterface({})
-    );
+export default function BrandForm({ mode, brand }: Props) {
+    const [currentBrand, setCurrentBrand] = useState<
+        NewBrandInterface | BrandInterface | undefined
+    >(undefined);
+
+    function initialize() {
+        if (mode === "create") {
+            return setCurrentBrand(createNewBrandInterface({}));
+        }
+        if (mode === "edit" && brand) {
+            return setCurrentBrand(brand);
+        }
+    }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
-        setCurrentBrand((prevBrand) => ({
-            ...prevBrand,
-            [name]: value,
-        }));
+        if (mode === "create") {
+            return setCurrentBrand(
+                (prev) => ({ ...prev, [name]: value }) as NewBrandInterface,
+            );
+        }
+        if (mode === "edit") {
+            return setCurrentBrand(
+                (prev) => ({ ...prev, [name]: value }) as BrandInterface,
+            );
+        }
     }
+
+    function getCategoryId(categoryId: string): void {
+        if (mode === "create") {
+            return setCurrentBrand(
+                (prev) => ({ ...prev, categoryId }) as NewBrandInterface,
+            );
+        }
+        if (mode === "edit") {
+            return setCurrentBrand(
+                (prev) => ({ ...prev, category: categoryId }) as BrandInterface,
+            );
+        }
+    }
+
+    useEffect(() => {
+        initialize();
+    }, []);
+
     return (
         <Box>
+            {JSON.stringify(currentBrand)}
             <FormControl>
                 <Stack
                     direction="column"
@@ -46,16 +84,17 @@ export default function BrandForm({ brand }: Props) {
                         name="name"
                         label="Brand Name"
                         placeholder="Enter brand name"
-                        value={currentBrand.name}
+                        value={currentBrand?.name}
                         onChange={handleChange}
                         required
                     />
+                    <CategorySelect getValue={getCategoryId} />
                     <TextField
                         type="text"
                         name="detail"
                         label="Detail"
                         placeholder="Enter brand detail or comments"
-                        value={currentBrand.detail}
+                        value={currentBrand?.detail}
                         onChange={handleChange}
                     />
                 </Stack>

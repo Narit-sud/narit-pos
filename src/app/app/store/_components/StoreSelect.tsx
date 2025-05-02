@@ -1,3 +1,5 @@
+"use client";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
@@ -72,8 +74,7 @@ export default function StoreSelect({ store }: Props) {
                         Updated by: {selectedStore?.updatedBy}
                     </DialogContentText>
                     <DialogContentText id="alert-dialog-description">
-                        This action will set the store id to your cookie and
-                        redirect you to the dashboard.
+                        This action will redirect you to dashboard page.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
