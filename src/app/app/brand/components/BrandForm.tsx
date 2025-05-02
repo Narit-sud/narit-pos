@@ -6,7 +6,10 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { createBrandInterface, type BrandInterface } from "../interface";
+import {
+    createBrandInterface,
+    type BrandInterface,
+} from "@/model/brand.interface";
 import { useState } from "react";
 
 type Props = {

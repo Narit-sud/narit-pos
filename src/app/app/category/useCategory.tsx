@@ -1,4 +1,5 @@
 "use client";
+import { getCategoryService } from "./components/service";
 import {
     useState,
     useEffect,
@@ -10,6 +11,7 @@ import type { CategoryInterface } from "@/model/category.interface";
 
 type CategoryContextType = {
     categories: CategoryInterface[];
+    loadCategories: () => Promise<void>;
 };
 
 type Props = {
@@ -17,28 +19,35 @@ type Props = {
 };
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
-    undefined,
+    undefined
 );
 
 export function CategoryContextProvider({ children }: Props) {
     const [categories, setCategories] = useState<CategoryInterface[]>([]);
 
-    async function initialize() {
-        // load categories from api}
-
-        useEffect(() => {
-            initialize();
-        }, []);
-
-        return (
-            <CategoryContext.Provider value={{ categories }}>
-                {children}
-            </CategoryContext.Provider>
-        );
+    async function loadCategories(): Promise<void> {
+        try {
+            const loadedCategories = await getCategoryService();
+            if (loadedCategories) {
+                setCategories(loadedCategories);
+            }
+        } catch (error) {
+            console.error("Error loading categories:", error);
+        }
     }
+
+    useEffect(() => {
+        loadCategories();
+    }, []);
+
+    return (
+        <CategoryContext.Provider value={{ categories, loadCategories }}>
+            {children}
+        </CategoryContext.Provider>
+    );
 }
 
-export function useCategoryContext() {
+export function useCategory() {
     const context = useContext(CategoryContext);
     if (!context) {
         throw new Error("useCategory must be used within a CategoryProvider");

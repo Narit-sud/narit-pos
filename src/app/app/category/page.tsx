@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
-import CategorySelect from "./components/CategorySelect";
+import CategoryTable from "./components/CategoryTable";
 
 export default function Page() {
     return (
         <Box>
-            <CategorySelect />
+            <CategoryTable />
         </Box>
     );
 }

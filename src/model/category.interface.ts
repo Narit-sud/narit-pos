@@ -4,14 +4,14 @@ export interface CategoryInterface {
     id: string;
     name: string;
     detail: string;
-    createdAt: string;
-    updatedAt: string;
-    createdBy: string;
-    updatedBy: string;
+    createdAt?: string;
+    updatedAt?: string;
+    createdBy?: string;
+    updatedBy?: string;
 }
 
 export function createCategoryInterface(
-    category: Partial<CategoryInterface>,
+    category: Partial<CategoryInterface>
 ): CategoryInterface {
     return {
         id: category.id || uuidv4(),
@@ -28,4 +28,14 @@ export interface NewCategoryInterface {
     id: string;
     name: string;
     detail: string;
+}
+
+export function createNewCategoryInterface(
+    category: Partial<NewCategoryInterface>
+): NewCategoryInterface {
+    return {
+        id: category.id || uuidv4(),
+        name: category.name || "",
+        detail: category.detail || "",
+    };
 }
