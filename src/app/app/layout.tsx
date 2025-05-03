@@ -128,7 +128,7 @@ export default function AppLayout({ children }: Props) {
             </Drawer>
 
             <AppProviders>
-                <Box sx={{ p: 8 }}>{children}</Box>
+                <Box sx={{ p: 8, mt: 1 }}>{children}</Box>
             </AppProviders>
         </Box>
     );

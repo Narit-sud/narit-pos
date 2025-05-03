@@ -1,5 +1,11 @@
 "use client";
 import Container from "@mui/material/Container";
+import ProductForm from "./components/ProductForm";
+
 export default function Page() {
-    return <Container>product page</Container>;
+    return (
+        <Container>
+            <ProductForm />
+        </Container>
+    );
 }

@@ -1,5 +1,4 @@
 "use client";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
@@ -23,7 +22,7 @@ type Props = {
 };
 
 export default function StoreSelect({ store }: Props) {
-    const [dialogOpen, setDialobOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedStore, setSelectedStore] = useState<
         StoreUserInterface | undefined
     >(undefined);
@@ -31,13 +30,13 @@ export default function StoreSelect({ store }: Props) {
     const handleConfirm = async () => {
         if (!selectedStore) return;
         await setUserStore(selectedStore.id);
-        setDialobOpen(false);
+        setDialogOpen(false);
         window.location.href = "/app";
     };
 
     async function handleSelectButton(storeData: StoreUserInterface) {
         setSelectedStore(storeData);
-        setDialobOpen(true);
+        setDialogOpen(true);
     }
 
     function handleEditButton(storeData: StoreUserInterface) {
@@ -49,7 +48,7 @@ export default function StoreSelect({ store }: Props) {
             <Dialog
                 open={dialogOpen}
                 onClose={() => {
-                    setDialobOpen(false);
+                    setDialogOpen(false);
                 }}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -81,7 +80,7 @@ export default function StoreSelect({ store }: Props) {
                     <Button
                         variant="outlined"
                         onClick={() => {
-                            setDialobOpen(false);
+                            setDialogOpen(false);
                         }}
                     >
                         Cancel

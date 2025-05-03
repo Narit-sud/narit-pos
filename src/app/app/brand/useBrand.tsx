@@ -1,5 +1,5 @@
 "use client";
-import { getBrandService } from "./service";
+import { createBrandService, getBrandService } from "./service";
 import {
     useState,
     useEffect,
@@ -7,50 +7,61 @@ import {
     useContext,
     ReactNode,
 } from "react";
-import type { CategoryInterface } from "@/model/category.interface";
+import type {
+    BrandInterface,
+    NewBrandInterface,
+} from "@/model/brand.interface";
 
-type CategoryContextType = {
-    categories: CategoryInterface[];
-    loadCategories: () => Promise<void>;
+type BrandContextType = {
+    brands: BrandInterface[];
+    loadBrands: () => Promise<void>;
+    createBrand: (brand: NewBrandInterface) => Promise<void>;
 };
 
 type Props = {
     children: ReactNode;
 };
 
-const CategoryContext = createContext<CategoryContextType | undefined>(
-    undefined,
-);
+const BrandContext = createContext<BrandContextType | undefined>(undefined);
 
-export function CategoryContextProvider({ children }: Props) {
-    const [categories, setCategories] = useState<CategoryInterface[]>([]);
+export function BrandContextProvider({ children }: Props) {
+    const [brands, setBrands] = useState<BrandInterface[]>([]);
 
-    async function loadCategories(): Promise<void> {
+    async function loadBrands(): Promise<void> {
         try {
-            const loadedCategories = await getCategoryService();
-            if (loadedCategories) {
-                setCategories(loadedCategories);
+            const loadedBrands = await getBrandService();
+            if (loadedBrands) {
+                setBrands(loadedBrands);
             }
         } catch (error) {
-            console.error("Error loading categories:", error);
+            console.error("Error loading brands:", error);
+        }
+    }
+
+    async function createBrand(brand: NewBrandInterface): Promise<void> {
+        try {
+            await createBrandService(brand);
+            await loadBrands();
+        } catch (error) {
+            console.error("Error creating brand:", error);
         }
     }
 
     useEffect(() => {
-        loadCategories();
+        loadBrands();
     }, []);
 
     return (
-        <CategoryContext.Provider value={{ categories, loadCategories }}>
+        <BrandContext.Provider value={{ brands, loadBrands, createBrand }}>
             {children}
-        </CategoryContext.Provider>
+        </BrandContext.Provider>
     );
 }
 
-export function useCategory() {
-    const context = useContext(CategoryContext);
+export function useBrand() {
+    const context = useContext(BrandContext);
     if (!context) {
-        throw new Error("useCategory must be used within a CategoryProvider");
+        throw new Error("useBrand must be used within a BrandProvider");
     }
     return context;
 }

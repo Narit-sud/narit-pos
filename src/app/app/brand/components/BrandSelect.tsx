@@ -5,27 +5,32 @@ import MenuItem from "@mui/material/MenuItem";
 import PopupModal from "@/components/PopupModal";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import CategoryForm from "./CategoryForm";
-import { useCategory } from "@/app/app/category/useCategory";
+import BrandForm from "./BrandForm";
+import { useBrand } from "@/app/app/brand/useBrand";
 import { useState } from "react";
 import { Divider, FormControl, InputLabel } from "@mui/material";
 
 type Props = {
-    getValue?: (categoryId: string) => void;
+    getValue?: (brandId: string) => void;
     initialValue?: string;
+    filter?: string;
 };
-export default function CategorySelect({ getValue, initialValue }: Props) {
-    const { categories } = useCategory(); // get categories from context to display
-    const [currentCategory, setCurrentCategory] = useState<string>(
+export default function CategorySelect({
+    getValue,
+    initialValue,
+    filter,
+}: Props) {
+    const { brands } = useBrand(); // get categories from context to display
+    const [currentBrand, setCurrentBrand] = useState<string>(
         initialValue || ""
-    ); // categoryId
+    ); // brandId
     const [createMode, setCreateMode] = useState<boolean>(false); // toggle create popup modal
 
     const handleChange = (event: SelectChangeEvent) => {
         if (event.target.value === "create") {
             return setCreateMode(true);
         }
-        setCurrentCategory(event.target.value as string);
+        setCurrentBrand(event.target.value as string);
         getValue?.(event.target.value as string);
     };
     return (
@@ -37,7 +42,7 @@ export default function CategorySelect({ getValue, initialValue }: Props) {
                         setCreateMode(false);
                     }}
                 >
-                    <CategoryForm
+                    <BrandForm
                         mode="create"
                         handleCancelButton={() => {
                             setCreateMode(false);
@@ -47,15 +52,15 @@ export default function CategorySelect({ getValue, initialValue }: Props) {
             )}
             <Divider />
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                <InputLabel id="demo-simple-select-label">Brand</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     onChange={handleChange}
-                    value={currentCategory}
+                    value={currentBrand}
                     label="Category"
                 >
-                    {categories.map((category) => (
-                        <MenuItem key={category.id} value={category.id}>
+                    {brands.map((bra) => (
+                        <MenuItem key={bra.id} value={bra.id}>
                             <Box
                                 sx={{
                                     display: "flex",
@@ -63,13 +68,13 @@ export default function CategorySelect({ getValue, initialValue }: Props) {
                                     width: "100%",
                                 }}
                             >
-                                <Typography>{category.name}</Typography>
-                                <Typography>{category.detail}</Typography>
+                                <Typography>{bra.name}</Typography>
+                                <Typography>{bra.detail}</Typography>
                             </Box>
                         </MenuItem>
                     ))}
                     <MenuItem value={"create"}>
-                        <AddIcon /> Create new category
+                        <AddIcon /> Create new brand
                     </MenuItem>
                 </Select>
             </FormControl>

@@ -6,16 +6,17 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useCategory } from "../useCategory";
+import { useBrand } from "../useBrand";
 
 export default function CategoryTable() {
-    const { categories } = useCategory(); // get categories from context to display
+    const { brands } = useBrand(); // get categories from context to display
 
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
                     <TableCell>Name</TableCell>
+                    <TableCell>Category</TableCell>
                     <TableCell>Detail</TableCell>
                     <TableCell>Created at</TableCell>
                     <TableCell>Created by</TableCell>
@@ -23,15 +24,16 @@ export default function CategoryTable() {
                     <TableCell>Updated by</TableCell>
                 </TableHead>
                 <TableBody>
-                    {categories?.map((cat) => {
+                    {brands?.map((bra) => {
                         return (
-                            <TableRow hover key={cat.id}>
-                                <TableCell>{cat.name}</TableCell>
-                                <TableCell>{cat.detail}</TableCell>
-                                <TableCell>{cat.createdAt}</TableCell>
-                                <TableCell>{cat.createdBy}</TableCell>
-                                <TableCell>{cat.updatedAt}</TableCell>
-                                <TableCell>{cat.updatedBy}</TableCell>
+                            <TableRow hover key={bra.id}>
+                                <TableCell>{bra.name}</TableCell>
+                                <TableCell>{bra.category}</TableCell>
+                                <TableCell>{bra.detail}</TableCell>
+                                <TableCell>{bra.createdAt}</TableCell>
+                                <TableCell>{bra.createdBy}</TableCell>
+                                <TableCell>{bra.updatedAt}</TableCell>
+                                <TableCell>{bra.updatedBy}</TableCell>
                             </TableRow>
                         );
                     })}
