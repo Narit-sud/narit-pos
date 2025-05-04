@@ -11,8 +11,9 @@ import type { StoreInterface } from "@/app/app/store/interface";
  * @throws: { message: string, error: any }
  * */
 export async function GET(request: Request) {
-    const session = await getCookie("session");
-    const userId = session?.userId;
+    console.log("getting store data");
+    const { userId } = await getCookie("authToken");
+    console.log(userId);
     if (!userId) {
         return Response.json(
             {

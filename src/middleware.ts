@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decrypt } from "./lib/token";
-import { off } from "process";
+import { getCookie } from "@/lib/cookie";
 
 // Routes that are publicly accessible
 /**
@@ -15,6 +15,9 @@ const publicRoutes = [
     "/_next/static/chunks",
     "/favicon.ico",
 ];
+
+const afterLoginRoutes = ["/app/store", "/api/store", "/api/store/select"];
+
 const protectedRoutes = ["/app"];
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -24,6 +27,18 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     if (publicRoutes.some((route) => pathname.startsWith(route))) {
         return NextResponse.next();
     }
+
+    // semi-protected Routes
+    if (afterLoginRoutes.some((route) => pathname.startsWith(route))) {
+        const authToken = await getCookie("authToken");
+        console.log("authToken", authToken);
+        if (authToken) {
+            return NextResponse.next();
+        }
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+    }
+
+    console.log("This route is protected", pathname);
 
     // protected routes
     if (pathname.startsWith("/app")) {
@@ -45,7 +60,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
         // If on store page, add any additional headers
         if (pathname === "/app/store") {
-            response.headers.set("x-store-page", "true");
+            return NextResponse.next();
         }
 
         return response;

@@ -12,14 +12,14 @@ export async function encrypt(payload: jose.JWTPayload) {
         .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined = "") {
+export async function decrypt(token: string | undefined = "") {
     try {
-        const { payload } = await jose.jwtVerify(session, encodedKey, {
+        const { payload } = await jose.jwtVerify(token, encodedKey, {
             algorithms: ["HS256"],
         });
         return payload;
     } catch (error) {
-        console.log("Failed to verify session", error);
+        console.log("Failed to verify token", error);
     }
 }
 
@@ -36,7 +36,11 @@ export async function createShortLiveSession(userId: string) {
     });
 }
 
-export async function createAuthToken(userId: string, storeId: string, permission: string) {
+export async function createAuthToken(
+    userId: string,
+    storeId: string,
+    permission: string,
+) {
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
     const authToken = await encrypt({ userId, storeId, permission, expiresAt });
     const cookieStore = await cookies();
@@ -47,3 +51,4 @@ export async function createAuthToken(userId: string, storeId: string, permissio
         sameSite: true,
     });
     return authToken;
+}

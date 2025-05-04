@@ -21,7 +21,7 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
                     return null;
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
+                    error.response.data.message || "Failed to fetch store data",
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)
@@ -39,7 +39,7 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
 
 export async function setUserStore(storeId: string): Promise<void> {
     try {
-        const response = await axiosInstance.post(`/store/${storeId}`);
+        const response = await axiosInstance.post(`/store/select/${storeId}`);
         console.log(response.data); // {isAutorized: true}
         if (!response.data) {
             throw new Error("Failed to set store data");
@@ -56,7 +56,7 @@ export async function setUserStore(storeId: string): Promise<void> {
                     throw new Error("Unauthorized access");
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
+                    error.response.data.message || "Failed to fetch store data",
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)
