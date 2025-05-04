@@ -27,7 +27,7 @@ export async function getCategoryService(): Promise<
                 }
                 throw new Error(
                     error.response.data.message ||
-                        "Failed to fetch category data",
+                        "Failed to fetch category data"
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)
@@ -44,7 +44,7 @@ export async function getCategoryService(): Promise<
 }
 
 export async function createCategoryService(
-    newCategory: NewCategoryInterface,
+    newCategory: NewCategoryInterface
 ): Promise<void> {
     try {
         axiosInstance.post("/category", newCategory);
@@ -57,7 +57,7 @@ export async function createCategoryService(
                     return;
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data",
+                    error.response.data.message || "Failed to fetch store data"
                 );
             } else if (error.request) {
                 // network errors

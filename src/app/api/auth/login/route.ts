@@ -1,14 +1,14 @@
 import { db } from "@/lib/db";
 import { comparePassword } from "@/lib/encrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { createSession } from "@/lib/session";
+import { createShortLiveSession } from "@/lib/token";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const { username, password } = await request.json();
     if (!username || !password) {
         return Response.json(
             { message: "Login failed. Credentials required." },
-            { status: 400 },
+            { status: 400 }
         );
     }
     try {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Username or password not found" },
-                { status: 500 },
+                { status: 500 }
             );
         }
         // compare password
@@ -27,25 +27,25 @@ export async function POST(request: NextRequest): Promise<Response> {
         // if password matched, redirect to store/select
         if (isPasswordMatched) {
             const userId = query.rows[0].id;
-            await createSession({ userId });
+            await createShortLiveSession({ userId });
             return Response.json(
                 {
                     message: "Login success",
                 },
-                { status: 200 },
+                { status: 200 }
             );
         }
         // if password doesn't match, return error response
         return Response.json(
             { message: "Username or password not found" },
-            { status: 500 },
+            { status: 500 }
         );
     } catch (error) {
         console.error("Login failed:", error);
         if (error instanceof Error) {
             return Response.json(
                 { message: error.message || "Login failed" },
-                { status: 500 },
+                { status: 500 }
             );
         }
 

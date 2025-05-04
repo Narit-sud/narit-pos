@@ -23,11 +23,11 @@ export async function decrypt(session: string | undefined = "") {
     }
 }
 
-export async function createSession(payload: any) {
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const session = await encrypt({ ...payload, expiresAt });
+export async function createShortLiveSession(userId: string) {
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    const authToken = await encrypt({ userId, expiresAt });
     const cookieStore = await cookies();
-    cookieStore.set("session", session, {
+    cookieStore.set("authToken", authToken, {
         httpOnly: true,
         secure: true,
         expires: expiresAt,
@@ -35,3 +35,15 @@ export async function createSession(payload: any) {
         path: "/",
     });
 }
+
+export async function createAuthToken(userId: string, storeId: string, permission: string) {
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
+    const authToken = await encrypt({ userId, storeId, permission, expiresAt });
+    const cookieStore = await cookies();
+    cookieStore.set("authToken", authToken, {
+        httpOnly: true,
+        secure: true,
+        expires: expiresAt,
+        sameSite: true,
+    });
+    return authToken;

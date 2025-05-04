@@ -10,10 +10,7 @@ export async function DELETE(request: Request): Promise<Response> {
         cookie.map((c) => {
             cookieStore.delete(c.name);
         });
-        return Response.json(
-            { message: "Cookie has been reset" },
-            { status: 200 }
-        );
+        return Response.json({ message: "Logout success" }, { status: 200 });
     } catch (error) {
         console.error("Error deleting cookie:", error);
         return Response.json(

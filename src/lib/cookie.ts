@@ -1,6 +1,6 @@
 import { JWTPayload } from "jose";
 import { cookies } from "next/headers";
-import { encrypt, decrypt } from "./session";
+import { encrypt, decrypt } from "./token";
 
 export async function getCookie(name: string): Promise<JWTPayload> {
     try {

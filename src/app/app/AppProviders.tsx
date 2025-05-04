@@ -1,5 +1,7 @@
 import { BrandContextProvider } from "./brand/useBrand";
 import { CategoryContextProvider } from "./category/useCategory";
+import { ProductContextProvider } from "./product/useProduct";
+
 export default function AppProviders({
     children,
 }: {
@@ -7,7 +9,9 @@ export default function AppProviders({
 }) {
     return (
         <CategoryContextProvider>
-            <BrandContextProvider>{children}</BrandContextProvider>
+            <BrandContextProvider>
+                <ProductContextProvider>{children}</ProductContextProvider>
+            </BrandContextProvider>
         </CategoryContextProvider>
     );
 }

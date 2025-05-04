@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import AppProviders from "./AppProviders";
+import { usePathname } from "next/navigation";
 
 type List = { name: string; url: string }[];
 const firstList: List = [
@@ -32,6 +33,8 @@ type Props = {
 };
 
 export default function AppLayout({ children }: Props) {
+    const pathname = usePathname();
+    const renderProviders = !pathname.startsWith("/app/store");
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -126,10 +129,12 @@ export default function AppLayout({ children }: Props) {
                     </List>
                 </Box>
             </Drawer>
-
-            <AppProviders>
-                <Box sx={{ p: 8, mt: 1 }}>{children}</Box>
-            </AppProviders>
+            {renderProviders && (
+                <AppProviders>
+                    <Box sx={{ p: 8, mt: 1 }}>{children}</Box>
+                </AppProviders>
+            )}
+            {!renderProviders && <Box sx={{ p: 8, mt: 1 }}>{children}</Box>}
         </Box>
     );
 }
