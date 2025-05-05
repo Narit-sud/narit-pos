@@ -14,8 +14,14 @@ import { addOwnerPermissionSql, createNewStoreSql } from "@/lib/sql";
  * @throws: { message: string, error: any }
  * */
 export async function GET(request: Request) {
+<<<<<<< HEAD
     const session = await getCookie("authToken");
     const userId = session?.userId;
+=======
+    console.log("getting store data");
+    const { userId } = await getCookie("authToken");
+    console.log(userId);
+>>>>>>> 2418357bcb458291bcba1319560b07daf812c64a
     if (!userId) {
         return Response.json(
             {

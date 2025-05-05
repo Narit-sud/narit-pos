@@ -10,7 +10,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (!username || !password) {
         return Response.json(
             { message: "Login failed. Credentials required." },
-            { status: 400 }
+            { status: 400 },
         );
     }
     try {
@@ -19,12 +19,13 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Username or password not found" },
-                { status: 500 }
+                { status: 500 },
             );
         }
         // compare password
         const hash = query.rows[0].password;
         const isPasswordMatched = comparePassword(password, hash);
+<<<<<<< HEAD
 
         // if password not matched
         if (!isPasswordMatched) {
@@ -43,14 +44,30 @@ export async function POST(request: NextRequest): Promise<Response> {
             return Response.json(
                 { message: "Login success", store: [] },
                 { status: 200 }
+=======
+        // if password matched, redirect to store/select
+        if (isPasswordMatched) {
+            const userId = query.rows[0].id;
+            await createShortLiveSession(userId);
+            return Response.json(
+                {
+                    message: "Login success",
+                },
+                { status: 200 },
+>>>>>>> 2418357bcb458291bcba1319560b07daf812c64a
             );
         }
         return Response.json(
+<<<<<<< HEAD
             {
                 message: "Login success",
                 store: storeData.rows,
             },
             { status: 200 }
+=======
+            { message: "Username or password not found" },
+            { status: 500 },
+>>>>>>> 2418357bcb458291bcba1319560b07daf812c64a
         );
 
         // if password doesn't match, return error response
@@ -59,7 +76,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (error instanceof Error) {
             return Response.json(
                 { message: error.message || "Login failed" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
