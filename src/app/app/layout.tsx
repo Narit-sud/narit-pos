@@ -7,12 +7,11 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { logoutService } from "@/app/auth/service";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import AppProviders from "./AppProviders";
 import { usePathname } from "next/navigation";
@@ -26,7 +25,7 @@ const firstList: List = [
     { name: "Product", url: "/product" },
 ];
 const secondList: List = [{ name: "Order", url: "/order" }];
-const thirdList: List = [{ name: "Logout", url: "/logout" }];
+const thirdList: List = [];
 
 type Props = {
     children: ReactNode;
@@ -35,8 +34,14 @@ type Props = {
 export default function AppLayout({ children }: Props) {
     const pathname = usePathname();
     const renderProviders = !pathname.startsWith("/app/store");
-    const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    async function logout() {
+        const confirmLogout = confirm("Are you sure you want to logout?");
+        if (confirmLogout) {
+            await logoutService();
+        }
+    }
 
     return (
         <Box>
@@ -65,6 +70,7 @@ export default function AppLayout({ children }: Props) {
                 }}
             >
                 <Box sx={{ bgcolor: "white", minWidth: "350px", p: 3 }}>
+                    {/* first list */}
                     <List>
                         {firstList.map((item) => {
                             return (
@@ -83,7 +89,7 @@ export default function AppLayout({ children }: Props) {
                             );
                         })}
                     </List>
-
+                    {/* second list */}
                     <Divider />
                     <List>
                         {secondList.map((item) => {
@@ -105,7 +111,7 @@ export default function AppLayout({ children }: Props) {
                             );
                         })}
                     </List>
-
+                    {/* third list */}
                     <Divider />
                     <List>
                         {thirdList.map((item) => {
@@ -127,6 +133,19 @@ export default function AppLayout({ children }: Props) {
                             );
                         })}
                     </List>
+                    {/* logout */}
+                    <Button
+                        onClick={() => {
+                            logout();
+                        }}
+                    >
+                        <ListItemButton>
+                            <ListItemIcon>icon</ListItemIcon>
+                            <ListItemText sx={{ color: "gray" }}>
+                                Logout
+                            </ListItemText>
+                        </ListItemButton>
+                    </Button>
                 </Box>
             </Drawer>
             {renderProviders && (

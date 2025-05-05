@@ -1,31 +1,31 @@
-import { getCookie } from "@/lib/cookie";
+import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 
 export async function GET(): Promise<Response> {
-    const { storeId } = await getCookie("storeData");
+    const { storeId } = await getDecryptedCookie("authToken");
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 }
+            { status: 400 },
         );
     }
     const sql = `
-    SELECT
-        pc.id AS "id",
-        pc.name AS "name",
-        pc.detail AS "detail",
-        pc.created_at AS "createdAt",
-        pc.updated_at AS "updatedAt",
-        creator.name AS "createdBy",
-        updator.name AS "updatedBy"
-    FROM
-            product_category pc
-    JOIN "user" creator ON
-            creator.id = pc.created_by
-    JOIN "user" updator ON
-            updator.id = pc.updated_by
-    WHERE
-        pc.store_id = $1`;
+        SELECT
+            pc.id AS "id",
+            pc.name AS "name",
+            pc.detail AS "detail",
+            pc.created_at AS "createdAt",
+            pc.updated_at AS "updatedAt",
+            creator.name AS "createdBy",
+            updator.name AS "updatedBy"
+        FROM
+                product_category pc
+        JOIN "user" creator ON
+                creator.id = pc.created_by
+        JOIN "user" updator ON
+                updator.id = pc.updated_by
+        WHERE
+            pc.store_id = $1`;
     try {
         const query = await db.query(sql, [storeId]);
         if (!query.rowCount) {
@@ -34,13 +34,13 @@ export async function GET(): Promise<Response> {
         const categories = query.rows;
         return Response.json(
             { message: "Fetch category data success", data: categories },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
         console.error("api/category/route.ts", error);
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -48,19 +48,19 @@ export async function GET(): Promise<Response> {
 export async function POST(request: Request): Promise<Response> {
     const newCategory = await request.json();
     const { id, name, detail } = newCategory;
-    const { userId } = await getCookie("session");
+    const { userId } = await getDecryptedCookie("session");
     if (!userId) {
         return Response.json(
             { message: "User not authenticated" },
-            { status: 401 }
+            { status: 401 },
         );
     }
-    const { storeId } = await getCookie("storeData");
+    const { storeId } = await getDecryptedCookie("authToken");
     // check if user has permission to create category (not pending or restricted)
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 }
+            { status: 400 },
         );
     }
     const sql = `
@@ -92,13 +92,13 @@ export async function POST(request: Request): Promise<Response> {
         }
         return Response.json(
             { message: "Create new category success." },
-            { status: 201 }
+            { status: 201 },
         );
     } catch (error) {
         console.error("api/category/route.ts", error);
         return Response.json(
             { message: "Error creating new category", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

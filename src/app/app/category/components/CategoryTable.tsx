@@ -15,12 +15,14 @@ export default function CategoryTable() {
         <TableContainer component={Paper}>
             <Table>
                 <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Detail</TableCell>
-                    <TableCell>Created at</TableCell>
-                    <TableCell>Created by</TableCell>
-                    <TableCell>Updated at</TableCell>
-                    <TableCell>Updated by</TableCell>
+                    <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Detail</TableCell>
+                        <TableCell>Created at</TableCell>
+                        <TableCell>Created by</TableCell>
+                        <TableCell>Updated at</TableCell>
+                        <TableCell>Updated by</TableCell>
+                    </TableRow>
                 </TableHead>
                 <TableBody>
                     {categories?.map((cat) => {

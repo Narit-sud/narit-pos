@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import StoreSelect from "@/app/app/store/components/StoreSelect";
+import StoreTable from "@/app/app/store/components/StoreTable";
 import { getUserStore } from "./service";
 import { useEffect, useState } from "react";
 import type { StoreUserInterface } from "@/app/app/store/interface";
@@ -51,7 +51,7 @@ export default function Page() {
                 <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
                     Select your store
                 </Typography>
-                <StoreSelect store={store} />
+                <StoreTable store={store} />
             </Paper>
 
             <Snackbar

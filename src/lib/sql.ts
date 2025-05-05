@@ -40,7 +40,7 @@ export const getStoreDataSql = `
  * * SQL queries for the store table by using userId and storeId to check if the user is authorized in that store
  * @returns userId, storeId, permissionId
  */
-export const validateUserAndStoreId = `
+export const getStoreUserPermissionIdSql = `
 	SELECT
 		su.user_id AS "userId",
 		su.store_id AS "storeId",

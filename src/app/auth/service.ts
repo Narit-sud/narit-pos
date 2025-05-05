@@ -4,34 +4,43 @@ import { apiUrl } from "@/lib/constants";
 import { SignupInterface } from "@/model/signup.interface";
 
 export async function signupService(
-  signupData: SignupInterface,
+    signupData: SignupInterface,
 ): Promise<boolean> {
-  try {
-    const response = await fetch(apiUrl + "/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signupData),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        return true;
-      }
-    } else {
-      throw new Error("Network response was not ok");
+    try {
+        const response = await fetch(apiUrl + "/auth/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(signupData),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                return true;
+            }
+        } else {
+            throw new Error("Network response was not ok");
+        }
+        return false;
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
-    return false;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
 }
 export async function loginService(loginData: LoginInterface): Promise<void> {
-  try {
-    await axiosInstance.post("/auth/login", loginData);
-  } catch (error) {
-    throw error;
-  }
+    try {
+        await axiosInstance.post("/auth/login", loginData);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function logoutService(): Promise<void> {
+    try {
+        await axiosInstance.delete("/auth/logout");
+        window.location.href = "/";
+    } catch (error) {
+        console.log("cannot logout", error);
+    }
 }

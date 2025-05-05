@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { getStoreId } from "@/lib/getStoreId";
+import { getDecryptedCookie } from "@/lib/cookie";
 
 export async function GET(request: Request): Promise<Response> {
     const sql = `
@@ -29,24 +29,23 @@ export async function GET(request: Request): Promise<Response> {
 			pv.store_id = $1 
 			AND pv.status = '1'`;
     try {
-        const storeId = await getStoreId();
-        console.log("storeId", storeId);
+        const { storeId } = await getDecryptedCookie("authToken");
         const query = await db.query(sql, [storeId]);
         if (!query.rowCount) {
             return Response.json(
                 { message: "Product not found" },
-                { status: 404 }
+                { status: 404 },
             );
         }
         return Response.json(
             { message: "Get product data success", data: query.rows },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
         console.error("api/product/active/display/route.ts", error);
         return Response.json(
             { message: "Error fetching product data", error },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

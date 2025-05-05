@@ -4,7 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { StoreUserInterface } from "@/app/app/store/interface";
 
 export async function loginService(
-    loginData: LoginInterface
+    loginData: LoginInterface,
 ): Promise<StoreUserInterface[]> {
     try {
         const response = await axiosInstance.post("/auth/login", loginData);
@@ -19,13 +19,13 @@ export async function loginService(
 
 export async function setUserStore(storeId: string): Promise<void> {
     try {
-        const response = await axiosInstance.post(
-            `/store/select/${storeId}`,
-            {}
-        );
+        const response = await axiosInstance.post("/auth/store-select/", {
+            storeId,
+        });
         if (!response.data) {
             throw new Error("Failed to set store data");
         }
+        console.log("Store data set successfully", response.data);
     } catch (error) {
         console.error("frontend Error:", error);
         if (isAxiosError(error)) {
@@ -38,7 +38,7 @@ export async function setUserStore(storeId: string): Promise<void> {
                     throw new Error("Unauthorized access");
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
+                    error.response.data.message || "Failed to fetch store data",
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)

@@ -30,7 +30,7 @@ export default function Page() {
                     open={brandFormPopup.open}
                     handleClose={handleClose}
                 >
-                    <BrandForm mode="create" />
+                    <BrandForm mode="create" handleCancelButton={handleClose} />
                 </PopupModal>
             )}
             <Stack

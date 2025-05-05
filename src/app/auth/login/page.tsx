@@ -7,21 +7,16 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import PopupModal from "@/components/PopupModal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "./service";
 import { createLoginData, LoginInterface } from "@/model/login.interface";
 import { isAxiosError } from "axios";
-import { StoreUserInterface } from "@/app/app/store/interface";
-import StoreSelect from "@/app/auth/login/components/StoreSelect";
 
 export default function Page() {
     const router = useRouter();
-    const [popupOpen, setPopupOpen] = useState(false);
-    const [store, setStore] = useState<StoreUserInterface[]>([]);
     const [loginData, setLoginData] = useState<LoginInterface>(
-        createLoginData({} as LoginInterface)
+        createLoginData({} as LoginInterface),
     );
     const [snackbarAlert, setSnackbarAlert] = useState({
         open: false,
@@ -34,18 +29,15 @@ export default function Page() {
     };
     const handleSubmit = async () => {
         try {
-            const storeData = await loginService(loginData);
-            console.log("storeData", storeData);
-            setStore(storeData);
+            await loginService(loginData);
             setSnackbarAlert({
                 open: true,
                 severity: "success",
-                message: "Login success, Please select your store",
+                message: "Login success. Redirecting to store selection...",
             });
-            setPopupOpen(true);
             setTimeout(() => {
-                setSnackbarAlert((prev) => ({ ...prev, open: false }));
-            }, 4000);
+                router.push("/auth/store-select");
+            }, 3000);
         } catch (error) {
             if (isAxiosError(error)) {
                 console.log(error);
@@ -73,22 +65,6 @@ export default function Page() {
                 minHeight: "100vh",
             }}
         >
-            {popupOpen && (
-                <PopupModal
-                    open={popupOpen}
-                    width={600}
-                    handleClose={() => {
-                        setPopupOpen(false);
-                    }}
-                >
-                    <StoreSelect
-                        store={store}
-                        redirect={() => {
-                            router.push("/app");
-                        }}
-                    />
-                </PopupModal>
-            )}
             <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 400 }}>
                 <Typography
                     variant="h4"

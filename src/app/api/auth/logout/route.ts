@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 /**
  * remove all cookies from the client
@@ -10,12 +11,12 @@ export async function DELETE(request: Request): Promise<Response> {
         cookie.map((c) => {
             cookieStore.delete(c.name);
         });
-        return Response.json({ message: "Logout success" }, { status: 200 });
+        return NextResponse.redirect(new URL("/", request.url));
     } catch (error) {
         console.error("Error deleting cookie:", error);
         return Response.json(
             { message: "Failed to delete cookie" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

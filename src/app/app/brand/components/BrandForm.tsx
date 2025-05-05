@@ -54,12 +54,12 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
 
         if (mode === "create") {
             return setCurrentBrand(
-                (prev) => ({ ...prev, [name]: value } as NewBrandInterface)
+                (prev) => ({ ...prev, [name]: value }) as NewBrandInterface,
             );
         }
         if (mode === "edit") {
             return setCurrentBrand(
-                (prev) => ({ ...prev, [name]: value } as BrandInterface)
+                (prev) => ({ ...prev, [name]: value }) as BrandInterface,
             );
         }
     }
@@ -67,12 +67,12 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
     function getCategoryId(categoryId: string): void {
         if (mode === "create") {
             return setCurrentBrand(
-                (prev) => ({ ...prev, categoryId } as NewBrandInterface)
+                (prev) => ({ ...prev, categoryId }) as NewBrandInterface,
             );
         }
         if (mode === "edit") {
             return setCurrentBrand(
-                (prev) => ({ ...prev, category: categoryId } as BrandInterface)
+                (prev) => ({ ...prev, category: categoryId }) as BrandInterface,
             );
         }
     }
@@ -100,7 +100,10 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
 
     return (
         <Box>
-            <FormControl>
+            <Typography sx={{ mb: 1 }} variant="h5">
+                Create brand
+            </Typography>
+            <FormControl fullWidth>
                 <Stack
                     direction="column"
                     spacing={2}
@@ -147,6 +150,7 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
                     </Button>
                 </Stack>
             </FormControl>
+
             {mode === "edit" && (
                 <Stack direction="row" spacing={2} mt={2}>
                     <Typography variant="body2" color="text.secondary">

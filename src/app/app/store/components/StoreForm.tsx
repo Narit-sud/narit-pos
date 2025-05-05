@@ -7,14 +7,16 @@ import FormControl from "@mui/material/FormControl";
 import { createNewStoreInterface, type NewStoreInterface } from "../interface";
 import { createStoreService } from "../service";
 import { useRef } from "react";
-import { useRouter } from "next/navigation";
 
 type Props = {
     handleCancelButton: () => void;
+    afterCreateFunction?: () => void;
 };
-export default function StoreForm({ handleCancelButton }: Props) {
+export default function StoreForm({
+    handleCancelButton,
+    afterCreateFunction,
+}: Props) {
     const nameRef = useRef<HTMLInputElement>(null);
-    const router = useRouter();
 
     async function handleCreateButton() {
         // if (!nameRef.current?.value) {
@@ -30,7 +32,7 @@ export default function StoreForm({ handleCancelButton }: Props) {
             await createStoreService(newStore);
             // Close modal and refresh store list
             handleCancelButton();
-            router.refresh();
+            afterCreateFunction && afterCreateFunction();
         } catch (error) {
             console.error("Failed to create store:", error);
         }

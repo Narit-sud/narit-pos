@@ -21,7 +21,7 @@ type Props = {
     store?: StoreUserInterface[];
 };
 
-export default function StoreSelect({ store }: Props) {
+export default function StoreTable({ store = [] }: Props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedStore, setSelectedStore] = useState<
         StoreUserInterface[] | undefined
