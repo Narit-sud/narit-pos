@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import StoreSelect from "@/app/app/store/_components/StoreSelect";
+import StoreSelect from "@/app/app/store/components/StoreSelect";
 import { getUserStore } from "./service";
 import { useEffect, useState } from "react";
 import type { StoreUserInterface } from "@/app/app/store/interface";

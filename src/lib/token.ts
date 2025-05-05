@@ -23,8 +23,13 @@ export async function decrypt(session: string | undefined = "") {
     }
 }
 
-export async function createShortLiveSession(userId: string) {
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+/**
+ * @param userId user id to be set in the cookie
+ * @description set a cookie with the given name and payload. The cookie will be encrypted and will expire in 10 minutes.
+ * The cookie will be set as httpOnly, secure, and sameSite.
+ * */
+export async function createShortLiveToken(userId: string) {
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
     const authToken = await encrypt({ userId, expiresAt });
     const cookieStore = await cookies();
     cookieStore.set("authToken", authToken, {

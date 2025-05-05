@@ -18,13 +18,13 @@ import type { StoreUserInterface } from "@/app/app/store/interface";
 import { setUserStore } from "../service";
 
 type Props = {
-    store: StoreUserInterface[];
+    store?: StoreUserInterface[];
 };
 
 export default function StoreSelect({ store }: Props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedStore, setSelectedStore] = useState<
-        StoreUserInterface | undefined
+        StoreUserInterface[] | undefined
     >(undefined);
 
     const handleConfirm = async () => {

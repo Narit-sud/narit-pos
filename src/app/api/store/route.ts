@@ -1,7 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
 import { db } from "@/lib/db";
-import { getCookie } from "@/lib/cookie";
-import type { StoreInterface } from "@/app/app/store/interface";
+import { getCookie, getDecryptedCookie } from "@/lib/cookie";
+import type {
+    NewStoreInterface,
+    StoreInterface,
+} from "@/app/app/store/interface";
+import { addOwnerPermissionSql, createNewStoreSql } from "@/lib/sql";
 
 /**
  * /api/store/GET
@@ -11,7 +14,7 @@ import type { StoreInterface } from "@/app/app/store/interface";
  * @throws: { message: string, error: any }
  * */
 export async function GET(request: Request) {
-    const session = await getCookie("session");
+    const session = await getCookie("authToken");
     const userId = session?.userId;
     if (!userId) {
         return Response.json(
@@ -19,7 +22,7 @@ export async function GET(request: Request) {
                 message:
                     "User authentication failed during fetching store data",
             },
-            { status: 401 },
+            { status: 401 }
         );
     }
     const sql = `
@@ -43,87 +46,93 @@ export async function GET(request: Request) {
             updater.id = s.updated_by_user_id
         where
             su.user_id = $1`;
+    const client = await db.connect();
     try {
-        const query = await db.query(sql, [userId]);
-        if (!query.rowCount) {
+        await client.query("BEGIN");
+        const query1 = await client.query(sql, [userId]);
+        if (!query1.rowCount) {
             return Response.json(
                 { message: "Store not found" },
-                { status: 404 },
+                { status: 404 }
             );
         }
+        await client.query("ROLLBACK");
+
+        const query2 = await client.query(addOwnerPermissionSql, [userId]);
+        if (!query2.rowCount) {
+            return Response.json(
+                { message: "Store not found" },
+                { status: 404 }
+            );
+        }
+        await client.query("ROLLBACK");
+
         return Response.json(
             {
                 message: "Get store data success",
-                data: query.rows,
+                data: query1.rows,
             },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
+        await client.query("ROLLBACK");
         console.error(
             "Error fetching store data",
-            error instanceof Error ? error.message : error,
+            error instanceof Error ? error.message : error
         );
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 },
-        );
-    }
-}
-
-export async function POST(request: Request) {
-    // get user credencials
-    const session = await getCookie("session");
-    let userIdFromSession;
-    if (session) {
-        userIdFromSession = session.userId;
-    }
-    if (!userIdFromSession) {
-        return Response.json(
-            {
-                message:
-                    "User authentication failed during creating new store.",
-            },
-            { status: 401 },
-        );
-    }
-    // get body data
-    const newStore: StoreInterface = await request.json();
-    // validate data
-    if (!newStore.id) newStore.id = uuidv4();
-    if (!newStore.name || newStore.name.length < 3) {
-        return Response.json(
-            {
-                message: "Name is required to be more than 3 charactors",
-            },
-            { status: 400 },
-        );
-    }
-    const sql1 = `insert into "store" (id, name, created_by, updated_by) values ($1, $2, $3, $4)`;
-    const sql2 = ` insert into "store_user (user_id, store_id, permission) values ($1, $2, 'owner')`;
-    const client = await db.connect();
-    try {
-        await client.query("begin");
-        const query1 = await client.query(sql1, [
-            newStore.id,
-            newStore.name,
-            userIdFromSession,
-            userIdFromSession,
-        ]);
-        const query2 = await client.query(sql2, [
-            userIdFromSession,
-            newStore.id,
-        ]);
-        await client.query("commit");
-        return Response.json(
-            { message: "Store created successfully" },
-            { status: 201 },
-        );
-    } catch (error) {
-        return Response.json(
-            { message: "Error creating store", error },
-            { status: 500 },
+            { status: 500 }
         );
     } finally {
         client.release();
+    }
+}
+
+/**
+ * /api/store/POST
+ * create a new store and assign the user to the store with owner permission.
+ */
+export async function POST(request: Request): Promise<Response> {
+    const newStore: NewStoreInterface = await request.json();
+
+    try {
+        const authToken = await getDecryptedCookie("authToken");
+        if (!authToken) {
+            return Response.json(
+                {
+                    message:
+                        "User authentication failed during creating store.",
+                },
+                { status: 401 }
+            );
+        }
+        const { userId } = authToken;
+
+        const query = await db.query(createNewStoreSql, [
+            newStore.id,
+            newStore.name,
+            userId,
+        ]);
+
+        if (!query.rowCount) {
+            return Response.json(
+                { message: "Store not created" },
+                { status: 404 }
+            );
+        }
+
+        return Response.json(
+            { message: "Store created successfully" },
+            { status: 201 }
+        );
+    } catch (error) {
+        return Response.json(
+            {
+                message: "User authentication failed during creating store.",
+                error,
+            },
+            { status: 401 }
+        );
     }
 }

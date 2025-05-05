@@ -1,7 +1,9 @@
 import { db } from "@/lib/db";
 import { comparePassword } from "@/lib/encrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { createShortLiveSession } from "@/lib/token";
+import { createShortLiveToken } from "@/lib/token";
+import { loginSql, getStoreDataSql } from "@/lib/sql";
+import { setEncryptedCookie } from "@/lib/cookie";
 
 export async function POST(request: NextRequest): Promise<Response> {
     const { username, password } = await request.json();
@@ -13,8 +15,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
     try {
         // get hash
-        const sql = `select id, password from "user" where username = $1;`;
-        const query = await db.query(sql, [username.toLowerCase()]);
+        const query = await db.query(loginSql, [username.toLowerCase()]);
         if (!query.rowCount) {
             return Response.json(
                 { message: "Username or password not found" },
@@ -24,22 +25,35 @@ export async function POST(request: NextRequest): Promise<Response> {
         // compare password
         const hash = query.rows[0].password;
         const isPasswordMatched = comparePassword(password, hash);
-        // if password matched, redirect to store/select
-        if (isPasswordMatched) {
-            const userId = query.rows[0].id;
-            await createShortLiveSession({ userId });
+
+        // if password not matched
+        if (!isPasswordMatched) {
             return Response.json(
-                {
-                    message: "Login success",
-                },
+                { message: "Username or password not found" },
+                { status: 500 }
+            );
+        }
+
+        // get store data
+        const userId = query.rows[0].id;
+        const storeData = await db.query(getStoreDataSql, [userId]);
+
+        await setEncryptedCookie("authToken", { userId }, 1);
+        if (!storeData.rowCount) {
+            return Response.json(
+                { message: "Login success", store: [] },
                 { status: 200 }
             );
         }
-        // if password doesn't match, return error response
         return Response.json(
-            { message: "Username or password not found" },
-            { status: 500 }
+            {
+                message: "Login success",
+                store: storeData.rows,
+            },
+            { status: 200 }
         );
+
+        // if password doesn't match, return error response
     } catch (error) {
         console.error("Login failed:", error);
         if (error instanceof Error) {

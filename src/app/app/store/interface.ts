@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export interface StoreInterface {
     id: string;
     name: string;
@@ -16,27 +18,30 @@ export interface StoreUserInterface {
     updatedBy: string;
 }
 
-select
-	s.id as "id",
-	s.name as "name",
-	sp.name as "permission",
-	s.created_at as "createdAt",
-	s.updated_at as "updatedAt",
-	creator.username as "createdBy",
-	-- Alias the first join as "creator"
-	updater.username as "updatedBy"
-	-- Alias the second join as "updater"
-from
-	store s
-join store_user su on
-	s.id = su.store_id
-join store_permission sp on
-	su.permission_id = sp.id
-join "user" creator on
-	-- Join for the creator's username
-	creator.id = s.created_by_user_id
-left join "user" updater on
-	-- Join for the updater's username, use LEFT JOIN
-	updater.id = s.updated_by_user_id
-where
-	su.user_id = 'e4f62a08-d9c9-4d2b-8f2e-6adfbd9b0b47'
+export interface NewStoreInterface {
+    id: string;
+    name: string;
+}
+
+export function createStoreInterface(
+    store: StoreUserInterface[] | undefined
+): StoreUserInterface[] {
+    return store?.map((storeData) => ({
+        id: storeData.id || uuidv4(),
+        name: storeData.name || "",
+        permission: storeData.permission || "",
+        createdAt: storeData.createdAt || "",
+        updatedAt: storeData.updatedAt || "",
+        createdBy: storeData.createdBy || "",
+        updatedBy: storeData.updatedBy || "",
+    })) as StoreUserInterface[];
+}
+
+export function createNewStoreInterface(
+    newStore: Partial<NewStoreInterface>
+): NewStoreInterface {
+    return {
+        id: newStore.id || uuidv4(),
+        name: newStore.name || "",
+    };
+}

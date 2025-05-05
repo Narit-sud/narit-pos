@@ -6,11 +6,13 @@ import { ReactNode } from "react";
 type Props = {
     children: ReactNode;
     open: boolean;
+    width?: number;
     handleClose: () => void;
 };
 
 export default function PopupModal({
     children,
+    width = 400,
     open = false,
     handleClose,
 }: Props) {
@@ -27,7 +29,7 @@ export default function PopupModal({
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: 400,
+                    width: width,
                     bgcolor: "background.paper",
                     border: "2px solid #000",
                     boxShadow: 24,
