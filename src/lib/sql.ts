@@ -21,8 +21,8 @@ export const getStoreDataSql = `
 		sp.name as "permission",
 		s.created_at as "createdAt",
 		s.updated_at as "updatedAt",
-		creator.username as "createdBy",
-		updater.username as "updatedBy"
+		creator.name as "createdBy",
+		updater.name as "updatedBy"
 	FROM
 		store s
 	JOIN store_user su on

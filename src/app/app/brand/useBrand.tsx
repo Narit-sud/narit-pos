@@ -14,6 +14,7 @@ import type {
 
 type BrandContextType = {
     brands: BrandInterface[];
+    loadBrands: () => Promise<void>;
     createBrand: (brand: NewBrandInterface) => Promise<void>;
 };
 
@@ -29,7 +30,6 @@ export function BrandContextProvider({ children }: Props) {
     async function loadBrands(): Promise<void> {
         try {
             const loadedBrands = await getBrandService();
-            console.log("loadedBrands", loadedBrands);
             if (loadedBrands) {
                 setBrands(loadedBrands);
             }
@@ -52,7 +52,7 @@ export function BrandContextProvider({ children }: Props) {
     }, []);
 
     return (
-        <BrandContext.Provider value={{ brands, createBrand }}>
+        <BrandContext.Provider value={{ brands, createBrand, loadBrands }}>
             {children}
         </BrandContext.Provider>
     );

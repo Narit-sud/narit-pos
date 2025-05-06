@@ -18,6 +18,7 @@ import type {
 
 type CategoryContextType = {
     categories: CategoryInterface[];
+    loadCategories: () => Promise<void>;
     createCategory: (newCategory: NewCategoryInterface) => Promise<void>;
     updateCategory: (updatedCategory: CategoryInterface) => Promise<void>;
 };
@@ -27,7 +28,7 @@ type Props = {
 };
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
-    undefined
+    undefined,
 );
 
 export function CategoryContextProvider({ children }: Props) {
@@ -44,7 +45,7 @@ export function CategoryContextProvider({ children }: Props) {
         }
     }
 
-    async function createCategory(newCategory: CategoryInterface) {
+    async function createCategory(newCategory: NewCategoryInterface) {
         try {
             await createCategoryService(newCategory);
             await loadCategories(); // Refresh categories after creation
@@ -67,7 +68,12 @@ export function CategoryContextProvider({ children }: Props) {
 
     return (
         <CategoryContext.Provider
-            value={{ categories, createCategory, updateCategory }}
+            value={{
+                categories,
+                createCategory,
+                updateCategory,
+                loadCategories,
+            }}
         >
             {children}
         </CategoryContext.Provider>

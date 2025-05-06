@@ -8,11 +8,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
     CategoryInterface,
-    createCategoryInterface,
     createNewCategoryInterface,
     NewCategoryInterface,
 } from "@/model/category.interface";
 import { useCategory } from "@/app/app/category/useCategory";
+import { useBrand } from "@/app/app/brand/useBrand";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -35,6 +35,7 @@ export default function CategoryForm({
     handleCancelButton,
 }: Props) {
     const { createCategory, updateCategory } = useCategory();
+    const { loadBrands } = useBrand();
     const [editCategory, setEditCategory] = useState<
         CategoryInterface | undefined
     >(undefined);
@@ -67,11 +68,11 @@ export default function CategoryForm({
         const { name, value } = event.target;
         if (mode === "edit" && editCategory) {
             setEditCategory(
-                (prev) => ({ ...prev, [name]: value } as CategoryInterface)
+                (prev) => ({ ...prev, [name]: value }) as CategoryInterface,
             );
         } else if (mode === "create" && newCategory) {
             setNewCategory(
-                (prev) => ({ ...prev, [name]: value } as NewCategoryInterface)
+                (prev) => ({ ...prev, [name]: value }) as NewCategoryInterface,
             );
         }
     }
@@ -90,6 +91,7 @@ export default function CategoryForm({
             }
             try {
                 await updateCategory(editCategory);
+                await loadBrands();
                 setSnackAlert({
                     open: true,
                     message: "Category updated successfully",
@@ -226,6 +228,24 @@ export default function CategoryForm({
                     </Stack>
                 </Stack>
             </FormControl>
+            {mode === "edit" && (
+                <Stack
+                    direction="column"
+                    spacing={0}
+                    mt={2}
+                    sx={{ textAlign: "right", userSelect: "none" }}
+                >
+                    <Typography variant="body2" color="text.secondary">
+                        Created at: {editCategory?.createdAt} by:{" "}
+                        {editCategory?.createdBy}
+                    </Typography>
+
+                    <Typography variant="body2" color="text.secondary">
+                        Last update: {editCategory?.updatedAt} by:{" "}
+                        {editCategory?.updatedBy}
+                    </Typography>
+                </Stack>
+            )}
         </>
     );
 }
