@@ -33,19 +33,19 @@ export async function GET(request: Request): Promise<Response> {
         const query = await db.query(sql, [storeId]);
         if (!query.rowCount) {
             return Response.json(
-                { message: "Product not found" },
-                { status: 404 },
+                { message: "Fetch product data success but dataset is empty" },
+                { status: 200 }
             );
         }
         return Response.json(
             { message: "Get product data success", data: query.rows },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
         console.error("api/product/active/display/route.ts", error);
         return Response.json(
             { message: "Error fetching product data", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }

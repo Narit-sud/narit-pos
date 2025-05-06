@@ -6,7 +6,7 @@ export async function GET(): Promise<Response> {
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 },
+            { status: 400 }
         );
     }
     const sql = `
@@ -25,22 +25,26 @@ export async function GET(): Promise<Response> {
         JOIN "user" updator ON
                 updator.id = pc.updated_by
         WHERE
-            pc.store_id = $1`;
+            pc.store_id = $1
+        ORDER BY
+            pc.created_at ASC;`;
     try {
         const query = await db.query(sql, [storeId]);
         if (!query.rowCount) {
-            return Response.json({ message: "Failed to fetch category data" });
+            return Response.json(
+                { message: "Fetch category data success but dataset is empty" },
+                { status: 200 }
+            );
         }
-        const categories = query.rows;
         return Response.json(
-            { message: "Fetch category data success", data: categories },
-            { status: 200 },
+            { message: "Fetch category data success", data: query.rows },
+            { status: 200 }
         );
     } catch (error) {
         console.error("api/category/route.ts", error);
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
@@ -48,11 +52,11 @@ export async function GET(): Promise<Response> {
 export async function POST(request: Request): Promise<Response> {
     const newCategory = await request.json();
     const { id, name, detail } = newCategory;
-    const { userId } = await getDecryptedCookie("session");
+    const { userId } = await getDecryptedCookie("authToken");
     if (!userId) {
         return Response.json(
             { message: "User not authenticated" },
-            { status: 401 },
+            { status: 401 }
         );
     }
     const { storeId } = await getDecryptedCookie("authToken");
@@ -60,7 +64,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 },
+            { status: 400 }
         );
     }
     const sql = `
@@ -92,13 +96,13 @@ export async function POST(request: Request): Promise<Response> {
         }
         return Response.json(
             { message: "Create new category success." },
-            { status: 201 },
+            { status: 201 }
         );
     } catch (error) {
         console.error("api/category/route.ts", error);
         return Response.json(
             { message: "Error creating new category", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }

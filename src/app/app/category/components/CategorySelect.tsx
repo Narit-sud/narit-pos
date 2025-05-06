@@ -13,8 +13,21 @@ import { Divider, FormControl, InputLabel } from "@mui/material";
 type Props = {
     getValue?: (categoryId: string) => void;
     initialValue?: string;
+    showRequired?: boolean;
 };
-export default function CategorySelect({ getValue, initialValue }: Props) {
+/**
+ * CategorySelect component
+ * This component is used to select a category from a list of categories.
+ * It takes in the following props:
+ * @param getValue: (categoryId: string) => void - function to handle category selection (default is empty function)
+ * @param initialValue: string - initial value of the select input (optional)
+ * @param showRequired: boolean - whether to show the required asterisk or not (default is true)
+ */
+export default function CategorySelect({
+    getValue = () => {},
+    initialValue,
+    showRequired = true,
+}: Props) {
     const { categories } = useCategory(); // get categories from context to display
     const [currentCategory, setCurrentCategory] = useState<string>(
         initialValue || ""
@@ -52,7 +65,7 @@ export default function CategorySelect({ getValue, initialValue }: Props) {
                     labelId="demo-simple-select-label"
                     onChange={handleChange}
                     value={currentCategory}
-                    label="Category"
+                    label={showRequired ? "Category*" : "Category"}
                 >
                     {categories.map((category) => (
                         <MenuItem key={category.id} value={category.id}>

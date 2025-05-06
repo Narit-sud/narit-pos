@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { convertToThailandTime } from "@/lib/convertTime";
 import {
     CategoryInterface,
     NewCategoryInterface,
@@ -8,45 +9,56 @@ import { isAxiosError } from "axios";
 export async function getCategoryService(): Promise<CategoryInterface[]> {
     try {
         const response = await axiosInstance.get("/category");
-        return response.data.data as CategoryInterface[];
+        if (response.data.data) {
+            return response.data.data.map((brand: CategoryInterface) => ({
+                ...brand,
+                createdAt: convertToThailandTime(brand.createdAt),
+                updatedAt: convertToThailandTime(brand.updatedAt),
+            }));
+        }
+        return [];
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log(error.response);
-            // Handle HTTP errors (4xx, 5xx)
-            throw error;
-        } else {
-            // Handle non-Axios errors
-            throw new Error("An unexpected error occurred.");
+            console.log(
+                "getCategoryService Error:",
+                error.response?.data || error.response
+            );
         }
+        return [];
     }
 }
 
 export async function createCategoryService(
-    newCategory: NewCategoryInterface,
+    newCategory: NewCategoryInterface
 ): Promise<void> {
     try {
         axiosInstance.post("/category", newCategory);
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log("createCategoryService Error:", error);
-            if (error.response) {
-                if (error.response.status === 401) {
-                    window.location.href = "/auth/login";
-                    return;
-                }
-                throw new Error(
-                    error.response.data.message || "Failed to fetch store data",
-                );
-            } else if (error.request) {
-                // network errors
-                throw new Error("Network error. Please check your connection.");
-            } else {
-                // other Axios errors
-                throw new Error(error.message);
-            }
-        } else {
-            // non-Axios errors
-            throw new Error("An unexpected error occurred.");
+            console.log(
+                "getBrandService Error:",
+                error.response?.data || error.response
+            );
         }
+        throw error;
+    }
+}
+
+export async function updateCategoryService(
+    updatedCategory: CategoryInterface
+): Promise<void> {
+    try {
+        await axiosInstance.put(
+            `/category/${updatedCategory.id}`,
+            updatedCategory
+        );
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.log(
+                "getBrandService Error:",
+                error.response?.data || error.response
+            );
+        }
+        throw error;
     }
 }

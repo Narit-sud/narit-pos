@@ -1,5 +1,9 @@
 "use client";
-import { getCategoryService } from "./service";
+import {
+    createCategoryService,
+    getCategoryService,
+    updateCategoryService,
+} from "./service";
 import {
     useState,
     useEffect,
@@ -7,11 +11,15 @@ import {
     useContext,
     ReactNode,
 } from "react";
-import type { CategoryInterface } from "@/model/category.interface";
+import type {
+    CategoryInterface,
+    NewCategoryInterface,
+} from "@/model/category.interface";
 
 type CategoryContextType = {
     categories: CategoryInterface[];
-    loadCategories: () => Promise<void>;
+    createCategory: (newCategory: NewCategoryInterface) => Promise<void>;
+    updateCategory: (updatedCategory: CategoryInterface) => Promise<void>;
 };
 
 type Props = {
@@ -19,7 +27,7 @@ type Props = {
 };
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
-    undefined,
+    undefined
 );
 
 export function CategoryContextProvider({ children }: Props) {
@@ -36,12 +44,31 @@ export function CategoryContextProvider({ children }: Props) {
         }
     }
 
+    async function createCategory(newCategory: CategoryInterface) {
+        try {
+            await createCategoryService(newCategory);
+            await loadCategories(); // Refresh categories after creation
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function updateCategory(updatedCategory: CategoryInterface) {
+        try {
+            await updateCategoryService(updatedCategory);
+            await loadCategories(); // Refresh categories after update
+        } catch (error) {
+            throw error;
+        }
+    }
     useEffect(() => {
         loadCategories();
     }, []);
 
     return (
-        <CategoryContext.Provider value={{ categories, loadCategories }}>
+        <CategoryContext.Provider
+            value={{ categories, createCategory, updateCategory }}
+        >
             {children}
         </CategoryContext.Provider>
     );

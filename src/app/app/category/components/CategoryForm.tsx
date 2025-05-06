@@ -9,28 +9,36 @@ import Typography from "@mui/material/Typography";
 import {
     CategoryInterface,
     createCategoryInterface,
+    createNewCategoryInterface,
     NewCategoryInterface,
 } from "@/model/category.interface";
 import { useCategory } from "@/app/app/category/useCategory";
-import { createCategoryService } from "../service";
 import { useEffect, useState } from "react";
 
 type Props = {
-    mode: "create" | "edit";
+    mode: "create" | "edit" | "view";
     category?: CategoryInterface;
     handleCancelButton: () => void;
 };
 
+/**
+ * CategoryForm component
+ * This component is used to create or edit a category.
+ * It takes in the following props:
+ * @param mode: "create" | "edit" | "view" - the mode of the form. Default is "create"
+ * @param category: CategoryInterface - the category object to be edited (optional)
+ * @param handleCancelButton: () => void - function to handle cancel button click
+ */
 export default function CategoryForm({
-    mode,
+    mode = "create",
     category,
     handleCancelButton,
 }: Props) {
-    const { loadCategories } = useCategory();
+    const { createCategory, updateCategory } = useCategory();
     const [editCategory, setEditCategory] = useState<
         CategoryInterface | undefined
     >(undefined);
-    const [createCategory, setCreateCategory] = useState<
+    const [newCategory, setNewCategory] = useState<
         NewCategoryInterface | undefined
     >(undefined);
     const [snackAlert, setSnackAlert] = useState<{
@@ -38,12 +46,20 @@ export default function CategoryForm({
         message: string;
         severity: "success" | "error" | "info" | "warning";
     }>({ open: false, message: "", severity: "success" });
+    const [loading, setLoading] = useState<boolean>(false);
 
     function initialize() {
-        if (mode === "edit" && category) {
+        // if mode is "create" and category is passed, set mode to "edit" instead
+        if (mode === "create" && category) {
+            mode = "edit";
+        }
+        // if mode is "edit" and category is passed, set editCategory to category
+        else if (mode === "edit" && category) {
             setEditCategory(category);
-        } else if (mode === "create") {
-            setCreateCategory(createCategoryInterface({}));
+        }
+        // if mode is "create" and category is not passed, set newCategory to NewCategoryInterface object
+        else if (mode === "create") {
+            setNewCategory(createNewCategoryInterface({}));
         }
     }
 
@@ -51,17 +67,18 @@ export default function CategoryForm({
         const { name, value } = event.target;
         if (mode === "edit" && editCategory) {
             setEditCategory(
-                (prev) => ({ ...prev, [name]: value }) as CategoryInterface,
+                (prev) => ({ ...prev, [name]: value } as CategoryInterface)
             );
-        } else if (mode === "create" && createCategory) {
-            setCreateCategory(
-                (prev) => ({ ...prev, [name]: value }) as NewCategoryInterface,
+        } else if (mode === "create" && newCategory) {
+            setNewCategory(
+                (prev) => ({ ...prev, [name]: value } as NewCategoryInterface)
             );
         }
     }
 
-    async function handleCreateButton() {
-        // handle edit category
+    async function handleSubmitButton() {
+        setLoading(true);
+        //  handle edit category
         if (mode === "edit" && editCategory) {
             if (!editCategory.name || editCategory.name === "") {
                 setSnackAlert({
@@ -71,7 +88,25 @@ export default function CategoryForm({
                 });
                 return;
             }
-            console.log("editCategory", editCategory);
+            try {
+                await updateCategory(editCategory);
+                setSnackAlert({
+                    open: true,
+                    message: "Category updated successfully",
+                    severity: "success",
+                });
+                setTimeout(() => {
+                    handleCancelButton();
+                }, 2000);
+            } catch (error) {
+                console.error("Error updating category:", error);
+                setSnackAlert({
+                    open: true,
+                    message: "Error updating category",
+                    severity: "error",
+                });
+                return setLoading(false);
+            }
         }
 
         // ===============================================================
@@ -83,26 +118,26 @@ export default function CategoryForm({
                     message: "Category name is required",
                     severity: "error",
                 });
-                return;
+                return setLoading(false);
             }
-            console.log("createCategory", createCategory);
             try {
-                await createCategoryService(createCategory);
+                if (newCategory) await createCategory(newCategory);
                 setSnackAlert({
                     open: true,
                     message: "Category created successfully",
                     severity: "success",
                 });
-                await loadCategories();
-                handleCancelButton();
+                setTimeout(() => {
+                    handleCancelButton();
+                }, 2000);
             } catch (error) {
                 console.error("Error creating category:", error);
                 setSnackAlert({
                     open: true,
-                    message: "Failed to create category",
+                    message: "Failed to create category. Please try again.",
                     severity: "error",
                 });
-                return;
+                return setLoading(false);
             }
         }
     }
@@ -128,9 +163,11 @@ export default function CategoryForm({
                     {snackAlert.message}
                 </Alert>
             </Snackbar>
-            <Typography variant="h6" component="h2" fontWeight="bold">
+
+            <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
                 {mode === "edit" ? "Edit Category" : "Create New Category"}
             </Typography>
+
             <FormControl>
                 <Stack
                     padding={2}
@@ -146,7 +183,7 @@ export default function CategoryForm({
                         value={
                             mode === "edit"
                                 ? editCategory?.name
-                                : createCategory?.name
+                                : newCategory?.name
                         }
                         onChange={handleChange}
                         required
@@ -159,7 +196,7 @@ export default function CategoryForm({
                         value={
                             mode === "edit"
                                 ? editCategory?.detail
-                                : createCategory?.detail
+                                : newCategory?.detail
                         }
                         onChange={handleChange}
                     />
@@ -171,6 +208,8 @@ export default function CategoryForm({
                         <Button
                             type="button"
                             variant="outlined"
+                            disabled={loading}
+                            color={mode === "edit" ? "warning" : "primary"}
                             onClick={handleCancelButton}
                         >
                             Cancel
@@ -178,9 +217,11 @@ export default function CategoryForm({
                         <Button
                             type="submit"
                             variant="contained"
-                            onClick={handleCreateButton}
+                            disabled={loading}
+                            color={mode === "edit" ? "warning" : "primary"}
+                            onClick={handleSubmitButton}
                         >
-                            Create
+                            {mode === "create" ? "Create" : "Update"}
                         </Button>
                     </Stack>
                 </Stack>

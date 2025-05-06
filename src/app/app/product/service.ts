@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { isAxiosError } from "axios";
 import { ProductInterface } from "@/model/product.interface";
 
 export async function getProductService(): Promise<ProductInterface[]> {
@@ -7,8 +8,14 @@ export async function getProductService(): Promise<ProductInterface[]> {
         if (response.status === 200) {
             return response.data.data as ProductInterface[];
         }
-        throw new Error("Failed to fetch product data");
+        return [];
     } catch (error) {
-        throw error;
+        if (isAxiosError(error)) {
+            console.log(
+                "getProductService Error:",
+                error.response?.data || error.response
+            );
+        }
+        return [];
     }
 }

@@ -1,4 +1,4 @@
-import { SignupInterface } from "../interface";
+import { SignupInterface } from "@/model/signup.interface";
 
 export function cleanSignupData(data: SignupInterface): SignupInterface {
     function firstUpperCase(str: string): string {

@@ -1,94 +1,146 @@
 "use client";
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CategorySelect from "../../category/components/CategorySelect";
 import {
-    createBrandInterface,
     createNewBrandInterface,
     type BrandInterface,
     type NewBrandInterface,
 } from "@/model/brand.interface";
+import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import { useState, useEffect } from "react";
-import { createBrandService } from "../service";
 import { useBrand } from "../useBrand";
 
 type Props = {
-    mode: "create" | "edit";
+    mode: "create" | "edit" | "view";
     brand?: BrandInterface;
     handleCancelButton: () => void;
 };
 
-export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
+/**
+ * CategoryForm component
+ * This component is used to create or edit a category.
+ * It takes in the following props:
+ * @param mode: "create" | "edit" | "view" - the mode of the form. Default is "create"
+ * @param category: CategoryInterface - the category object to be edited (optional)
+ * @param handleCancelButton: () => void - function to handle cancel button click
+ */
+export default function BrandForm({
+    mode = "create",
+    brand,
+    handleCancelButton,
+}: Props) {
     const { createBrand } = useBrand(); // get categories from context to display
-    const [currentBrand, setCurrentBrand] = useState<
-        NewBrandInterface | BrandInterface | undefined
-    >(undefined);
-    const [nameError, setNameError] = useState<{
-        error: boolean;
+    const [editBrand, setEditBrand] = useState<BrandInterface | undefined>(
+        undefined
+    );
+    const [newBrand, setNewBrand] = useState<NewBrandInterface | undefined>(
+        undefined
+    );
+    const [snackAlert, setSnackAlert] = useState<{
+        open: boolean;
         message: string;
-    }>({ error: false, message: "" });
+        severity: "success" | "error" | "info" | "warning";
+    }>({ open: false, message: "", severity: "success" });
+    const [loading, setLoading] = useState<boolean>(false);
 
     function initialize() {
-        if (mode === "create") {
-            return setCurrentBrand(createNewBrandInterface({}));
+        // if mode is "create" and brand is passed, set mode to "edit" instead
+        if (mode === "create" && brand) {
+            mode = "edit";
         }
-        if (mode === "edit" && brand) {
-            return setCurrentBrand(brand);
+        // if mode is "edit" and brand is passed, set editCategory to category
+        else if (mode === "edit" && brand) {
+            setEditBrand(brand);
+        }
+        // if mode is "create" and category is not passed, set newCategory to NewCategoryInterface object
+        else if (mode === "create") {
+            setNewBrand(createNewBrandInterface({}));
         }
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
-        if (nameError.error) setNameError({ error: false, message: "" });
-        if (name === "name" && value.length < 3) {
-            setNameError({
-                error: true,
-                message: "Brand name must be at least 3 characters long",
-            });
-        }
 
         if (mode === "create") {
-            return setCurrentBrand(
-                (prev) => ({ ...prev, [name]: value }) as NewBrandInterface,
+            return setNewBrand(
+                (prev) => ({ ...prev, [name]: value } as NewBrandInterface)
             );
         }
+
+        // ===============================================================
+
         if (mode === "edit") {
-            return setCurrentBrand(
-                (prev) => ({ ...prev, [name]: value }) as BrandInterface,
+            return setEditBrand(
+                (prev) => ({ ...prev, [name]: value } as BrandInterface)
             );
         }
     }
 
     function getCategoryId(categoryId: string): void {
         if (mode === "create") {
-            return setCurrentBrand(
-                (prev) => ({ ...prev, categoryId }) as NewBrandInterface,
+            return setNewBrand(
+                (prev) => ({ ...prev, categoryId } as NewBrandInterface)
             );
         }
+
+        // ===============================================================
+
         if (mode === "edit") {
-            return setCurrentBrand(
-                (prev) => ({ ...prev, category: categoryId }) as BrandInterface,
+            return setEditBrand(
+                (prev) => ({ ...prev, category: categoryId } as BrandInterface)
             );
         }
     }
 
     async function handleSubmit() {
-        if (mode === "create") {
-            const newBrand = currentBrand as NewBrandInterface;
+        setLoading(true);
+        if (mode === "create" && newBrand) {
+            // validate category
+            if (!newBrand.categoryId || newBrand.categoryId === "") {
+                setSnackAlert({
+                    open: true,
+                    message: "Category is required",
+                    severity: "error",
+                });
+                return setLoading(false);
+            }
+            // validate brand name
+            else if (
+                !newBrand.name ||
+                newBrand.name === "" ||
+                newBrand.name.length < 3
+            ) {
+                setSnackAlert({
+                    open: true,
+                    message: "Brand name is required",
+                    severity: "error",
+                });
+                return setLoading(false);
+            }
             try {
                 await createBrand(newBrand);
                 handleCancelButton();
             } catch (error) {
                 console.error("Error creating brand:", error);
+                setSnackAlert({
+                    open: true,
+                    message: "Failed to create brand. Please try again.",
+                    severity: "error",
+                });
+                return setLoading(false);
             }
         }
+
+        // ===============================================================
+
         if (mode === "edit") {
-            const updatedBrand = currentBrand as BrandInterface;
+            const updatedBrand = editBrand as BrandInterface;
             console.log("updatedBrand", updatedBrand);
             // TODO: implement update brand function
         }
@@ -99,9 +151,25 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
     }, []);
 
     return (
-        <Box>
-            <Typography sx={{ mb: 1 }} variant="h5">
-                Create brand
+        <>
+            <Snackbar
+                open={snackAlert.open}
+                autoHideDuration={4000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setSnackAlert({ ...snackAlert, open: false })}
+            >
+                <Alert
+                    onClose={() =>
+                        setSnackAlert({ ...snackAlert, open: false })
+                    }
+                    severity={snackAlert.severity}
+                    sx={{ width: "100%" }}
+                >
+                    {snackAlert.message}
+                </Alert>
+            </Snackbar>
+            <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
+                {firstLetterUppercase(mode)} Brand
             </Typography>
             <FormControl fullWidth>
                 <Stack
@@ -115,13 +183,11 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
                     }}
                 >
                     <TextField
-                        error={nameError.error}
-                        helperText={nameError.message}
                         type="text"
                         name="name"
                         label="Brand Name"
                         placeholder="Enter brand name"
-                        value={currentBrand?.name}
+                        value={editBrand?.name}
                         onChange={handleChange}
                         required
                     />
@@ -131,7 +197,7 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
                         name="detail"
                         label="Detail"
                         placeholder="Enter brand detail or comments"
-                        value={currentBrand?.detail}
+                        value={editBrand?.detail}
                         onChange={handleChange}
                     />
                 </Stack>
@@ -142,31 +208,40 @@ export default function BrandForm({ mode, brand, handleCancelButton }: Props) {
                     width={"100%"}
                     justifyContent="center"
                 >
-                    <Button variant="contained" onClick={handleSubmit}>
+                    <Button
+                        variant="contained"
+                        disabled={loading}
+                        onClick={handleSubmit}
+                    >
                         {mode === "create" ? "Create" : "Update"}
                     </Button>
-                    <Button variant="outlined" onClick={handleCancelButton}>
+                    <Button
+                        variant="outlined"
+                        disabled={loading}
+                        onClick={handleCancelButton}
+                    >
                         Cencel
                     </Button>
                 </Stack>
             </FormControl>
-
             {mode === "edit" && (
-                <Stack direction="row" spacing={2} mt={2}>
+                <Stack
+                    direction="column"
+                    spacing={0}
+                    mt={2}
+                    sx={{ textAlign: "right", userSelect: "none" }}
+                >
                     <Typography variant="body2" color="text.secondary">
-                        Created at: {currentBrand?.createdAt}
+                        Created at: {editBrand?.createdAt} by:{" "}
+                        {editBrand?.createdBy}
                     </Typography>
+
                     <Typography variant="body2" color="text.secondary">
-                        Updated at: {currentBrand?.updatedAt}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Created by: {currentBrand?.createdBy}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Updated by: {currentBrand?.updatedBy}
+                        Last update: {editBrand?.updatedAt} by:{" "}
+                        {editBrand?.updatedBy}
                     </Typography>
                 </Stack>
             )}
-        </Box>
+        </>
     );
 }

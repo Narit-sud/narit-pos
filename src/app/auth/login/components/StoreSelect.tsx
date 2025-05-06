@@ -68,6 +68,7 @@ export default function StoreSelect() {
                 maxHeight: "70vh",
                 margin: "auto",
                 padding: 2,
+                overflowY: "auto",
             }}
             // sx={{ padding: 2, border: "1px solid #dddddd", borderRadius: 2 }}
         >
@@ -106,45 +107,62 @@ export default function StoreSelect() {
             {store.length === 0 && !isLoading && (
                 <Typography>No store found</Typography>
             )}
-            {store?.map((storeData) => (
-                <Card variant="outlined" key={storeData.id}>
-                    <CardContent>
-                        <Typography variant="h6" component="div">
-                            {storeData.name}
-                        </Typography>
-                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            {storeData.permission}
-                        </Typography>
-                        <Typography variant="body2">
-                            Created at: {storeData.createdAt}
-                        </Typography>
-                        <Typography variant="body2">
-                            Updated at: {storeData.updatedAt}
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            sx={{ flexGrow: 1 }}
-                            justifyContent="flex-end"
-                        >
-                            <Button
-                                variant="contained"
-                                onClick={() => handleSubmit(storeData.id)}
-                                disabled={
-                                    storeData.permission === "Pending" ||
-                                    isSelected
-                                }
+            <Stack spacing={2} sx={{ width: "100%" }}>
+                {store?.map((storeData) => (
+                    <Card variant="outlined" key={storeData.id} sx={{ mb: 2 }}>
+                        <CardContent>
+                            <Typography variant="h6" component="div">
+                                {storeData.name}
+                            </Typography>
+                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                {storeData.permission}
+                            </Typography>
+                            <Typography variant="body2">
+                                Created at: {storeData.createdAt}
+                            </Typography>
+                            <Typography variant="body2">
+                                Updated at: {storeData.updatedAt}
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{ flexGrow: 1 }}
+                                justifyContent="flex-end"
                             >
-                                Select
-                            </Button>
-                        </Stack>
-                    </CardActions>
-                </Card>
-            ))}
+                                {" "}
+                                <Button
+                                    variant="outlined"
+                                    disableRipple
+                                    disableFocusRipple
+                                    disableElevation
+                                    endIcon={
+                                        <Tooltip title="Under construction">
+                                            <InfoOutlineIcon />
+                                        </Tooltip>
+                                    }
+                                >
+                                    Manage
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => handleSubmit(storeData.id)}
+                                    disabled={
+                                        storeData.permission === "Pending" ||
+                                        isSelected
+                                    }
+                                >
+                                    Select
+                                </Button>
+                            </Stack>
+                        </CardActions>
+                    </Card>
+                ))}
+            </Stack>
             <Button
                 variant="outlined"
+                disabled={isSelected}
                 onClick={() => {
                     setCreateMode(true);
                 }}

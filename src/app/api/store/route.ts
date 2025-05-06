@@ -18,23 +18,13 @@ import {
  * @throws: { message: string, error: any }
  * */
 export async function GET(request: Request) {
-    const authToken = await getDecryptedCookie("authToken");
-    if (!authToken) {
-        return Response.json(
-            {
-                message:
-                    "User authentication failed during fetching store data",
-            },
-            { status: 401 },
-        );
-    }
+    const authToken = await getDecryptedCookie("authToken"); // get authToken this will be surely exist because of middleware
     try {
         const query = await db.query(getStoreDataSql, [authToken.userId]);
-
         if (!query.rowCount) {
             return Response.json(
-                { message: "Store data not found" },
-                { status: 404 },
+                { message: "Fetch store data success but dataset is empty" },
+                { status: 200 }
             );
         }
 
@@ -43,16 +33,16 @@ export async function GET(request: Request) {
                 message: "Get store data success",
                 data: query.rows,
             },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
         console.error(
             "Error fetching store data",
-            error instanceof Error ? error.message : error,
+            error instanceof Error ? error.message : error
         );
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
@@ -79,7 +69,7 @@ export async function POST(request: Request): Promise<Response> {
                     message:
                         "User authentication failed during creating store.",
                 },
-                { status: 401 },
+                { status: 401 }
             );
         }
         const { userId } = authToken;
@@ -94,7 +84,7 @@ export async function POST(request: Request): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Store creation failed" },
-                { status: 404 },
+                { status: 404 }
             );
         }
 
@@ -106,7 +96,7 @@ export async function POST(request: Request): Promise<Response> {
         if (!query2.rowCount) {
             return Response.json(
                 { message: "Add permission failed" },
-                { status: 404 },
+                { status: 404 }
             );
         }
         await client.query("COMMIT");
@@ -116,12 +106,12 @@ export async function POST(request: Request): Promise<Response> {
         if (!query3.rowCount) {
             return Response.json(
                 { message: "Fetching store data after store creation failed" },
-                { status: 404 },
+                { status: 404 }
             );
         }
         return Response.json(
             { message: "Store created successfully", data: query3.rows },
-            { status: 201 },
+            { status: 201 }
         );
     } catch (error) {
         await client.query("ROLLBACK");
@@ -136,7 +126,7 @@ export async function POST(request: Request): Promise<Response> {
             if (error.detail.includes("already exists")) {
                 return Response.json(
                     { message: "This store name already exists" },
-                    { status: 409 },
+                    { status: 409 }
                 );
             }
         }
@@ -145,7 +135,7 @@ export async function POST(request: Request): Promise<Response> {
                 message: "Unexpected error during creating store",
                 error,
             },
-            { status: 500 },
+            { status: 500 }
         );
     } finally {
         client.release();

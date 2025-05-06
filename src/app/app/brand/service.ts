@@ -1,42 +1,30 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { convertToThailandTime } from "@/lib/convertTime";
 import { isAxiosError } from "axios";
 import type {
     NewBrandInterface,
     BrandInterface,
 } from "@/model/brand.interface";
 
-export async function getBrandService(): Promise<BrandInterface[] | null> {
+export async function getBrandService(): Promise<BrandInterface[]> {
     try {
         const response = await axiosInstance.get("/brand");
-        if (!response.data || !response.data.data) {
-            return null;
+        if (response.data.data) {
+            return response.data.data.map((brand: BrandInterface) => ({
+                ...brand,
+                createdAt: convertToThailandTime(brand.createdAt),
+                updatedAt: convertToThailandTime(brand.updatedAt),
+            }));
         }
-        return response.data.data as BrandInterface[];
+        return [];
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log(error.response);
-            // Handle HTTP errors (4xx, 5xx)
-            if (error.response) {
-                if (error.response.status === 404) {
-                    return null;
-                } else if (error.response.status === 401) {
-                    window.location.href = "/auth/login";
-                    return null;
-                }
-                throw new Error(
-                    error.response.data.message || "Failed to fetch brand data",
-                );
-            } else if (error.request) {
-                // Handle network errors (e.g., connection refused)
-                throw new Error("Network error. Please check your connection.");
-            } else {
-                // Handle other Axios errors
-                throw new Error(error.message);
-            }
-        } else {
-            // Handle non-Axios errors
-            throw new Error("An unexpected error occurred.");
+            console.log(
+                "getBrandService Error:",
+                error.response?.data || error.response
+            );
         }
+        return [];
     }
 }
 
@@ -52,7 +40,7 @@ export async function createBrandService(newBrand: NewBrandInterface) {
                     return;
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data",
+                    error.response.data.message || "Failed to fetch store data"
                 );
             } else if (error.request) {
                 // network errors

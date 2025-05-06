@@ -2,8 +2,8 @@
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import BrandForm from "./components/BrandForm";
 import Typography from "@mui/material/Typography";
+import BrandForm from "./components/BrandForm";
 import BrandTable from "./components/BrandTable";
 import PopupModal from "@/components/PopupModal";
 import { Add } from "@mui/icons-material";
@@ -24,7 +24,7 @@ export default function Page() {
     };
 
     return (
-        <Paper elevation={3} sx={{ padding: 4 }}>
+        <Paper elevation={3} sx={{ padding: 4, userSelect: "none" }}>
             {brandFormPopup.open && (
                 <PopupModal
                     open={brandFormPopup.open}

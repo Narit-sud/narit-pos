@@ -20,12 +20,12 @@ type List = { name: string; url: string }[];
 const firstList: List = [
     { name: "Dashboard", url: "/dashboard" },
     { name: "Store", url: "/store" },
-    { name: "Brand", url: "/brand" },
     { name: "Category", url: "/category" },
+    { name: "Brand", url: "/brand" },
     { name: "Product", url: "/product" },
 ];
 const secondList: List = [{ name: "Order", url: "/order" }];
-const thirdList: List = [];
+const thirdList: List = [{ name: "Change store", url: "/auth/store-select" }];
 
 type Props = {
     children: ReactNode;
@@ -103,9 +103,7 @@ export default function AppLayout({ children }: Props) {
                                 >
                                     <ListItemButton>
                                         <ListItemIcon>icon</ListItemIcon>
-                                        <ListItemText sx={{ color: "gray" }}>
-                                            {item.name}
-                                        </ListItemText>
+                                        <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
                                 </Link>
                             );
@@ -118,16 +116,14 @@ export default function AppLayout({ children }: Props) {
                             return (
                                 <Link
                                     key={item.name}
-                                    href={"/app" + item.url}
+                                    href={item.url}
                                     onClick={() => {
                                         setSidebarOpen(false);
                                     }}
                                 >
                                     <ListItemButton>
                                         <ListItemIcon>icon</ListItemIcon>
-                                        <ListItemText sx={{ color: "gray" }}>
-                                            {item.name}
-                                        </ListItemText>
+                                        <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
                                 </Link>
                             );
