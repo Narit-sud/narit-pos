@@ -6,7 +6,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import CategorySelect from "../../category/components/CategorySelect";
+import BrandSelect from "../../brand/components/BrandSelect";
 import {
     ProductInterface,
     NewProductInterface,
@@ -23,11 +23,11 @@ type Props = {
 };
 
 /**
- * CategoryForm component
- * This component is used to create or edit a category.
+ * ProductForm component
+ * This component is used to create or edit a product.
  * It takes in the following props:
  * @param mode: "create" | "edit" | "view" - the mode of the form. Default is "create"
- * @param category: CategoryInterface - the category object to be edited (optional)
+ * @param product: ProductInterface- the product object to be edited (optional)
  * @param handleCancelButton: () => void - function to handle cancel button click
  */
 export default function ProductForm({
@@ -35,7 +35,7 @@ export default function ProductForm({
     product,
     handleCancelButton,
 }: Props) {
-    const { createProduct } = useProduct(); // get categories from context to display
+    const { createProduct } = useProduct(); // create product function from context
     const [editProduct, setEditProduct] = useState<
         ProductInterface | undefined
     >(undefined);
@@ -54,11 +54,11 @@ export default function ProductForm({
         if (mode === "create" && product) {
             mode = "edit";
         }
-        // if mode is "edit" and product is passed, set editCategory to category
+        // if mode is "edit" and product is passed, set editProduct to product
         else if (mode === "edit" && product) {
             setEditProduct(product);
         }
-        // if mode is "create" and category is not passed, set newCategory to NewCategoryInterface object
+        // if mode is "create" and product is not passed, set newProduct to NewProductInterface object
         else if (mode === "create") {
             setNewProduct(createNewProductInterface({}));
         }
@@ -69,7 +69,7 @@ export default function ProductForm({
 
         if (mode === "create") {
             return setNewProduct(
-                (prev) => ({ ...prev, [name]: value } as NewProductInterface)
+                (prev) => ({ ...prev, [name]: value }) as NewProductInterface,
             );
         }
 
@@ -77,15 +77,15 @@ export default function ProductForm({
 
         if (mode === "edit") {
             return setEditProduct(
-                (prev) => ({ ...prev, [name]: value } as ProductInterface)
+                (prev) => ({ ...prev, [name]: value }) as ProductInterface,
             );
         }
     }
 
-    function getCategoryId(categoryId: string): void {
+    function getBrandId(brandId: string): void {
         if (mode === "create") {
             return setNewProduct(
-                (prev) => ({ ...prev, categoryId } as NewProductInterface)
+                (prev) => ({ ...prev, brandId }) as NewProductInterface,
             );
         }
 
@@ -93,8 +93,7 @@ export default function ProductForm({
 
         if (mode === "edit") {
             return setEditProduct(
-                (prev) =>
-                    ({ ...prev, category: categoryId } as ProductInterface)
+                (prev) => ({ ...prev, brandId }) as ProductInterface,
             );
         }
     }
@@ -102,11 +101,11 @@ export default function ProductForm({
     async function handleSubmit() {
         setLoading(true);
         if (mode === "create" && newProduct) {
-            // validate category
-            if (!newProduct.categoryId || newProduct.categoryId === "") {
+            // validate brand
+            if (!newProduct.brandId || newProduct.brandId === "") {
                 setSnackAlert({
                     open: true,
-                    message: "Category is required",
+                    message: "Brand is required",
                     severity: "error",
                 });
                 return setLoading(false);
@@ -153,6 +152,7 @@ export default function ProductForm({
 
     return (
         <>
+            {JSON.stringify(newProduct)}
             <Snackbar
                 open={snackAlert.open}
                 autoHideDuration={4000}
@@ -192,7 +192,7 @@ export default function ProductForm({
                         onChange={handleChange}
                         required
                     />
-                    <CategorySelect getValue={getCategoryId} />
+                    <BrandSelect getValue={getBrandId} />
                     <TextField
                         type="text"
                         name="detail"

@@ -25,6 +25,8 @@ import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ReplayIcon from "@mui/icons-material/Replay";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonIcon from "@mui/icons-material/Person";
 
 type List = { name: string; url: string; icon: ReactNode }[];
 const firstList: List = [
@@ -33,12 +35,15 @@ const firstList: List = [
     { name: "Category", url: "/category", icon: <CategoryIcon /> },
     { name: "Brand", url: "/brand", icon: <BrandingWatermarkIcon /> },
     { name: "Product", url: "/product", icon: <InventoryIcon /> },
+    { name: "Customer", url: "/customer", icon: <PeopleIcon /> },
 ];
 const secondList: List = [
     { name: "Order", url: "/order", icon: <ReceiptLongIcon /> },
     { name: "Procurement", url: "/procurement", icon: <ReceiptLongIcon /> },
+    { name: "Stock Management", url: "/stock", icon: <ReceiptLongIcon /> },
 ];
 const thirdList: List = [
+    { name: "Employee", url: "/employee", icon: <PersonIcon /> },
     {
         name: "Change store",
         url: "/auth/store-select",

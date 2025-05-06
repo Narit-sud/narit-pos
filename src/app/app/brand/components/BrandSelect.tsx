@@ -13,22 +13,32 @@ import { Divider, FormControl, InputLabel } from "@mui/material";
 type Props = {
     getValue?: (brandId: string) => void;
     initialValue?: string;
-    filter?: string;
+    showRequired?: boolean;
+    createMode?: boolean;
 };
+/**
+ * BrandSelect component
+ * This component is used to select a category from a list of categories.
+ * It takes in the following props:
+ * @param getValue: (categoryId: string) => void - function to handle category selection (default is empty function)
+ * @param initialValue: string - initial value of the select input (optional)
+ * @param showRequired: boolean - whether to show the required asterisk or not (default is true)
+ */
 export default function CategorySelect({
-    getValue,
+    getValue = () => {},
     initialValue,
-    filter,
+    showRequired = true,
+    createMode = false,
 }: Props) {
-    const { brands } = useBrand(); // get categories from context to display
+    const { brands } = useBrand(); // get brands from context to display
     const [currentBrand, setCurrentBrand] = useState<string>(
-        initialValue || ""
+        initialValue || "",
     ); // brandId
-    const [createMode, setCreateMode] = useState<boolean>(false); // toggle create popup modal
+    const [createPopupOpen, setCreatePopupOpen] = useState<boolean>(false); // toggle create popup modal
 
     const handleChange = (event: SelectChangeEvent) => {
         if (event.target.value === "create") {
-            return setCreateMode(true);
+            return setCreatePopupOpen(true);
         }
         setCurrentBrand(event.target.value as string);
         getValue?.(event.target.value as string);
@@ -39,25 +49,25 @@ export default function CategorySelect({
                 <PopupModal
                     open={createMode}
                     handleClose={() => {
-                        setCreateMode(false);
+                        setCreatePopupOpen(false);
                     }}
                 >
                     <BrandForm
                         mode="create"
                         handleCancelButton={() => {
-                            setCreateMode(false);
+                            setCreatePopupOpen(false);
                         }}
                     />
                 </PopupModal>
             )}
             <Divider />
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Brand</InputLabel>
+                <InputLabel id="brand-select-label">Brand</InputLabel>
                 <Select
-                    labelId="demo-simple-select-label"
+                    labelId="brand-select-label"
                     onChange={handleChange}
                     value={currentBrand}
-                    label="Category"
+                    label={showRequired ? "Brand*" : "Brand"}
                 >
                     {brands.map((bra) => (
                         <MenuItem key={bra.id} value={bra.id}>
@@ -73,9 +83,11 @@ export default function CategorySelect({
                             </Box>
                         </MenuItem>
                     ))}
-                    <MenuItem value={"create"}>
-                        <AddIcon /> Create new brand
-                    </MenuItem>
+                    {createMode && (
+                        <MenuItem value={"create"}>
+                            <AddIcon /> Create new brand
+                        </MenuItem>
+                    )}
                 </Select>
             </FormControl>
         </Box>

@@ -1,6 +1,9 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { isAxiosError } from "axios";
-import { ProductInterface } from "@/model/product.interface";
+import {
+    NewProductInterface,
+    ProductInterface,
+} from "@/model/product.interface";
 
 export async function getProductService(): Promise<ProductInterface[]> {
     try {
@@ -13,9 +16,35 @@ export async function getProductService(): Promise<ProductInterface[]> {
         if (isAxiosError(error)) {
             console.log(
                 "getProductService Error:",
-                error.response?.data || error.response
+                error.response?.data || error.response,
             );
         }
         return [];
+    }
+}
+
+export async function createProductService(
+    newProduct: NewProductInterface,
+): Promise<void> {
+    try {
+        await axiosInstance.post("/product", newProduct);
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.log("createProductService Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch store data",
+                );
+            } else if (error.request) {
+                // network errors
+                throw new Error("Network error. Please check your connection.");
+            } else {
+                // other Axios errors
+                throw new Error(error.message);
+            }
+        } else {
+            // non-Axios errors
+            throw new Error("An unexpected error occurred.");
+        }
     }
 }

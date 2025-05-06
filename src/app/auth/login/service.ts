@@ -19,15 +19,9 @@ export async function loginService(
 
 export async function setUserStore(storeId: string): Promise<void> {
     try {
-        const response = await axiosInstance.post("/auth/store-select/", {
-            storeId,
-        });
-        if (!response.data) {
-            throw new Error("Failed to set store data");
-        }
-        console.log("Store data set successfully", response.data);
+        await axiosInstance.post("/auth/store-select/", { storeId });
     } catch (error) {
-        console.error("frontend Error:", error);
+        console.error("setUserStore Error: ", error);
         if (isAxiosError(error)) {
             console.log(error.response);
             // Handle HTTP errors (4xx, 5xx)
