@@ -12,7 +12,7 @@ import {
     type BrandInterface,
     type NewBrandInterface,
 } from "@/model/brand.interface";
-import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
+import { setProductFormPopup } from "@/lib/firstLetterUppercase";
 import { useState, useEffect } from "react";
 import { useBrand } from "../useBrand";
 
@@ -169,7 +169,7 @@ export default function BrandForm({
                 </Alert>
             </Snackbar>
             <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
-                {firstLetterUppercase(mode)} Brand
+                {setProductFormPopup(mode)} Brand
             </Typography>
             <FormControl fullWidth>
                 <Stack
