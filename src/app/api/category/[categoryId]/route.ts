@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 
 export async function PUT(
     request: Request,
-    { params }: { params: { categoryId: string } }
+    { params }: { params: { categoryId: string } },
 ) {
     const categoryId = params.categoryId;
     const { name, detail } = await request.json();
@@ -24,17 +24,18 @@ export async function PUT(
         if (!query.rowCount) {
             return Response.json(
                 { error: "Category not found" },
-                { status: 404 }
+                { status: 404 },
             );
         }
         return Response.json(
             { message: "Category updated successfully" },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
+        console.error("Error updating category:", error);
         return Response.json(
             { error: "Error updating category" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

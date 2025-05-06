@@ -4,10 +4,7 @@ import { setEncryptedCookie } from "@/lib/cookie";
 import { getDecryptedCookie } from "@/lib/cookie";
 import { NextResponse } from "next/server";
 
-export async function POST(
-    request: Request,
-    { params }: { params: Promise<{ storeId: string }> },
-): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
     const authToken = await getDecryptedCookie("authToken");
     if (!authToken) {
         return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -45,6 +42,7 @@ export async function POST(
             { status: 200 },
         );
     } catch (error) {
+        console.log("store-select route error: ", error);
         return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 }
