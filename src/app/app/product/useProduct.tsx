@@ -7,11 +7,16 @@ import {
     useContext,
     ReactNode,
 } from "react";
-import type { ProductInterface } from "@/model/product.interface";
+import type {
+    ProductInterface,
+    NewProductInterface,
+} from "@/model/product.interface";
 
 type ProductContextType = {
     products: ProductInterface[];
     loadProducts: () => Promise<void>;
+    createProduct: (newProduct: NewProductInterface) => Promise<void>;
+    updateProduct: (updatedProduct: ProductInterface) => Promise<void>;
 };
 
 type Props = {
@@ -34,18 +39,28 @@ export function ProductContextProvider({ children }: Props) {
         }
     }
 
+    async function createProduct(
+        newProduct: NewProductInterface
+    ): Promise<void> {}
+
+    async function updateProduct(
+        updatedProduct: ProductInterface
+    ): Promise<void> {}
+
     useEffect(() => {
         loadProducts();
     }, []);
 
     return (
-        <ProductContext.Provider value={{ products, loadProducts }}>
+        <ProductContext.Provider
+            value={{ products, loadProducts, createProduct, updateProduct }}
+        >
             {children}
         </ProductContext.Provider>
     );
 }
 
-export function useCategory() {
+export function useProduct() {
     const context = useContext(ProductContext);
     if (!context) {
         throw new Error("useCategory must be used within a CategoryProvider");

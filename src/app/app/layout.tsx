@@ -10,22 +10,46 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import Stack from "@mui/material/Stack";
 import { logoutService } from "@/app/auth/service";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 import AppProviders from "./AppProviders";
 import { usePathname } from "next/navigation";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import StoreIcon from "@mui/icons-material/Store";
+import CategoryIcon from "@mui/icons-material/Category";
+import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ReplayIcon from "@mui/icons-material/Replay";
 
-type List = { name: string; url: string }[];
+type List = { name: string; url: string; icon: ReactNode }[];
 const firstList: List = [
-    { name: "Dashboard", url: "/dashboard" },
-    { name: "Store", url: "/store" },
-    { name: "Category", url: "/category" },
-    { name: "Brand", url: "/brand" },
-    { name: "Product", url: "/product" },
+    { name: "Dashboard", url: "/dashboard", icon: <SpaceDashboardIcon /> },
+    { name: "Store", url: "/store", icon: <StoreIcon /> },
+    { name: "Category", url: "/category", icon: <CategoryIcon /> },
+    { name: "Brand", url: "/brand", icon: <BrandingWatermarkIcon /> },
+    { name: "Product", url: "/product", icon: <InventoryIcon /> },
 ];
-const secondList: List = [{ name: "Order", url: "/order" }];
-const thirdList: List = [{ name: "Change store", url: "/auth/store-select" }];
+const secondList: List = [
+    { name: "Order", url: "/order", icon: <ReceiptLongIcon /> },
+    { name: "Procurement", url: "/procurement", icon: <ReceiptLongIcon /> },
+];
+const thirdList: List = [
+    {
+        name: "Change store",
+        url: "/auth/store-select",
+        icon: <ReplayIcon />,
+    },
+    {
+        name: "Logout",
+        url: "#",
+        icon: <LogoutIcon />,
+    },
+];
 
 type Props = {
     children: ReactNode;
@@ -36,7 +60,7 @@ export default function AppLayout({ children }: Props) {
     const renderProviders = !pathname.startsWith("/app/store");
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    async function logout() {
+    async function handleLogout() {
         const confirmLogout = confirm("Are you sure you want to logout?");
         if (confirmLogout) {
             await logoutService();
@@ -69,7 +93,17 @@ export default function AppLayout({ children }: Props) {
                     setSidebarOpen(!sidebarOpen);
                 }}
             >
-                <Box sx={{ bgcolor: "white", minWidth: "350px", p: 3 }}>
+                <Stack
+                    height={"100vh"}
+                    direction="column"
+                    justifyItems="space-between"
+                    sx={{
+                        bgcolor: "white",
+                        minWidth: "350px",
+                        p: 3,
+                        justifyContent: "space-between",
+                    }}
+                >
                     {/* first list */}
                     <List>
                         {firstList.map((item) => {
@@ -82,7 +116,7 @@ export default function AppLayout({ children }: Props) {
                                     }}
                                 >
                                     <ListItemButton>
-                                        <ListItemIcon>icon</ListItemIcon>
+                                        <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
                                 </Link>
@@ -102,7 +136,7 @@ export default function AppLayout({ children }: Props) {
                                     }}
                                 >
                                     <ListItemButton>
-                                        <ListItemIcon>icon</ListItemIcon>
+                                        <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
                                 </Link>
@@ -118,18 +152,20 @@ export default function AppLayout({ children }: Props) {
                                     key={item.name}
                                     href={item.url}
                                     onClick={() => {
+                                        item.name === "Logout" &&
+                                            handleLogout();
                                         setSidebarOpen(false);
                                     }}
                                 >
                                     <ListItemButton>
-                                        <ListItemIcon>icon</ListItemIcon>
+                                        <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
                                 </Link>
                             );
                         })}
                     </List>
-                    {/* logout */}
+                    {/* logout
                     <Button
                         onClick={() => {
                             logout();
@@ -141,8 +177,8 @@ export default function AppLayout({ children }: Props) {
                                 Logout
                             </ListItemText>
                         </ListItemButton>
-                    </Button>
-                </Box>
+                    </Button> */}
+                </Stack>
             </Drawer>
             {renderProviders && (
                 <AppProviders>

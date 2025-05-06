@@ -24,7 +24,11 @@ export default function Page() {
     };
 
     return (
-        <Paper elevation={3} sx={{ padding: 4, userSelect: "none" }}>
+        <Paper
+            elevation={3}
+            sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
+        >
+            {" "}
             {brandFormPopup.open && (
                 <PopupModal
                     open={brandFormPopup.open}

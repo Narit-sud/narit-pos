@@ -1,3 +1,3 @@
-export function firstLetterUppercase(str: string): string {
+export function setProductFormPopup(str: string): string {
     return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 }

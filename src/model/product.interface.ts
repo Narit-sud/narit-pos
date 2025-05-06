@@ -14,7 +14,7 @@ export interface ProductInterface {
     updatedBy: string;
 }
 
-export interface NewProductInface {
+export interface NewProductInterface {
     id: string;
     name: string;
     detail: string;
