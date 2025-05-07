@@ -5,7 +5,7 @@ export interface ProductInterface {
     name: string;
     detail: string;
     price: number;
-    quantity: number;
+    stock: number;
     brand: string;
     createdAt: string;
     updatedAt: string;
@@ -16,11 +16,11 @@ export interface ProductInterface {
 export interface NewProductInterface {
     id: string;
     name: string;
-    detail: string;
-    price: number;
-    initialQuantity: number;
-    cost: number;
     brandId: string;
+    price: number;
+    cost: number;
+    initialQuantity: number;
+    detail: string;
 }
 
 export function createProductInterface(
@@ -31,7 +31,7 @@ export function createProductInterface(
         name: product.name || "",
         detail: product.detail || "",
         price: product.price || 0,
-        quantity: product.quantity || 0,
+        stock: product.stock || 0,
         brand: product.brand || "",
         createdAt: product.createdAt || "",
         updatedAt: product.updatedAt || "",

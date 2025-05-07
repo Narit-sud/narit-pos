@@ -65,7 +65,20 @@ export default function ProductForm({
     }
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
+        let { name, value }: { name: string; value: number | string } =
+            event.target;
+        if (name === "initialQuantity" || name === "price" || name === "cost") {
+            // if field is number, parse it to number
+            value = parseFloat(value);
+            if (isNaN(value)) {
+                // if value is not a number, set it to 0
+                value = 0;
+            }
+            if (value < 0) {
+                // if value is negative, set it to positive
+                value * -1;
+            }
+        }
 
         if (mode === "create") {
             return setNewProduct(
@@ -110,7 +123,7 @@ export default function ProductForm({
                 });
                 return setLoading(false);
             }
-            // validate brand name
+            // validate product name
             else if (
                 !newProduct.name ||
                 newProduct.name === "" ||
@@ -125,7 +138,8 @@ export default function ProductForm({
             }
             try {
                 await createProduct(newProduct);
-                handleCancelButton();
+                console.log("create product ");
+                // handleCancelButton();
             } catch (error) {
                 console.error("Error creating product:", error);
                 setSnackAlert({
@@ -188,17 +202,44 @@ export default function ProductForm({
                         name="name"
                         label="Prodruct Name"
                         placeholder="Enter product name"
-                        value={editProduct?.name}
+                        value={newProduct?.name}
                         onChange={handleChange}
                         required
                     />
                     <BrandSelect getValue={getBrandId} />
                     <TextField
+                        type="number"
+                        name="price"
+                        label="Price"
+                        placeholder="Enter product detail or comments"
+                        value={newProduct?.price}
+                        onChange={handleChange}
+                        required
+                    />
+                    <TextField
+                        type="number"
+                        name="cost"
+                        label="Cost"
+                        placeholder="Enter product cost"
+                        value={newProduct?.cost}
+                        onChange={handleChange}
+                        required
+                    />
+                    <TextField
+                        type="number"
+                        name="initialQuantity"
+                        label="Initial Quantity"
+                        placeholder="Enter prodruct detail or comments"
+                        value={newProduct?.initialQuantity}
+                        onChange={handleChange}
+                        required
+                    />
+                    <TextField
                         type="text"
                         name="detail"
                         label="Detail"
                         placeholder="Enter prodruct detail or comments"
-                        value={editProduct?.detail}
+                        value={newProduct?.detail}
                         onChange={handleChange}
                     />
                 </Stack>
