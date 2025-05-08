@@ -104,7 +104,7 @@ export async function POST(request: Request): Promise<Response> {
     try {
         await client.query("begin");
         // product_variant table
-        const q1 = await client.query(sql1, [
+        await client.query(sql1, [
             prodId,
             name,
             brandId,
@@ -116,33 +116,27 @@ export async function POST(request: Request): Promise<Response> {
         ]);
         if (initialQuantity > 0) {
             // procurement table
-            const q2 = await client.query(sql2, [
-                procurementId,
-                userId,
-                storeId,
-            ]);
-            console.log("q2", q2);
+            await client.query(sql2, [procurementId, userId, storeId]);
             // procurement_product_variant table
-            const q3 = await client.query(sql3, [
+            await client.query(sql3, [
                 procurementId,
                 prodId,
                 initialQuantity,
                 cost * initialQuantity,
                 storeId,
             ]);
-            console.log("q3", q3);
         }
         await client.query("commit");
         return Response.json(
             { message: "Product created successfully" },
-            { status: 201 },
+            { status: 201 }
         );
     } catch (error) {
         await client.query("rollback");
         console.error("Error creating product", error);
         return Response.json(
             { message: "Error creating product", error },
-            { status: 500 },
+            { status: 500 }
         );
     } finally {
         client.release();

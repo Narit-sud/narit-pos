@@ -1,9 +1,6 @@
 import { db } from "@/lib/db";
 import { getDecryptedCookie } from "@/lib/cookie";
-import type {
-    NewStoreInterface,
-    StoreInterface,
-} from "@/app/app/store/interface";
+import type { NewStoreInterface } from "@/app/app/store/interface";
 import {
     addOwnerPermissionSql,
     createNewStoreSql,
@@ -17,7 +14,7 @@ import {
  * @return: { message: string, data: StoreInterface[]},{status: number}
  * @throws: { message: string, error: any }
  * */
-export async function GET(request: Request) {
+export async function GET() {
     const authToken = await getDecryptedCookie("authToken"); // get authToken this will be surely exist because of middleware
     try {
         const query = await db.query(getStoreDataSql, [authToken.userId]);
