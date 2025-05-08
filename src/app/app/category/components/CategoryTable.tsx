@@ -28,7 +28,7 @@ export default function CategoryTable() {
     };
 
     const handleRowDoubleClick = (category: CategoryInterface) => {
-        handleOpen(true); // open the modal
+        handleOpen(); // open the modal
         setSelectedCategory(category); // set selected category to the clicked category
     };
 
