@@ -1,8 +1,8 @@
 import { apiUrl } from "@/lib/constants";
-import { SignupInterface } from "./interface";
+import { SignupInterface } from "@/model/signup.interface";
 
 export async function signupService(
-    signupData: SignupInterface,
+    signupData: SignupInterface
 ): Promise<boolean> {
     try {
         const response = await fetch(apiUrl + "/auth/signup", {
