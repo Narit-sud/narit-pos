@@ -3,10 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 export interface ProductInterface {
     id: string;
     name: string;
-    detail: string;
     price: number;
     stock: number;
     brand: string;
+    category: string;
+    detail: string;
     createdAt: string;
     updatedAt: string;
     createdBy: string;
@@ -24,7 +25,7 @@ export interface NewProductInterface {
 }
 
 export function createProductInterface(
-    product: Partial<ProductInterface>,
+    product: Partial<ProductInterface>
 ): ProductInterface {
     return {
         id: product.id || uuidv4(),
@@ -41,7 +42,7 @@ export function createProductInterface(
 }
 
 export function createNewProductInterface(
-    product: Partial<NewProductInterface>,
+    product: Partial<NewProductInterface>
 ): NewProductInterface {
     return {
         id: product.id || uuidv4(),
