@@ -34,6 +34,7 @@ export function createProductInterface(
         price: product.price || 0,
         stock: product.stock || 0,
         brand: product.brand || "",
+        category: product.category || "",
         createdAt: product.createdAt || "",
         updatedAt: product.updatedAt || "",
         createdBy: product.createdBy || "",
