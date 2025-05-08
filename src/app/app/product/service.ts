@@ -16,7 +16,7 @@ export async function getProductService(): Promise<ProductInterface[]> {
         if (isAxiosError(error)) {
             console.log(
                 "getProductService Error:",
-                error.response?.data || error.response,
+                error.response?.data || error.response
             );
         }
         return [];
@@ -24,7 +24,7 @@ export async function getProductService(): Promise<ProductInterface[]> {
 }
 
 export async function createProductService(
-    newProduct: NewProductInterface,
+    newProduct: NewProductInterface
 ): Promise<void> {
     try {
         await axiosInstance.post("/product", newProduct);
@@ -33,7 +33,7 @@ export async function createProductService(
             console.log("createProductService Error:", error);
             if (error.response) {
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data",
+                    error.response.data.message || "Failed to fetch store data"
                 );
             } else if (error.request) {
                 // network errors

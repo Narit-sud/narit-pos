@@ -1,28 +1,18 @@
-import { apiUrl } from "@/lib/constants";
+import axiosInstance from "@/lib/axiosInstance";
+import { isAxiosError } from "axios";
 import { SignupInterface } from "@/model/signup.interface";
 
 export async function signupService(
     signupData: SignupInterface
-): Promise<boolean> {
+): Promise<void> {
     try {
-        const response = await fetch(apiUrl + "/auth/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(signupData),
-        });
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                return true;
-            }
-        } else {
-            throw new Error("Network response was not ok");
-        }
-        return false;
+        await axiosInstance.post("/auth/signup", signupData);
     } catch (error) {
-        console.log(error);
-        throw error;
+        if (isAxiosError(error)) {
+            console.log(
+                "getProductService Error:",
+                error.response?.data || error.response
+            );
+        }
     }
 }
