@@ -3,10 +3,13 @@ import { v4 as uuidv4 } from "uuid";
 export interface ProductInterface {
     id: string;
     name: string;
+    cost: number;
     price: number;
     stock: number;
     brand: string;
+    brandId: string;
     category: string;
+    categoryId: string;
     detail: string;
     createdAt: string;
     updatedAt: string;
@@ -31,10 +34,13 @@ export function createProductInterface(
         id: product.id || uuidv4(),
         name: product.name || "",
         detail: product.detail || "",
+        cost: product.cost || 0,
         price: product.price || 0,
         stock: product.stock || 0,
         brand: product.brand || "",
+        brandId: product.brandId || "",
         category: product.category || "",
+        categoryId: product.categoryId || "",
         createdAt: product.createdAt || "",
         updatedAt: product.updatedAt || "",
         createdBy: product.createdBy || "",

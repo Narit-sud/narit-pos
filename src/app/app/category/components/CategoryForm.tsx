@@ -68,11 +68,11 @@ export default function CategoryForm({
         const { name, value } = event.target;
         if (mode === "edit" && editCategory) {
             setEditCategory(
-                (prev) => ({ ...prev, [name]: value }) as CategoryInterface,
+                (prev) => ({ ...prev, [name]: value } as CategoryInterface)
             );
         } else if (mode === "create" && newCategory) {
             setNewCategory(
-                (prev) => ({ ...prev, [name]: value }) as NewCategoryInterface,
+                (prev) => ({ ...prev, [name]: value } as NewCategoryInterface)
             );
         }
     }
@@ -202,20 +202,7 @@ export default function CategoryForm({
                         }
                         onChange={handleChange}
                     />
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        justifyContent="flex-end"
-                    >
-                        <Button
-                            type="button"
-                            variant="outlined"
-                            disabled={loading}
-                            color={mode === "edit" ? "warning" : "primary"}
-                            onClick={handleCancelButton}
-                        >
-                            Cancel
-                        </Button>
+                    <Stack direction="row" spacing={2} justifyContent="center">
                         <Button
                             type="submit"
                             variant="contained"
@@ -224,6 +211,15 @@ export default function CategoryForm({
                             onClick={handleSubmitButton}
                         >
                             {mode === "create" ? "Create" : "Update"}
+                        </Button>{" "}
+                        <Button
+                            type="button"
+                            variant="outlined"
+                            disabled={loading}
+                            color={mode === "edit" ? "warning" : "primary"}
+                            onClick={handleCancelButton}
+                        >
+                            Cancel
                         </Button>
                     </Stack>
                 </Stack>

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { comparePassword } from "@/lib/encrypt";
 import { NextRequest } from "next/server";
-import { loginSql } from "@/lib/sql";
+import { loginSql } from "./sql";
 import { setEncryptedCookie } from "@/lib/cookie";
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (!username || !password) {
         return Response.json(
             { message: "Login failed. Credentials required." },
-            { status: 400 },
+            { status: 400 }
         );
     }
     try {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Username or password not found" },
-                { status: 500 },
+                { status: 500 }
             );
         }
         // compare password
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         if (!isPasswordMatched) {
             return Response.json(
                 { message: "Username or password not found" },
-                { status: 500 },
+                { status: 500 }
             );
         }
 
@@ -40,14 +40,14 @@ export async function POST(request: NextRequest): Promise<Response> {
             {
                 message: "Login success",
             },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
         console.error("Login failed:", error);
         if (error instanceof Error) {
             return Response.json(
                 { message: error.message || "Login failed" },
-                { status: 500 },
+                { status: 500 }
             );
         }
 

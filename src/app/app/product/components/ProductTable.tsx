@@ -7,13 +7,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 import ProductForm from "./ProductForm";
 import PopupModal from "@/components/PopupModal";
 import { useProduct } from "../useProduct";
 import { useState, useEffect, use } from "react";
 import { ProductInterface } from "@/model/product.interface";
 
-export default function CategoryTable() {
+export default function ProductTable() {
     const { products } = useProduct(); // get brand from context to display
     const [open, setOpen] = useState(false); // state to control the modal open/close
     const [loading, setLoading] = useState<boolean>(false); // state to control the loading state
@@ -42,7 +43,7 @@ export default function CategoryTable() {
 
     return (
         <>
-            <PopupModal open={open} handleClose={handleClose}>
+            <PopupModal open={open} handleClose={handleClose} width={600}>
                 <ProductForm
                     mode="edit"
                     handleCancelButton={handleClose}
@@ -62,37 +63,37 @@ export default function CategoryTable() {
                             <TableCell
                                 sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
+                                Brand
+                            </TableCell>
+                            <TableCell
+                                sx={{ fontWeight: "bold", textAlign: "center" }}
+                            >
                                 Category
+                            </TableCell>
+                            <TableCell
+                                sx={{ fontWeight: "bold", textAlign: "center" }}
+                            >
+                                Cost
+                            </TableCell>
+                            <TableCell
+                                sx={{ fontWeight: "bold", textAlign: "center" }}
+                            >
+                                Price
+                            </TableCell>
+                            <TableCell
+                                sx={{ fontWeight: "bold", textAlign: "center" }}
+                            >
+                                Stock
                             </TableCell>
                             <TableCell
                                 sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
                                 Detail
                             </TableCell>
-                            <TableCell
-                                sx={{ fontWeight: "bold", textAlign: "center" }}
-                            >
-                                Created at
-                            </TableCell>
-                            <TableCell
-                                sx={{ fontWeight: "bold", textAlign: "center" }}
-                            >
-                                Created by
-                            </TableCell>
-                            <TableCell
-                                sx={{ fontWeight: "bold", textAlign: "center" }}
-                            >
-                                Updated at
-                            </TableCell>
-                            <TableCell
-                                sx={{ fontWeight: "bold", textAlign: "center" }}
-                            >
-                                Updated by
-                            </TableCell>
                         </TableRow>
                     </TableHead>
                     {loading && <CircularProgress />}
-                    {!loading && products?.length === 0 && (
+                    {!loading && products?.length > 0 && (
                         <TableBody>
                             {products?.map((prod) => {
                                 return (
@@ -110,22 +111,27 @@ export default function CategoryTable() {
                                             {prod.name}
                                         </TableCell>
                                         <TableCell sx={{ textAlign: "center" }}>
+                                            {prod.brand}
+                                        </TableCell>
+                                        <TableCell sx={{ textAlign: "center" }}>
                                             {prod.category}
                                         </TableCell>
                                         <TableCell sx={{ textAlign: "center" }}>
+                                            {prod.cost}
+                                        </TableCell>
+                                        <TableCell sx={{ textAlign: "center" }}>
+                                            {prod.price}
+                                        </TableCell>
+                                        <TableCell sx={{ textAlign: "center" }}>
+                                            {prod.stock}
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                textAlign: "center",
+                                                width: "20%",
+                                            }}
+                                        >
                                             {prod.detail}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {prod.createdAt}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {prod.createdBy}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {prod.updatedAt}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {prod.updatedBy}
                                         </TableCell>
                                     </TableRow>
                                 );

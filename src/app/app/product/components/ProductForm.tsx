@@ -38,7 +38,7 @@ export default function ProductForm({
     const { createProduct } = useProduct(); // create product function from context
     const [editProduct, setEditProduct] = useState<
         ProductInterface | undefined
-    >(undefined);
+    >(product || undefined);
     const [newProduct, setNewProduct] = useState<
         NewProductInterface | undefined
     >(undefined);
@@ -54,11 +54,11 @@ export default function ProductForm({
         if (mode === "create" && product) {
             mode = "edit";
         }
-        // if mode is "edit" and product is passed, set editProduct to product
+        // if mode is "edit" and product is passed, dont do anything let state initialize itself
         else if (mode === "edit" && product) {
-            setEditProduct(product);
+            return;
         }
-        // if mode is "create" and product is not passed, set newProduct to NewProductInterface object
+        // if mode is "create", set newProduct to NewProductInterface object
         else if (mode === "create") {
             setNewProduct(createNewProductInterface({}));
         }
@@ -82,7 +82,7 @@ export default function ProductForm({
 
         if (mode === "create") {
             return setNewProduct(
-                (prev) => ({ ...prev, [name]: value }) as NewProductInterface,
+                (prev) => ({ ...prev, [name]: value } as NewProductInterface)
             );
         }
 
@@ -90,7 +90,7 @@ export default function ProductForm({
 
         if (mode === "edit") {
             return setEditProduct(
-                (prev) => ({ ...prev, [name]: value }) as ProductInterface,
+                (prev) => ({ ...prev, [name]: value } as ProductInterface)
             );
         }
     }
@@ -98,7 +98,7 @@ export default function ProductForm({
     function getBrandId(brandId: string): void {
         if (mode === "create") {
             return setNewProduct(
-                (prev) => ({ ...prev, brandId }) as NewProductInterface,
+                (prev) => ({ ...prev, brandId } as NewProductInterface)
             );
         }
 
@@ -106,7 +106,7 @@ export default function ProductForm({
 
         if (mode === "edit") {
             return setEditProduct(
-                (prev) => ({ ...prev, brandId }) as ProductInterface,
+                (prev) => ({ ...prev, brandId } as ProductInterface)
             );
         }
     }
@@ -138,8 +138,7 @@ export default function ProductForm({
             }
             try {
                 await createProduct(newProduct);
-                console.log("create product ");
-                // handleCancelButton();
+                return handleCancelButton();
             } catch (error) {
                 console.error("Error creating product:", error);
                 setSnackAlert({
@@ -166,7 +165,6 @@ export default function ProductForm({
 
     return (
         <>
-            {JSON.stringify(newProduct)}
             <Snackbar
                 open={snackAlert.open}
                 autoHideDuration={4000}
@@ -200,19 +198,33 @@ export default function ProductForm({
                     <TextField
                         type="text"
                         name="name"
-                        label="Prodruct Name"
+                        label="Product Name"
                         placeholder="Enter product name"
-                        value={newProduct?.name}
+                        value={
+                            mode === "create"
+                                ? newProduct?.name
+                                : editProduct?.name
+                        }
                         onChange={handleChange}
                         required
                     />
-                    <BrandSelect getValue={getBrandId} />
+                    <BrandSelect
+                        getValue={getBrandId}
+                        createMode={true}
+                        initialValue={
+                            mode === "edit" ? editProduct?.brandId : ""
+                        }
+                    />
                     <TextField
                         type="number"
                         name="price"
                         label="Price"
                         placeholder="Enter product detail or comments"
-                        value={newProduct?.price}
+                        value={
+                            mode === "create"
+                                ? newProduct?.price
+                                : editProduct?.price
+                        }
                         onChange={handleChange}
                         required
                     />
@@ -221,7 +233,11 @@ export default function ProductForm({
                         name="cost"
                         label="Cost"
                         placeholder="Enter product cost"
-                        value={newProduct?.cost}
+                        value={
+                            mode === "create"
+                                ? newProduct?.cost
+                                : editProduct?.cost
+                        }
                         onChange={handleChange}
                         required
                     />
@@ -230,7 +246,11 @@ export default function ProductForm({
                         name="initialQuantity"
                         label="Initial Quantity"
                         placeholder="Enter prodruct detail or comments"
-                        value={newProduct?.initialQuantity}
+                        value={
+                            mode === "create"
+                                ? newProduct?.initialQuantity
+                                : editProduct?.stock
+                        }
                         onChange={handleChange}
                         required
                     />

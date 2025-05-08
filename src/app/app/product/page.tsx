@@ -32,6 +32,7 @@ export default function Page() {
                 <PopupModal
                     open={productFormPopup.open}
                     handleClose={handleClose}
+                    width={600}
                 >
                     <ProductForm
                         mode="create"

@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { convertToThailandTime } from "@/lib/convertTime";
 import { isAxiosError } from "axios";
 import {
     NewProductInterface,
@@ -9,7 +10,11 @@ export async function getProductService(): Promise<ProductInterface[]> {
     try {
         const response = await axiosInstance.get("/product/active/display");
         if (response.status === 200) {
-            return response.data.data as ProductInterface[];
+            return response.data.data.map((prod: ProductInterface) => ({
+                ...prod,
+                createdAt: convertToThailandTime(prod.createdAt),
+                updatedAt: convertToThailandTime(prod.updatedAt),
+            }));
         }
         return [];
     } catch (error) {
