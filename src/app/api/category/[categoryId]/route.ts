@@ -4,9 +4,9 @@ import { NextRequest } from "next/server";
 
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { categoryId: string } }
+    { params }: { params: Promise<{ categoryId: string > }
 ) {
-    const { categoryId } = params;
+    const { categoryId } = await params;
     const { name, detail } = await request.json();
     const { userId } = await getDecryptedCookie("authToken");
 
