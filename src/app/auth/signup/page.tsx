@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
+import Link from "next/link";
 import { createSignupData, SignupInterface } from "@/model/signup.interface";
 import { cleanSignupData } from "./utils/cleanSignupData";
 import { validateSignupData } from "./utils/validateSignupData";
@@ -18,7 +19,7 @@ import { signupService } from "./service";
 export default function Page() {
     const router = useRouter();
     const [signupData, setSignupData] = useState<SignupInterface>(
-        createSignupData({} as SignupInterface)
+        createSignupData({} as SignupInterface),
     );
     const [snackbarAlert, setSnackbarAlert] = useState<{
         open: boolean;
@@ -161,6 +162,10 @@ export default function Page() {
                                 Cancel
                             </Button>
                         </Box>
+                        <Typography>
+                            Already has an account?{" "}
+                            <Link href="/auth/login">Login here</Link>
+                        </Typography>
                     </Box>
                 </FormControl>
             </Paper>

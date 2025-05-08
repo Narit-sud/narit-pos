@@ -17,7 +17,6 @@ import { ReactNode, useState } from "react";
 import AppProviders from "./AppProviders";
 import { usePathname } from "next/navigation";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import StoreIcon from "@mui/icons-material/Store";
 import CategoryIcon from "@mui/icons-material/Category";
 import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
@@ -91,7 +90,6 @@ export default function AppLayout({ children }: Props) {
                     <Grid size={11}></Grid>
                 </Grid>
             </AppBar>
-
             <Drawer
                 open={sidebarOpen}
                 onClose={() => {
@@ -170,19 +168,6 @@ export default function AppLayout({ children }: Props) {
                             );
                         })}
                     </List>
-                    {/* logout
-                    <Button
-                        onClick={() => {
-                            logout();
-                        }}
-                    >
-                        <ListItemButton>
-                            <ListItemIcon>icon</ListItemIcon>
-                            <ListItemText sx={{ color: "gray" }}>
-                                Logout
-                            </ListItemText>
-                        </ListItemButton>
-                    </Button> */}
                 </Stack>
             </Drawer>
             {renderProviders && (
