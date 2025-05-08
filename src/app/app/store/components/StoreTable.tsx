@@ -24,7 +24,7 @@ type Props = {
 export default function StoreTable({ store = [] }: Props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedStore, setSelectedStore] = useState<
-        StoreUserInterface[] | undefined
+        StoreUserInterface | undefined
     >(undefined);
 
     const handleConfirm = async () => {
