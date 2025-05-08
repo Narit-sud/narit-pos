@@ -1,4 +1,4 @@
-import { SignupInterface } from "../interface";
+import { SignupInterface } from "@/model/signup.interface";
 
 export function validateSignupData(data: SignupInterface): {
     valid: boolean;
