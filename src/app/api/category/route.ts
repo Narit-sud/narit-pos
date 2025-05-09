@@ -6,7 +6,7 @@ export async function GET(): Promise<Response> {
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 },
+            { status: 400 }
         );
     }
     const sql = `
@@ -33,18 +33,18 @@ export async function GET(): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "Fetch category data success but dataset is empty" },
-                { status: 200 },
+                { status: 200 }
             );
         }
         return Response.json(
             { message: "Fetch category data success", data: query.rows },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
-        console.error("api/category/route.ts", error);
+        console.error("api/category/route.ts/GET", error);
         return Response.json(
             { message: "Error fetching store data", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
@@ -56,7 +56,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!userId) {
         return Response.json(
             { message: "User not authenticated" },
-            { status: 401 },
+            { status: 401 }
         );
     }
     const { storeId } = await getDecryptedCookie("authToken");
@@ -64,7 +64,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!storeId) {
         return Response.json(
             { message: "Store ID not found" },
-            { status: 400 },
+            { status: 400 }
         );
     }
     const sql = `
@@ -96,13 +96,13 @@ export async function POST(request: Request): Promise<Response> {
         }
         return Response.json(
             { message: "Create new category success." },
-            { status: 201 },
+            { status: 201 }
         );
     } catch (error) {
-        console.error("api/category/route.ts", error);
+        console.error("api/category/route.ts/POST", error);
         return Response.json(
             { message: "Error creating new category", error },
-            { status: 500 },
+            { status: 500 }
         );
     }
 }
