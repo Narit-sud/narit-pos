@@ -1,3 +1,6 @@
+import AppBar from "@mui/material/AppBar";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -27,7 +30,16 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                {children}
+                <AppBar
+                    position="static"
+                    sx={{
+                        backgroundColor: "background.default",
+                        color: "text.primary",
+                        boxShadow: "none",
+                    }}
+                >
+                    {children}
+                </AppBar>
             </body>
         </html>
     );
