@@ -62,7 +62,7 @@ export default function Page() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                minHeight: "100vh",
+                height: { sm: "80vh", md: "100vh" },
             }}
         >
             <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 400 }}>

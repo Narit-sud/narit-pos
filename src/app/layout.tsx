@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import HomeBar from "@/components/HomeBar";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
