@@ -31,16 +31,8 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <AppBar
-                    position="static"
-                    sx={{
-                        backgroundColor: "background.default",
-                        color: "text.primary",
-                        boxShadow: "none",
-                    }}
-                >
-                    {children}
-                </AppBar>
+                <HomeBar />
+                {children}
             </body>
         </html>
     );

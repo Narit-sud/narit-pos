@@ -46,7 +46,9 @@ export default function Page() {
                 justifyContent="space-between"
                 sx={{ marginBottom: 2 }}
             >
-                <Typography variant="h5">Products</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                    Products
+                </Typography>
                 <Button
                     variant="contained"
                     onClick={() => handleOpen("create")}

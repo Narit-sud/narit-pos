@@ -1,3 +1,4 @@
+import { AuthContextProvider } from "./useAuth";
 import { BrandContextProvider } from "./brand/useBrand";
 import { CategoryContextProvider } from "./category/useCategory";
 import { CustomerContextProvider } from "./customer/useCustomer";
@@ -9,14 +10,16 @@ export default function AppProviders({
     children: React.ReactNode;
 }) {
     return (
-        <CategoryContextProvider>
-            <BrandContextProvider>
-                <ProductContextProvider>
-                    <CustomerContextProvider>
-                        {children}
-                    </CustomerContextProvider>
-                </ProductContextProvider>
-            </BrandContextProvider>
-        </CategoryContextProvider>
+        <AuthContextProvider>
+            <CategoryContextProvider>
+                <BrandContextProvider>
+                    <ProductContextProvider>
+                        <CustomerContextProvider>
+                            {children}
+                        </CustomerContextProvider>
+                    </ProductContextProvider>
+                </BrandContextProvider>
+            </CategoryContextProvider>
+        </AuthContextProvider>
     );
 }

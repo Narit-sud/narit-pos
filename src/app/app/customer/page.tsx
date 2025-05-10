@@ -45,7 +45,9 @@ export default function Page() {
                 justifyContent="space-between"
                 sx={{ marginBottom: 2 }}
             >
-                <Typography variant="h5">Customers</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                    Customers
+                </Typography>
                 <Button
                     variant="contained"
                     startIcon={<Add />}

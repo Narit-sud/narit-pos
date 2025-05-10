@@ -21,6 +21,17 @@ export const getCustomerSql = `
 		ORDER BY
 			c.created_at;
 `;
+
+/**
+ * * $1, -- id
+ * * $2, -- name
+ * * $3, -- surname
+ * * $4, -- email
+ * * $5, -- phone_number
+ * * $6, -- address
+ * * $7, -- store_id
+ * * $8, -- created_by_user_id, updated_by_user_id
+ */
 export const createCustomerSql = `
 	INSERT
 	INTO customer (
@@ -48,4 +59,20 @@ export const createCustomerSql = `
 		now(), -- updated_at
 		$8, -- created_by_user_id
 		$8); -- updated_by_user_id
+`;
+
+export const updateCustomerSql = `
+		UPDATE
+			customer
+		SET
+			"name" = $1,
+			surname = $2,
+			email = $3,
+			address = $4,
+			phone_number = $5,
+			updated_by_user_id = $6,
+			updated_at = now()
+		WHERE
+			id = $7
+			AND store_id =$8;
 `;

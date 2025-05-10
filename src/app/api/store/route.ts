@@ -1,11 +1,14 @@
 import { db } from "@/lib/db";
 import { getDecryptedCookie } from "@/lib/cookie";
+import { v4 as uuidv4 } from "uuid";
 import type { NewStoreInterface } from "@/app/app/store/interface";
 import {
     addOwnerPermissionSql,
     createNewStoreSql,
     getStoreDataSql,
-} from "@/lib/sql";
+} from "./sql";
+import { createCategorySql } from "@/app/api/category/sql";
+import { createCustomerSql } from "../customer/sql";
 
 /**
  * /api/store/GET
@@ -24,7 +27,6 @@ export async function GET() {
                 { status: 200 }
             );
         }
-
         return Response.json(
             {
                 message: "Get store data success",
@@ -50,7 +52,6 @@ export async function GET() {
  */
 export async function POST(request: Request): Promise<Response> {
     const newStore: NewStoreInterface = await request.json();
-    console.log("newStore", newStore);
     // user login validation is success at middleware
     // TODO: validate newStore data
     // TODO: validate user permission
@@ -60,7 +61,7 @@ export async function POST(request: Request): Promise<Response> {
     const client = await db.connect();
     try {
         const authToken = await getDecryptedCookie("authToken");
-        if (!authToken) {
+        if (!authToken || !authToken.userId || !newStore.id) {
             return Response.json(
                 {
                     message:
@@ -71,33 +72,36 @@ export async function POST(request: Request): Promise<Response> {
         }
         const { userId } = authToken;
 
-        // create new store
         await client.query("BEGIN");
-        const query = await client.query(createNewStoreSql, [
+        // create new store
+        await client.query(createNewStoreSql, [
             newStore.id,
             newStore.name,
             userId,
         ]);
-        if (!query.rowCount) {
-            return Response.json(
-                { message: "Store creation failed" },
-                { status: 404 }
-            );
-        }
-
         // add permission
-        const query2 = await client.query(addOwnerPermissionSql, [
+        await client.query(addOwnerPermissionSql, [userId, newStore.id]);
+        // create initial category
+        await client.query(createCategorySql, [
+            uuidv4(),
+            "Uncategorized",
+            "Default category",
             userId,
             newStore.id,
         ]);
-        if (!query2.rowCount) {
-            return Response.json(
-                { message: "Add permission failed" },
-                { status: 404 }
-            );
-        }
+        // create initial customer
+        await client.query(createCustomerSql, [
+            uuidv4(),
+            "General",
+            "Default customer",
+            "",
+            "",
+            "",
+            newStore.id,
+            userId,
+        ]);
+        // TODO: create initial supplier
         await client.query("COMMIT");
-
         // get and re-send  store data
         const query3 = await client.query(getStoreDataSql, [userId]);
         if (!query3.rowCount) {
@@ -113,6 +117,7 @@ export async function POST(request: Request): Promise<Response> {
     } catch (error) {
         await client.query("ROLLBACK");
         console.error(error);
+        return Response.json(error, { status: 500 });
         // if store name duplicate
         if (
             typeof error === "object" &&

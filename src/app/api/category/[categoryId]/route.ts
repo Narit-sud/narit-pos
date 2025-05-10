@@ -1,6 +1,7 @@
 import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
+import { updateCategorySql } from "../sql";
 
 export async function PUT(
     request: NextRequest,
@@ -9,19 +10,13 @@ export async function PUT(
     const { categoryId } = await params;
     const { name, detail } = await request.json();
     const { userId } = await getDecryptedCookie("authToken");
-
-    const sql = `
-		UPDATE
-			product_category
-		SET
-			"name" = $1,
-			detail = $2,
-			updated_at = now(),
-			updated_by = $3
-		WHERE
-			id = $4;`;
     try {
-        const query = await db.query(sql, [name, detail, userId, categoryId]);
+        const query = await db.query(updateCategorySql, [
+            name,
+            detail,
+            userId,
+            categoryId,
+        ]);
         if (!query.rowCount) {
             return Response.json(
                 { error: "Category not found" },

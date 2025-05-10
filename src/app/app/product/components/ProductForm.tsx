@@ -181,7 +181,12 @@ export default function ProductForm({
                     {snackAlert.message}
                 </Alert>
             </Snackbar>
-            <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
+            <Typography
+                sx={{ mb: 1, userSelect: "none" }}
+                variant="h5"
+                fontWeight="bold"
+                textAlign="center"
+            >
                 {setProductFormPopup(mode)} Product
             </Typography>
             <FormControl fullWidth>

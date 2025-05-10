@@ -28,7 +28,6 @@ export default function Page() {
             elevation={3}
             sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
         >
-            {" "}
             {categoryFormPopup.open && (
                 <PopupModal
                     open={categoryFormPopup.open}
@@ -46,7 +45,9 @@ export default function Page() {
                 justifyContent="space-between"
                 sx={{ marginBottom: 2 }}
             >
-                <Typography variant="h5">Categories</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                    Categories
+                </Typography>
                 <Button
                     variant="contained"
                     onClick={() => handleOpen("create")}

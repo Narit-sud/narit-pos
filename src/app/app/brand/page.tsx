@@ -28,7 +28,6 @@ export default function Page() {
             elevation={3}
             sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
         >
-            {" "}
             {brandFormPopup.open && (
                 <PopupModal
                     open={brandFormPopup.open}
@@ -43,7 +42,9 @@ export default function Page() {
                 justifyContent="space-between"
                 sx={{ marginBottom: 2 }}
             >
-                <Typography variant="h5">Brands</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                    Brands
+                </Typography>
                 <Button
                     variant="contained"
                     onClick={() => handleOpen("create")}

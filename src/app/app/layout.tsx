@@ -6,16 +6,17 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
+import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Stack from "@mui/material/Stack";
 import { logoutService } from "@/app/auth/service";
-import Link from "next/link";
 import { ReactNode, useState } from "react";
-import AppProviders from "./AppProviders";
 import { usePathname } from "next/navigation";
+import AppProviders from "./AppProviders";
+import NextLink from "next/link";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import StoreIcon from "@mui/icons-material/Store";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -26,6 +27,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ReplayIcon from "@mui/icons-material/Replay";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import AuthMenu from "@/components/AuthMenu";
+import { AuthContextProvider } from "./useAuth";
 
 type List = { name: string; url: string; icon: ReactNode }[];
 const firstList: List = [
@@ -87,7 +91,11 @@ export default function AppLayout({ children }: Props) {
                             <MenuIcon />
                         </Button>
                     </Grid>
-                    <Grid size={11}></Grid>
+                    <Grid size={11}>
+                        <AuthContextProvider>
+                            <AuthMenu />
+                        </AuthContextProvider>
+                    </Grid>
                 </Grid>
             </AppBar>
             <Drawer
@@ -107,11 +115,21 @@ export default function AppLayout({ children }: Props) {
                         justifyContent: "space-between",
                     }}
                 >
+                    <Button
+                        LinkComponent={NextLink}
+                        href="/app/pos"
+                        startIcon={<PointOfSaleIcon />}
+                        size="large"
+                        variant="contained"
+                    >
+                        POS
+                    </Button>
+                    <Divider />
                     {/* first list */}
                     <List>
                         {firstList.map((item) => {
                             return (
-                                <Link
+                                <NextLink
                                     key={item.name}
                                     href={"/app" + item.url}
                                     onClick={() => {
@@ -122,7 +140,7 @@ export default function AppLayout({ children }: Props) {
                                         <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
-                                </Link>
+                                </NextLink>
                             );
                         })}
                     </List>
@@ -131,7 +149,7 @@ export default function AppLayout({ children }: Props) {
                     <List>
                         {secondList.map((item) => {
                             return (
-                                <Link
+                                <NextLink
                                     key={item.name}
                                     href={"/app" + item.url}
                                     onClick={() => {
@@ -142,7 +160,7 @@ export default function AppLayout({ children }: Props) {
                                         <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
-                                </Link>
+                                </NextLink>
                             );
                         })}
                     </List>
@@ -151,9 +169,9 @@ export default function AppLayout({ children }: Props) {
                     <List>
                         {thirdList.map((item) => {
                             return (
-                                <Link
+                                <NextLink
                                     key={item.name}
-                                    href={item.url}
+                                    href={"/app" + item.url}
                                     onClick={() => {
                                         item.name === "Logout" &&
                                             handleLogout();
@@ -164,7 +182,7 @@ export default function AppLayout({ children }: Props) {
                                         <ListItemIcon>{item.icon}</ListItemIcon>
                                         <ListItemText>{item.name}</ListItemText>
                                     </ListItemButton>
-                                </Link>
+                                </NextLink>
                             );
                         })}
                     </List>

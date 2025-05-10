@@ -1,10 +1,11 @@
 import { db } from "@/lib/db";
-import { getStoreUserPermissionIdSql } from "@/lib/sql";
+import { getStoreUserPermissionIdSql } from "@/app/api/store/sql";
 import { setEncryptedCookie } from "@/lib/cookie";
 import { getDecryptedCookie } from "@/lib/cookie";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<Response> {
+    console.log("store-select route");
     const authToken = await getDecryptedCookie("authToken");
     if (!authToken) {
         return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -19,7 +20,7 @@ export async function POST(request: Request): Promise<Response> {
             {
                 message: "User authentication failed during select a store.",
             },
-            { status: 401 },
+            { status: 401 }
         );
     }
     try {
@@ -32,14 +33,14 @@ export async function POST(request: Request): Promise<Response> {
         if (!query.rowCount) {
             return Response.json(
                 { message: "User is not authorized in that store." },
-                { status: 403 },
+                { status: 403 }
             );
         }
         // if yes, set cookie to the client
         await setEncryptedCookie("authToken", { userId, storeId });
         return Response.json(
             { message: "User is authorized in this store." },
-            { status: 200 },
+            { status: 200 }
         );
     } catch (error) {
         console.log("store-select route error: ", error);

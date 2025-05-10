@@ -13,10 +13,7 @@ export async function DELETE(request: Request): Promise<Response> {
         });
         return NextResponse.redirect(new URL("/", request.url));
     } catch (error) {
-        console.error("Error deleting cookie:", error);
-        return Response.json(
-            { message: "Failed to delete cookie" },
-            { status: 500 },
-        );
+        console.error("Error logging out:", error);
+        return Response.json({ message: "Failed to logout" }, { status: 500 });
     }
 }

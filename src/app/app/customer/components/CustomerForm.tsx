@@ -35,7 +35,7 @@ export default function CustomerForm({
     customer,
     handleCancelButton,
 }: Props) {
-    const { createCustomer } = useCustomer(); // get categories from context to display
+    const { createCustomer, updateCustomer } = useCustomer(); // get categories from context to display
     const [editCustomer, setEditCustomer] = useState<CustomerInterface | null>(
         null
     );
@@ -97,7 +97,7 @@ export default function CustomerForm({
                     });
                     return;
                 }
-                // await createCustomer(newCustomer);
+                await createCustomer(newCustomer);
                 setSnackAlert({
                     open: true,
                     message: "Customer created successfully",
@@ -119,10 +119,37 @@ export default function CustomerForm({
 
         // ===============================================================
 
-        if (mode === "edit") {
-            const updatedCustomer = editCustomer as CustomerInterface;
-            console.log("updatedCustomer", updatedCustomer);
-            // TODO: implement update customer function
+        if (mode === "edit" && editCustomer) {
+            try {
+                const isCustomerValid =
+                    validateNewCustomerInterface(editCustomer);
+                if (!isCustomerValid.valid) {
+                    setLoading(false);
+                    setSnackAlert({
+                        open: true,
+                        message: isCustomerValid.message,
+                        severity: "error",
+                    });
+                    return;
+                }
+                await updateCustomer(editCustomer);
+                setSnackAlert({
+                    open: true,
+                    message: "Customer updated successfully",
+                    severity: "success",
+                });
+                setTimeout(() => {
+                    handleCancelButton();
+                }, 2000);
+            } catch (error) {
+                console.error("Error updating customer:", error);
+                setSnackAlert({
+                    open: true,
+                    message: "Failed to update customer. Please try again.",
+                    severity: "error",
+                });
+                return setLoading(false);
+            }
         }
     }
 
@@ -148,7 +175,12 @@ export default function CustomerForm({
                     {snackAlert.message}
                 </Alert>
             </Snackbar>
-            <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
+            <Typography
+                sx={{ mb: 1, userSelect: "none" }}
+                variant="h5"
+                textAlign="center"
+                fontWeight="bold"
+            >
                 {setProductFormPopup(mode)} Customer
             </Typography>
             <FormControl fullWidth>

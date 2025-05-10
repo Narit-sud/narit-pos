@@ -22,9 +22,8 @@ export async function GET() {
         );
     } catch (error) {
         console.error("api/customer/route.ts/GET", error);
-
         return Response.json(
-            { message: "Error fetching store data", error },
+            { message: "Error fetching customer data", error },
             { status: 500 }
         );
     }

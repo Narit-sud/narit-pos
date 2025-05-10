@@ -16,6 +16,7 @@ export default function HomeBar() {
                 alignItems: "center",
                 marginBottom: 10,
             }}
+            suppressHydrationWarning
         >
             <Stack
                 direction="row"
@@ -25,7 +26,7 @@ export default function HomeBar() {
                 height="100%"
             >
                 {/* LOGO */}
-                <Link href="/">
+                <Link href="/" color="white" underline="none">
                     <Box
                         sx={{
                             display: "flex",
@@ -62,27 +63,33 @@ export default function HomeBar() {
                         gap: 2,
                     }}
                 >
-                    <Link href="/" underline="hover" color="white">
+                    <Link href="/" color="white" underline="hover">
                         Home
                     </Link>
-                    <Link href="/manual" underline="hover">
-                        <Button variant="text" sx={{ color: "white" }}>
-                            Manual
-                        </Button>
+                    <Link href="/manual" color="white" underline="hover">
+                        Manual
                     </Link>
-                    <Link href="/about" underline="hover">
-                        <Button variant="text" sx={{ color: "white" }}>
-                            About
-                        </Button>
+                    <Link href="/about" color="white" underline="hover">
+                        About
                     </Link>
                 </Box>
                 {/* Get started button */}
                 <Box>
-                    <Link href="/auth/signup" underline="hover">
-                        <Button variant="contained" sx={{ color: "white" }}>
-                            Get Started
-                        </Button>
-                    </Link>
+                    <Button
+                        variant="contained"
+                        LinkComponent={Link}
+                        href="/auth/signup"
+                        sx={{
+                            backgroundColor: "white",
+                            color: "black",
+                            "&:hover": {
+                                backgroundColor: "#f5f5f5",
+                                color: "black",
+                            },
+                        }}
+                    >
+                        Get Started
+                    </Button>
                 </Box>
             </Stack>
         </AppBar>
