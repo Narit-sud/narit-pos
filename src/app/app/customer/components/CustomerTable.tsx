@@ -60,22 +60,17 @@ export default function CustomerTable() {
                             <TableCell
                                 sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
-                                Created at
+                                Phone Number
                             </TableCell>
                             <TableCell
                                 sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
-                                Created by
+                                Email
                             </TableCell>
                             <TableCell
                                 sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
-                                Updated at
-                            </TableCell>
-                            <TableCell
-                                sx={{ fontWeight: "bold", textAlign: "center" }}
-                            >
-                                Updated by
+                                Address
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -99,16 +94,13 @@ export default function CustomerTable() {
                                     </TableCell>
 
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.createdAt}
+                                        {cat.phoneNumber}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.createdBy}
+                                        {cat.email || "N/A"}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.updatedAt}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.updatedBy}
+                                        {cat.address || "N/A"}
                                     </TableCell>
                                 </TableRow>
                             );

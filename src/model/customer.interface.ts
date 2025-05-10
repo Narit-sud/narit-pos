@@ -27,7 +27,7 @@ export function createNewCustomerInterface(
     customer: Partial<NewCustomerInterface>
 ): NewCustomerInterface {
     return {
-        id: customer.id || uuidv4(),
+        id: customer.id || "",
         name: customer.name?.trim() || "",
         surname: customer.surname?.trim() || "",
         email: customer.email?.trim() || "",
@@ -40,7 +40,7 @@ export function createCustomerInterface(
     customer: Partial<CustomerInterface>
 ): CustomerInterface {
     return {
-        id: customer.id || uuidv4(),
+        id: customer.id || "",
         name: customer.name || "",
         surname: customer.surname || "",
         email: customer.email || "",
