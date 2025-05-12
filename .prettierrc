@@ -1,0 +1,20 @@
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": false,
+  "tabWidth": 4,
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "importOrder": [
+    "^react$",
+    "^next(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@mui/(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

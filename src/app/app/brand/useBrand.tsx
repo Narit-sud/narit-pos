@@ -1,21 +1,26 @@
 "use client";
-import { createBrandService, getBrandService } from "./service";
-import {
-    useState,
-    useEffect,
-    createContext,
-    useContext,
-    ReactNode,
-} from "react";
 import type {
     BrandInterface,
     NewBrandInterface,
 } from "@/model/brand.interface";
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
+import {
+    createBrandService,
+    getBrandService,
+    updateBrandService,
+} from "./service";
 
 type BrandContextType = {
     brands: BrandInterface[];
     loadBrands: () => Promise<void>;
     createBrand: (brand: NewBrandInterface) => Promise<void>;
+    updateBrand: (brand: BrandInterface) => Promise<void>;
 };
 
 type Props = {
@@ -47,12 +52,21 @@ export function BrandContextProvider({ children }: Props) {
         }
     }
 
+    async function updateBrand(updatedBrand: BrandInterface): Promise<void> {
+        try {
+            await updateBrandService(updatedBrand);
+            await loadBrands();
+        } catch (error) {
+            console.error("Error updating brand:", error);
+        }
+    }
+
     useEffect(() => {
         loadBrands();
     }, []);
 
     return (
-        <BrandContext.Provider value={{ brands, createBrand, loadBrands }}>
+        <BrandContext.Provider value={{ brands, createBrand, loadBrands,updateBrand }}>
             {children}
         </BrandContext.Provider>
     );

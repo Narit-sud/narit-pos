@@ -1,7 +1,7 @@
 import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
-import { v4 as uuidv4 } from "uuid";
 import type { NewProductInterface } from "@/model/product.interface";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * this route is used to create a new product and set the initial value to the product
@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<Response> {
         detail,
     } = (await request.json()) as NewProductInterface;
     const { userId, storeId } = await getDecryptedCookie("authToken");
-    const procurementId = uuidv4();
+    const productIncomingId = uuidv4();
     // add product to product_variant_table
     const sql1 = `
         INSERT
@@ -116,10 +116,10 @@ export async function POST(request: Request): Promise<Response> {
         ]);
         if (initialQuantity > 0) {
             // procurement table
-            await client.query(sql2, [procurementId, userId, storeId]);
+            await client.query(sql2, [productIncomingId, userId, storeId]);
             // procurement_product_variant table
             await client.query(sql3, [
-                procurementId,
+                productIncomingId,
                 prodId,
                 initialQuantity,
                 cost * initialQuantity,

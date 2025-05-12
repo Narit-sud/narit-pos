@@ -1,14 +1,15 @@
-import { db } from "@/lib/db";
-import { getDecryptedCookie } from "@/lib/cookie";
-import { v4 as uuidv4 } from "uuid";
+import { createBrandSql } from "@/app/api/brand/sql";
+import { createCategorySql } from "@/app/api/category/sql";
 import type { NewStoreInterface } from "@/app/app/store/interface";
+import { getDecryptedCookie } from "@/lib/cookie";
+import { db } from "@/lib/db";
+import { v4 as uuidv4 } from "uuid";
+import { createCustomerSql } from "../customer/sql";
 import {
     addOwnerPermissionSql,
     createNewStoreSql,
     getStoreDataSql,
 } from "./sql";
-import { createCategorySql } from "@/app/api/category/sql";
-import { createCustomerSql } from "../customer/sql";
 
 /**
  * /api/store/GET
@@ -71,23 +72,31 @@ export async function POST(request: Request): Promise<Response> {
             );
         }
         const { userId } = authToken;
+        const storeId = newStore.id;
+        const categoryId = uuidv4();
+        const brandId = uuidv4();
 
         await client.query("BEGIN");
         // create new store
-        await client.query(createNewStoreSql, [
-            newStore.id,
-            newStore.name,
-            userId,
-        ]);
+        await client.query(createNewStoreSql, [storeId, newStore.name, userId]);
         // add permission
-        await client.query(addOwnerPermissionSql, [userId, newStore.id]);
+        await client.query(addOwnerPermissionSql, [userId, storeId]);
         // create initial category
         await client.query(createCategorySql, [
-            uuidv4(),
+            categoryId,
             "Uncategorized",
             "Default category",
             userId,
-            newStore.id,
+            storeId,
+        ]);
+
+        await client.query(createBrandSql, [
+            brandId,
+            "Unbranded",
+            categoryId,
+            "Default brand",
+            storeId,
+            userId,
         ]);
         // create initial customer
         await client.query(createCustomerSql, [
@@ -97,7 +106,7 @@ export async function POST(request: Request): Promise<Response> {
             "",
             "",
             "",
-            newStore.id,
+            storeId,
             userId,
         ]);
         // TODO: create initial supplier

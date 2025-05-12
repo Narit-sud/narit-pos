@@ -1,6 +1,7 @@
 import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import { NewBrandInterface } from "@/model/brand.interface";
+import { createBrandSql, getBrandSql } from "./sql";
 
 export async function GET(): Promise<Response> {
     const { storeId } = await getDecryptedCookie("authToken");
@@ -10,28 +11,9 @@ export async function GET(): Promise<Response> {
             { status: 400 }
         );
     }
-    const sql = `
-        SELECT
-            pb.id AS "id",
-            pb.name AS "name",
-            pc.name AS "category",
-            pb.detail AS "detail",
-            pb.created_at AS "createdAt",
-            pb.updated_at AS "updatedAt",
-            creator.name AS "createdBy",
-            updator.name AS "updatedBy"
-        FROM
-            product_brand pb
-        JOIN product_category pc ON
-            pb.product_category_id = pc.id
-        JOIN "user" creator ON
-            creator.id = pc.created_by
-        JOIN "user" updator ON
-            updator.id = pc.updated_by
-        WHERE
-            pc.store_id = $1;`;
+
     try {
-        const query = await db.query(sql, [storeId]);
+        const query = await db.query(getBrandSql, [storeId]);
         if (!query.rowCount) {
             return Response.json(
                 { message: "Fetch brand data success but dataset is empty" },
@@ -74,31 +56,8 @@ export async function POST(request: Request): Promise<Response> {
         return Response.json({ message: "Store not found" }, { status: 404 });
     }
 
-    const sql = `
-		INSERT
-		INTO
-		product_brand (
-			id,
-			"name",
-			product_category_id,
-			detail,
-			created_at,
-			updated_at,
-			store_id,
-			created_by,
-			updated_by)
-		VALUES (
-			$1,
-			$2,
-			$3,
-			$4,
-			now(),
-			now(),
-			$5,
-			$6,
-			$6);`;
     try {
-        const query = await db.query(sql, [
+        const query = await db.query(createBrandSql, [
             newBrand.id,
             newBrand.name,
             newBrand.categoryId,

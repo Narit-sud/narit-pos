@@ -1,19 +1,20 @@
 "use client";
+import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import {
+    NewProductInterface,
+    ProductInterface,
+    createNewProductInterface,
+} from "@/model/product.interface";
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 import BrandSelect from "../../brand/components/BrandSelect";
-import {
-    ProductInterface,
-    NewProductInterface,
-    createNewProductInterface,
-} from "@/model/product.interface";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
-import { useState, useEffect } from "react";
 import { useProduct } from "../useProduct";
 
 type Props = {
@@ -164,7 +165,15 @@ export default function ProductForm({
     }, []);
 
     return (
-        <>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                width: "100%",
+                height: "100%",
+            }}
+        >
             <Snackbar
                 open={snackAlert.open}
                 autoHideDuration={4000}
@@ -248,9 +257,13 @@ export default function ProductForm({
                     />
                     <TextField
                         type="number"
-                        name="initialQuantity"
-                        label="Initial Quantity"
-                        placeholder="Enter prodruct detail or comments"
+                        name={mode === "create" ? "initialQuantity" : "stock"}
+                        label={mode === "create" ? "Initial Quantity" : "Stock"}
+                        placeholder={
+                            mode === "create"
+                                ? "Enter initial quantity"
+                                : "Enter stock"
+                        }
                         value={
                             mode === "create"
                                 ? newProduct?.initialQuantity
@@ -309,6 +322,6 @@ export default function ProductForm({
                     </Typography>
                 </Stack>
             )}
-        </>
+        </Box>
     );
 }

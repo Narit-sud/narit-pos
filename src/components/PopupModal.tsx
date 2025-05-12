@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 type Props = {
     children: ReactNode;
     open: boolean;
-    width?: number;
+    width?: string | number;
     handleClose: () => void;
 };
 
@@ -29,14 +29,17 @@ export default function PopupModal({
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: width,
+                    width: { xs: "100vw", sm: width },
+                    maxHeight: { sm: "100vh", md: "90vh" },
+                    overflowY: "auto",
+                    overflowX: "hidden",
                     bgcolor: "background.paper",
                     border: "2px solid #000",
                     boxShadow: 24,
                     p: 4,
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    borderRadius: "10px",
                 }}
             >
                 {children}

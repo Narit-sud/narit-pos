@@ -36,7 +36,7 @@ export async function createCategoryService(
     } catch (error) {
         if (isAxiosError(error)) {
             console.log(
-                "getBrandService Error:",
+                "createCategoryService Error:",
                 error.response?.data || error.response
             );
         }
@@ -55,7 +55,7 @@ export async function updateCategoryService(
     } catch (error) {
         if (isAxiosError(error)) {
             console.log(
-                "getBrandService Error:",
+                "updateCategoryService Error:",
                 error.response?.data || error.response
             );
         }

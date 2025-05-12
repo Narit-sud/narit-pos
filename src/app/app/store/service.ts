@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { isAxiosError } from "axios";
 import { NewStoreInterface, StoreUserInterface } from "./interface";
+import { convertToThailandTime } from "@/lib/convertTime";
 
 export async function getUserStore(): Promise<StoreUserInterface[] | null> {
     try {
@@ -8,7 +9,15 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
         if (!response.data || !response.data.data) {
             return null;
         }
-        return response.data.data;
+        return response.data.data.map((store: StoreUserInterface) => ({
+            id: store.id,
+            name: store.name,
+            permission: store.permission,
+            createdAt: convertToThailandTime(store.createdAt),
+            updatedAt: convertToThailandTime(store.updatedAt),
+            createdBy: store.createdBy,
+            updatedBy: store.updatedBy,
+        })) as StoreUserInterface[];
     } catch (error) {
         if (isAxiosError(error)) {
             console.log(error.response);

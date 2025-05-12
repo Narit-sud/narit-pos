@@ -1,4 +1,11 @@
 "use client";
+import { useBrand } from "@/app/app/brand/useBrand";
+import { useCategory } from "@/app/app/category/useCategory";
+import {
+    CategoryInterface,
+    createNewCategoryInterface,
+    NewCategoryInterface,
+} from "@/model/category.interface";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -6,13 +13,6 @@ import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import {
-    CategoryInterface,
-    createNewCategoryInterface,
-    NewCategoryInterface,
-} from "@/model/category.interface";
-import { useCategory } from "@/app/app/category/useCategory";
-import { useBrand } from "@/app/app/brand/useBrand";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -99,7 +99,7 @@ export default function CategoryForm({
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
                 console.error("Error updating category:", error);
                 setSnackAlert({
@@ -131,7 +131,7 @@ export default function CategoryForm({
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
                 console.error("Error creating category:", error);
                 setSnackAlert({

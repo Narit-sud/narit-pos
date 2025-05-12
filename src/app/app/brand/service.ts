@@ -1,10 +1,10 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { convertToThailandTime } from "@/lib/convertTime";
-import { isAxiosError } from "axios";
 import type {
-    NewBrandInterface,
     BrandInterface,
+    NewBrandInterface,
 } from "@/model/brand.interface";
+import { isAxiosError } from "axios";
 
 export async function getBrandService(): Promise<BrandInterface[]> {
     try {
@@ -53,5 +53,21 @@ export async function createBrandService(newBrand: NewBrandInterface) {
             // non-Axios errors
             throw new Error("An unexpected error occurred.");
         }
+    }
+}
+
+export async function updateBrandService(
+    updatedBrand: BrandInterface
+): Promise<void> {
+    try {
+        await axiosInstance.put(`/brand/${updatedBrand.id}`, updatedBrand);
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.log(
+                "updateBrandService Error:",
+                error.response?.data || error.response
+            );
+        }
+        throw error;
     }
 }

@@ -7,12 +7,11 @@ export const getProductSql = `
 		pv.name as "name",
 		pv.detail as "detail",
 		pv.price as "price",
-		(
-			COALESCE(
-				procurement_stock,
+		(			COALESCE(
+				product_incoming_stock,
 				0
 			) - COALESCE(
-				sale_stock,
+				product_outgoing_stock,
 				0
 			)
 		) AS "stock",
@@ -37,23 +36,21 @@ export const getProductSql = `
 		creator.id = s.created_by_user_id
 		-- Corrected column name
 	LEFT JOIN "user" updater ON
-		updater.id = s.updated_by_user_id
-	LEFT JOIN (
+		updater.id = s.updated_by_user_id	LEFT JOIN (
 			SELECT
 				product_variant_id,
-				SUM(qty) AS procurement_stock
+				SUM(qty) AS product_incoming_stock
 			FROM
-				procurement_product_variant
+				product_variant_incoming
 			GROUP BY
 				product_variant_id
 		) AS procurement_summary ON
-		pv.id = procurement_summary.product_variant_id
-	LEFT JOIN (
+		pv.id = procurement_summary.product_variant_id	LEFT JOIN (
 			SELECT
 				product_variant_id,
-				SUM(qty) AS sale_stock
+				SUM(qty) AS product_outgoing_stock
 			FROM
-				sale_product_variant
+				product_variant_outgoing
 			GROUP BY
 				product_variant_id
 		) AS sale_summary ON
@@ -62,3 +59,6 @@ export const getProductSql = `
 		pv.store_id = $1
 	ORDER BY
 		pv.created_at;`;
+
+export const updateProductSql = `
+		`;

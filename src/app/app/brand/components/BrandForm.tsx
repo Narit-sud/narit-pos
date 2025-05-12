@@ -1,4 +1,10 @@
 "use client";
+import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import {
+    createNewBrandInterface,
+    type BrandInterface,
+    type NewBrandInterface,
+} from "@/model/brand.interface";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -6,14 +12,8 @@ import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 import CategorySelect from "../../category/components/CategorySelect";
-import {
-    createNewBrandInterface,
-    type BrandInterface,
-    type NewBrandInterface,
-} from "@/model/brand.interface";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
-import { useState, useEffect } from "react";
 import { useBrand } from "../useBrand";
 
 type Props = {
@@ -35,7 +35,7 @@ export default function BrandForm({
     brand,
     handleCancelButton,
 }: Props) {
-    const { createBrand } = useBrand(); // get categories from context to display
+    const { createBrand, updateBrand } = useBrand(); // get categories from context to display
     const [editBrand, setEditBrand] = useState<BrandInterface | undefined>(
         undefined
     );
@@ -93,7 +93,7 @@ export default function BrandForm({
 
         if (mode === "edit") {
             return setEditBrand(
-                (prev) => ({ ...prev, category: categoryId } as BrandInterface)
+                (prev) => ({ ...prev, categoryId } as BrandInterface)
             );
         }
     }
@@ -140,9 +140,25 @@ export default function BrandForm({
         // ===============================================================
 
         if (mode === "edit") {
-            const updatedBrand = editBrand as BrandInterface;
-            console.log("updatedBrand", updatedBrand);
-            // TODO: implement update brand function
+            try {
+                const updatedBrand = editBrand as BrandInterface;
+                await updateBrand(updatedBrand);
+                setSnackAlert({
+                    open: true,
+                    message: "Brand updated successfully",
+                    severity: "success",
+                });
+                setTimeout(() => {
+                    handleCancelButton();
+                }, 1000);
+            } catch (error) {
+                setLoading(false);
+                setSnackAlert({
+                    open: true,
+                    message: "Failed to update brand. Please try again.",
+                    severity: "error",
+                });
+            }
         }
     }
 
@@ -191,7 +207,10 @@ export default function BrandForm({
                         onChange={handleChange}
                         required
                     />
-                    <CategorySelect getValue={getCategoryId} />
+                    <CategorySelect
+                        getValue={getCategoryId}
+                        initialValue={brand?.categoryId}
+                    />
                     <TextField
                         type="text"
                         name="detail"

@@ -1,26 +1,41 @@
 "use client";
+import PopupModal from "@/components/PopupModal";
+import { BrandInterface } from "@/model/brand.interface";
+import CategoryIcon from "@mui/icons-material/Category";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+    Box,
+    Card,
+    CardContent,
+    Chip,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid/"; // Correct import path for Grid
+import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import BrandForm from "./BrandForm";
-import PopupModal from "@/components/PopupModal";
+import Tooltip from "@mui/material/Tooltip";
+import { formatDistanceToNow } from "date-fns";
+import { useEffect, useState } from "react";
 import { useBrand } from "../useBrand";
-import { BrandInterface } from "@/model/brand.interface";
-import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import BrandForm from "./BrandForm";
 
-export default function CategoryTable() {
+export default function BrandTable() {
     const { brands } = useBrand(); // get brand from context to display
     const [open, setOpen] = useState(false); // state to control the modal open/close
     const [loading, setLoading] = useState<boolean>(true); // state to control the loading state
     const [selectedBrand, setSelectedBrand] = useState<
         BrandInterface | undefined
     >(undefined); // state to store selected brand
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleOpen = () => {
         setOpen(true); // open the modal
@@ -29,9 +44,18 @@ export default function CategoryTable() {
         setOpen(false); // close the modal
     };
 
-    const handleRowDoubleClick = (brand: BrandInterface) => {
+    const handleEditBrand = (brand: BrandInterface) => {
         handleOpen(); // open the modal
         setSelectedBrand(brand); // set selected category to the clicked category
+    };
+
+    const formatDate = (dateString: string) => {
+        try {
+            const date = new Date(dateString);
+            return formatDistanceToNow(date, { addSuffix: true });
+        } catch {
+            return dateString;
+        }
     };
 
     useEffect(() => {
@@ -48,28 +72,36 @@ export default function CategoryTable() {
                     brand={selectedBrand}
                 />
             </PopupModal>
-
             {loading && (
                 <Box
                     sx={{
                         display: "flex",
                         justifyContent: "center",
-                        marginTop: 2,
+                        alignItems: "center",
+                        minHeight: "200px",
                     }}
                 >
-                    <CircularProgress size={80} />
+                    <CircularProgress size={60} />
                 </Box>
-            )}
-
-            {!loading && brands && (
-                <TableContainer component={Paper}>
+            )}{" "}
+            {!loading && brands && !isMobile && (
+                <TableContainer
+                    sx={{
+                        borderRadius: 2,
+                        overflow: "hidden",
+                        border: "1px solid rgba(224, 224, 224, 1)",
+                    }}
+                >
                     <Table>
-                        <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
+                        <TableHead
+                            sx={{ backgroundColor: theme.palette.primary.main }}
+                        >
                             <TableRow>
                                 <TableCell
                                     sx={{
                                         fontWeight: "bold",
                                         textAlign: "center",
+                                        color: "white",
                                     }}
                                 >
                                     Name
@@ -78,6 +110,7 @@ export default function CategoryTable() {
                                     sx={{
                                         fontWeight: "bold",
                                         textAlign: "center",
+                                        color: "white",
                                     }}
                                 >
                                     Category
@@ -86,6 +119,7 @@ export default function CategoryTable() {
                                     sx={{
                                         fontWeight: "bold",
                                         textAlign: "center",
+                                        color: "white",
                                     }}
                                 >
                                     Detail
@@ -94,77 +128,159 @@ export default function CategoryTable() {
                                     sx={{
                                         fontWeight: "bold",
                                         textAlign: "center",
+                                        color: "white",
                                     }}
                                 >
-                                    Created at
+                                    Created
                                 </TableCell>
                                 <TableCell
                                     sx={{
                                         fontWeight: "bold",
                                         textAlign: "center",
+                                        color: "white",
                                     }}
                                 >
-                                    Created by
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    Updated at
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    Updated by
+                                    Actions
                                 </TableCell>
                             </TableRow>
                         </TableHead>
 
                         <TableBody>
-                            {brands?.map((bra) => {
-                                return (
-                                    <TableRow
-                                        hover
-                                        key={bra.id}
-                                        onDoubleClick={() =>
-                                            handleRowDoubleClick(bra)
-                                        }
+                            {brands?.map((brand) => (
+                                <TableRow
+                                    hover
+                                    key={brand.id}
+                                    sx={{
+                                        "&:hover": {
+                                            backgroundColor:
+                                                theme.palette.action.hover,
+                                        },
+                                    }}
+                                >
+                                    <TableCell
                                         sx={{
-                                            cursor: "pointer",
+                                            textAlign: "center",
+                                            fontWeight: "medium",
                                         }}
                                     >
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.name}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.category}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.detail}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.createdAt}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.createdBy}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.updatedAt}
-                                        </TableCell>
-                                        <TableCell sx={{ textAlign: "center" }}>
-                                            {bra.updatedBy}
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                        {brand.name}
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Chip
+                                            icon={<CategoryIcon />}
+                                            label={brand.category}
+                                            variant="outlined"
+                                            size="small"
+                                            color="primary"
+                                        />
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        {brand.detail || "-"}
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Tooltip
+                                            title={`Created by ${brand.createdBy}`}
+                                        >
+                                            <Typography variant="body2">
+                                                {formatDate(brand.createdAt)}
+                                            </Typography>
+                                        </Tooltip>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Tooltip title="Edit Brand">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditBrand(brand);
+                                                }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
+            )}{" "}
+            {!loading && brands && isMobile && (
+                <Grid container spacing={2}>
+                    {brands.map((brand) => (
+                        <Grid size={{ xs: 12 }} key={brand.id}>
+                            <Card
+                                sx={{
+                                    cursor: "pointer",
+                                    "&:hover": { boxShadow: 6 },
+                                    transition: "box-shadow 0.3s ease-in-out",
+                                }}
+                                onClick={() => handleEditBrand(brand)}
+                            >
+                                <CardContent>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="h6"
+                                            component="div"
+                                        >
+                                            {brand.name}
+                                        </Typography>
+                                        <Chip
+                                            icon={<CategoryIcon />}
+                                            label={brand.category}
+                                            size="small"
+                                            color="primary"
+                                        />
+                                    </Box>
+
+                                    {brand.detail && (
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            sx={{ mt: 1 }}
+                                        >
+                                            {brand.detail}
+                                        </Typography>
+                                    )}
+
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            mt: 2,
+                                            pt: 1,
+                                            borderTop: "1px solid #eee",
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
+                                            Created{" "}
+                                            {formatDate(brand.createdAt)}
+                                        </Typography>
+                                        <IconButton
+                                            size="small"
+                                            color="primary"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditBrand(brand);
+                                            }}
+                                        >
+                                            <EditIcon fontSize="small" />
+                                        </IconButton>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
             )}
         </>
     );

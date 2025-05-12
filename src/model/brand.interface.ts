@@ -4,6 +4,7 @@ export interface BrandInterface {
     id: string;
     name: string;
     category: string;
+    categoryId: string;
     detail: string;
     createdAt: string;
     updatedAt: string;
@@ -12,12 +13,13 @@ export interface BrandInterface {
 }
 
 export function createBrandInterface(
-    brand: Partial<BrandInterface>,
+    brand: Partial<BrandInterface>
 ): BrandInterface {
     return {
         id: brand.id || uuidv4(),
         name: brand.name || "",
         category: brand.category || "",
+        categoryId: brand.categoryId || "",
         detail: brand.detail || "",
         createdAt: brand.createdAt || "",
         updatedAt: brand.updatedAt || "",
@@ -34,7 +36,7 @@ export interface NewBrandInterface {
 }
 
 export function createNewBrandInterface(
-    brand: Partial<NewBrandInterface>,
+    brand: Partial<NewBrandInterface>
 ): NewBrandInterface {
     return {
         id: brand.id || uuidv4(),
