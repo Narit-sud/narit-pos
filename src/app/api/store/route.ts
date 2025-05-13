@@ -10,6 +10,7 @@ import {
     createNewStoreSql,
     getStoreDataSql,
 } from "./sql";
+import { handleApiError } from "@/lib/handleApiError";
 
 /**
  * /api/store/GET
@@ -125,29 +126,7 @@ export async function POST(request: Request): Promise<Response> {
         );
     } catch (error) {
         await client.query("ROLLBACK");
-        console.error(error);
-        return Response.json(error, { status: 500 });
-        // if store name duplicate
-        if (
-            typeof error === "object" &&
-            error &&
-            "detail" in error &&
-            typeof error.detail === "string"
-        ) {
-            if (error.detail.includes("already exists")) {
-                return Response.json(
-                    { message: "This store name already exists" },
-                    { status: 409 }
-                );
-            }
-        }
-        return Response.json(
-            {
-                message: "Unexpected error during creating store",
-                error,
-            },
-            { status: 500 }
-        );
+        return handleApiError(error);
     } finally {
         client.release();
     }
