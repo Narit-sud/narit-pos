@@ -23,7 +23,13 @@ export default function AppLayout({ children }: Props) {
                 isOpen={sidebarOpen}
                 handleClose={() => setSidebarOpen(false)}
             />
-            <Box sx={{ p: { xs: 1, sm: 8 }, mt: { xs: 7, sm: 5 } }}>
+            <Box
+                sx={{
+                    userSelect: "none",
+                    p: { xs: 1, sm: 8 },
+                    mt: { xs: 7, sm: 5 },
+                }}
+            >
                 {renderProviders ? (
                     <AppProviders>{children}</AppProviders>
                 ) : (
