@@ -1,4 +1,6 @@
 "use client";
+// MUI components
+import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -6,10 +8,16 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
+// Icons
+import EditIcon from "@mui/icons-material/Edit";
+// Custom components
 import SupplierForm from "./SupplierForm";
 import PopupModal from "@/components/PopupModal";
+// Hooks
 import { useSupplier } from "../useSupplier";
 import { useState } from "react";
+// Types
 import { SupplierInterface } from "@/model/supplier.interface";
 
 export default function SupplierTable() {
@@ -29,6 +37,11 @@ export default function SupplierTable() {
     const handleRowDoubleClick = (supplier: SupplierInterface) => {
         handleOpen(); // open the modal
         setSelectedSupplier(supplier); // set selected supplier to the clicked supplier
+    };
+
+    const handleEditButton = (supplier: SupplierInterface) => {
+        handleOpen(); // open the modal
+        setSelectedSupplier(supplier); // set selected supplier
     };
 
     return (
@@ -72,35 +85,45 @@ export default function SupplierTable() {
                             >
                                 Address
                             </TableCell>
+                            <TableCell
+                                sx={{ fontWeight: "bold", textAlign: "center" }}
+                            >
+                                Options
+                            </TableCell>
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
-                        {suppliers?.map((cat) => {
+                        {suppliers?.map((sup) => {
                             return (
-                                <TableRow
-                                    hover
-                                    key={cat.id}
-                                    sx={{ cursor: "pointer" }}
-                                    onDoubleClick={() =>
-                                        handleRowDoubleClick(cat)
-                                    }
-                                >
+                                <TableRow hover key={sup.id}>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.name}
+                                        {sup.name}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.surname}
-                                    </TableCell>
-
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.phoneNumber}
+                                        {sup.surname}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.email || "N/A"}
+                                        {sup.phoneNumber}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {cat.address || "N/A"}
+                                        {sup.email || "N/A"}
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        {sup.address || "N/A"}
+                                    </TableCell>{" "}
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Tooltip title="Edit Product">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditButton(sup);
+                                                }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             );
