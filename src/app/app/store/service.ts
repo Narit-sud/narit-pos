@@ -3,11 +3,12 @@ import { isAxiosError } from "axios";
 import { NewStoreInterface, StoreUserInterface } from "./interface";
 import { convertToThailandTime } from "@/lib/convertTime";
 
-export async function getUserStore(): Promise<StoreUserInterface[] | null> {
+export async function getUserStore(): Promise<StoreUserInterface[]> {
     try {
         const response = await axiosInstance.get("/store");
         if (!response.data || !response.data.data) {
-            return null;
+            // Return empty array instead of null for better type safety
+            return [];
         }
         return response.data.data.map((store: StoreUserInterface) => ({
             id: store.id,
@@ -20,18 +21,26 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
         })) as StoreUserInterface[];
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log(error.response);
+            console.error(
+                "Error fetching user stores:",
+                error.response || error.message
+            );
+
             // Handle HTTP errors (4xx, 5xx)
             if (error.response) {
                 if (error.response.status === 404) {
-                    return null;
+                    // No stores found, return empty array instead of null
+                    return [];
                 } else if (error.response.status === 401) {
-                    window.location.href = "/auth/login";
-                    return null;
+                    // Instead of redirecting directly, throw an error that can be handled by the component
+                    throw new Error(
+                        "Your session has expired. Please log in again."
+                    );
+                } else if (error.response.data && error.response.data.message) {
+                    throw new Error(error.response.data.message);
+                } else {
+                    throw new Error("Failed to fetch store data");
                 }
-                throw new Error(
-                    error.response.data.message || "Failed to fetch store data"
-                );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)
                 throw new Error("Network error. Please check your connection.");
@@ -41,7 +50,9 @@ export async function getUserStore(): Promise<StoreUserInterface[] | null> {
             }
         } else {
             // Handle non-Axios errors
-            throw new Error("An unexpected error occurred.");
+            throw new Error(
+                "An unexpected error occurred while fetching store data."
+            );
         }
     }
 }

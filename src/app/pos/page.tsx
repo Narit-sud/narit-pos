@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import ProductGrid from "./components/ProductGrid";
 import Cart from "./components/Cart";
 import ProductSelectionPanel from "./components/ProductSelectionPanel";
@@ -13,7 +12,7 @@ export default function Page() {
             <Box sx={{ p: 2 }}>
                 <Typography variant="h4" fontWeight="bold" gutterBottom>
                     Point of Sale
-                </Typography>{" "}
+                </Typography>
                 <Grid container spacing={2}>
                     <Grid size={{ xs: 12, md: 8 }}>
                         <ProductGrid />

@@ -4,7 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { StoreUserInterface } from "@/app/app/store/interface";
 
 export async function loginService(
-    loginData: LoginInterface,
+    loginData: LoginInterface
 ): Promise<StoreUserInterface[]> {
     try {
         const response = await axiosInstance.post("/auth/login", loginData);
@@ -13,6 +13,24 @@ export async function loginService(
         }
         return [];
     } catch (error) {
+        if (isAxiosError(error)) {
+            console.error(
+                "Login service error:",
+                error.response?.data || error.message
+            );
+
+            if (error.response) {
+                // The server responded with a status code outside the 2xx range
+                if (error.response.status === 401) {
+                    throw new Error("Invalid username or password");
+                } else if (error.response.status === 404) {
+                    throw new Error("User not found");
+                } else if (error.response.data && error.response.data.message) {
+                    throw new Error(error.response.data.message);
+                }
+            }
+        }
+        // Re-throw the error for the component to handle
         throw error;
     }
 }
@@ -32,7 +50,7 @@ export async function setUserStore(storeId: string): Promise<void> {
                     throw new Error("Unauthorized access");
                 }
                 throw new Error(
-                    error.response.data.message || "Failed to fetch store data",
+                    error.response.data.message || "Failed to fetch store data"
                 );
             } else if (error.request) {
                 // Handle network errors (e.g., connection refused)

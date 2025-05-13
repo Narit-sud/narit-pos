@@ -1,6 +1,6 @@
 "use client";
 import { usePosContext } from "../usePosContext";
-import { useCustomer } from "../../customer/useCustomer";
+import { useCustomer } from "../../app/customer/useCustomer";
 import {
     Dialog,
     DialogTitle,

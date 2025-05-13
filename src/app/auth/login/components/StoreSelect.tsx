@@ -38,7 +38,6 @@ export default function StoreSelect() {
         message: "",
         severity: "success",
     });
-
     const initialize = async () => {
         setIsLoading(true);
         setSnackAlert({
@@ -48,57 +47,88 @@ export default function StoreSelect() {
         });
         try {
             const storeData = await getUserStore();
-            if (storeData) {
+            if (storeData && storeData.length > 0) {
                 setStore(storeData);
                 setSnackAlert({
                     open: true,
                     message: "Loaded store data successfully",
                     severity: "success",
                 });
+            } else {
+                // Handle empty store data
+                setStore([]);
+                setSnackAlert({
+                    open: true,
+                    message:
+                        "No stores found for your account. Create a new one to get started.",
+                    severity: "info",
+                });
             }
-            setIsLoading(false);
         } catch (error) {
-            console.log("Error loading store data:", error);
+            console.error("Error loading store data:", error);
+            let errorMessage = "Failed to load store data. Please try again.";
+
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+
             setSnackAlert({
                 open: true,
-                message: "Failed to load store data",
+                message: errorMessage,
                 severity: "error",
             });
+        } finally {
             setIsLoading(false);
         }
     };
-
     const handleSubmit = async (storeId: string) => {
         setIsDisable(true);
         setSnackAlert({
             open: true,
-            message: "Selecting store data...",
+            message: "Selecting store...",
             severity: "info",
         });
         try {
             await setUserStore(storeId);
+
+            // Success message
             setSnackAlert({
                 open: true,
-                message: "Select store data successfully",
+                message: "Store selected successfully!",
                 severity: "success",
             });
+
+            // Show redirecting message after a delay
             setTimeout(() => {
                 setSnackAlert({
                     open: true,
-                    message: "Redirecting to app...",
+                    message: "Redirecting to dashboard...",
                     severity: "info",
                 });
-            }, 2000);
+            }, 1500);
+
+            // Redirect after another delay
             setTimeout(() => {
                 router.push("/app");
-            }, 4000);
+            }, 2500);
         } catch (error) {
             console.error("Error setting user store:", error);
+
+            // Handle different types of errors
+            let errorMessage = "Failed to select store. Please try again.";
+
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+
+            // Display error message to user
             setSnackAlert({
                 open: true,
-                message: "Failed to set user store",
+                message: errorMessage,
                 severity: "error",
             });
+
+            // Re-enable the button so user can try again
             setIsDisable(false);
         }
     };
@@ -117,19 +147,26 @@ export default function StoreSelect() {
                 py: 1,
             }}
         >
+            {" "}
             <Snackbar
                 open={snackAlert.open}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                autoHideDuration={4000}
+                autoHideDuration={snackAlert.severity === "error" ? 6000 : 4000}
                 onClose={() =>
                     setSnackAlert((prev) => ({ ...prev, open: false }))
                 }
             >
-                <Alert severity={snackAlert.severity}>
+                <Alert
+                    severity={snackAlert.severity}
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                    onClose={() =>
+                        setSnackAlert((prev) => ({ ...prev, open: false }))
+                    }
+                >
                     {snackAlert.message}
                 </Alert>
             </Snackbar>
-
             {createMode && (
                 <PopupModal
                     open={createMode}
@@ -145,7 +182,6 @@ export default function StoreSelect() {
                     />
                 </PopupModal>
             )}
-
             <Typography
                 variant="h5"
                 fontWeight="bold"
@@ -157,13 +193,11 @@ export default function StoreSelect() {
             >
                 Select Store
             </Typography>
-
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
                     <CircularProgress />
                 </Box>
             )}
-
             {store.length === 0 && !isLoading && (
                 <Box sx={{ textAlign: "center", py: 3 }}>
                     <Typography
@@ -178,7 +212,6 @@ export default function StoreSelect() {
                     </Typography>
                 </Box>
             )}
-
             <Stack spacing={2} sx={{ width: "100%" }}>
                 {store?.map((storeData) => (
                     <Card
@@ -271,9 +304,7 @@ export default function StoreSelect() {
                     </Card>
                 ))}
             </Stack>
-
             <Divider sx={{ my: 1 }} />
-
             <Stack
                 direction={{ xs: "column", sm: "row" }}
                 spacing={2}
@@ -309,7 +340,6 @@ export default function StoreSelect() {
                     Join Existing Store
                 </Button>
             </Stack>
-
             <Typography
                 align="center"
                 variant="body2"

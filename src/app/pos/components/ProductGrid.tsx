@@ -1,5 +1,5 @@
 "use client";
-import { useProduct } from "../../product/useProduct";
+import { useProduct } from "../../app/product/useProduct";
 import { usePosContext } from "../usePosContext";
 import {
     Grid,

@@ -2,8 +2,8 @@
 import { ProductInterface } from "@/model/product.interface";
 import { CustomerInterface } from "@/model/customer.interface";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { useProduct } from "../product/useProduct";
-import { useCustomer } from "../customer/useCustomer";
+import { useProduct } from "../app/product/useProduct";
+import { useCustomer } from "../app/customer/useCustomer";
 
 export type CartItemInterface = {
     product: ProductInterface;

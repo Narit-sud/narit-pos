@@ -74,10 +74,11 @@ export default function AppSidebar({ isOpen, handleClose }: Props) {
                 </Box>
 
                 <Box sx={{ flexGrow: 1, p: 2, overflowY: "auto" }}>
+                    {" "}
                     <Button
                         fullWidth
                         LinkComponent={NextLink}
-                        href="/app/pos"
+                        href="/pos"
                         startIcon={<PointOfSaleIcon />}
                         size="large"
                         variant="contained"

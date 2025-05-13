@@ -24,7 +24,7 @@ export default function Page() {
     const [isMobile, setIsMobile] = useState(false);
     const [snackbarAlert, setSnackbarAlert] = useState<{
         open: boolean;
-        severity: "success" | "error";
+        severity: "success" | "error" | "info" | "warning";
         message: string;
     }>({
         open: false,
@@ -55,35 +55,65 @@ export default function Page() {
         // Clean up
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
-
     const handleSubmit = async () => {
         const signupDataValid = validateSignupData(signupData);
         if (!signupDataValid.valid) {
             setSnackbarAlert({
                 open: true,
                 severity: "error",
-                message: signupDataValid.message || "Something went wrong",
+                message:
+                    signupDataValid.message ||
+                    "Please check your input and try again",
             });
             return;
         }
+
+        // Show loading message
+        setSnackbarAlert({
+            open: true,
+            severity: "info",
+            message: "Creating your account...",
+        });
+
         try {
             const cleanedSignupData = cleanSignupData(signupData);
             await signupService(cleanedSignupData);
+
             setSnackbarAlert({
                 open: true,
                 severity: "success",
-                message: "Signup success",
+                message:
+                    "Account created successfully! Redirecting to login...",
             });
+
             setTimeout(() => {
                 router.push("/auth/login");
-            }, 4000);
+            }, 3000);
         } catch (error) {
+            console.error("Signup error:", error);
+
+            let errorMessage = "Failed to create account. Please try again.";
+
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+
+            // Check for specific errors from the API
+            if (error && typeof error === "object" && "response" in error) {
+                const axiosError = error as any;
+                if (axiosError.response?.data?.message) {
+                    errorMessage = axiosError.response.data.message;
+                } else if (axiosError.response?.status === 409) {
+                    errorMessage =
+                        "Username or email already exists. Please use different credentials.";
+                }
+            }
+
             setSnackbarAlert({
                 open: true,
                 severity: "error",
-                message: "Signup failed",
+                message: errorMessage,
             });
-            return;
         }
     };
     return (
@@ -245,12 +275,13 @@ export default function Page() {
                             </Typography>
                         </Box>
                     </FormControl>{" "}
-                </Paper>
+                </Paper>{" "}
                 <Snackbar
                     open={snackbarAlert.open}
                     anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                    autoHideDuration={4000}
-                    message={snackbarAlert.message}
+                    autoHideDuration={
+                        snackbarAlert.severity === "error" ? 6000 : 4000
+                    }
                     onClose={() => {
                         setSnackbarAlert({ ...snackbarAlert, open: false });
                     }}
@@ -260,6 +291,7 @@ export default function Page() {
                             setSnackbarAlert({ ...snackbarAlert, open: false });
                         }}
                         severity={snackbarAlert.severity}
+                        variant="filled"
                         sx={{ width: "100%" }}
                     >
                         {snackbarAlert.message}

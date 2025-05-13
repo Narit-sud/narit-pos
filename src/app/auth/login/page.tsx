@@ -19,9 +19,13 @@ export default function Page() {
     const [loginData, setLoginData] = useState<LoginInterface>(
         createLoginData({} as LoginInterface)
     );
-    const [snackbarAlert, setSnackbarAlert] = useState({
+    const [snackbarAlert, setSnackbarAlert] = useState<{
+        open: boolean;
+        severity: "success" | "error" | "info" | "warning";
+        message: string;
+    }>({
         open: false,
-        severity: "",
+        severity: "info",
         message: "",
     });
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +33,23 @@ export default function Page() {
         setLoginData((prev) => ({ ...prev, [name]: value.trim() }));
     };
     const handleSubmit = async () => {
+        // Validate login data
+        if (!loginData.username || !loginData.password) {
+            setSnackbarAlert({
+                open: true,
+                severity: "error",
+                message: "Please enter both username and password",
+            });
+            return;
+        }
+
+        // Show loading message
+        setSnackbarAlert({
+            open: true,
+            severity: "info",
+            message: "Logging in...",
+        });
+
         try {
             await loginService(loginData);
             setSnackbarAlert({
@@ -38,20 +59,59 @@ export default function Page() {
             });
             setTimeout(() => {
                 router.push("/auth/store-select");
-            }, 3000);
+            }, 2000);
         } catch (error) {
+            console.error("Login error:", error);
+
             if (isAxiosError(error)) {
-                console.log(error);
-                setSnackbarAlert({
-                    open: true,
-                    severity: "error",
-                    message: error.message,
-                });
+                // Handle API response errors
+                if (error.response) {
+                    const status = error.response.status;
+                    const errorMessage =
+                        error.response.data?.message || error.message;
+
+                    if (status === 401) {
+                        setSnackbarAlert({
+                            open: true,
+                            severity: "error",
+                            message: "Invalid username or password",
+                        });
+                    } else if (status === 404) {
+                        setSnackbarAlert({
+                            open: true,
+                            severity: "error",
+                            message: "User not found",
+                        });
+                    } else {
+                        setSnackbarAlert({
+                            open: true,
+                            severity: "error",
+                            message:
+                                errorMessage ||
+                                "Login failed. Please try again.",
+                        });
+                    }
+                } else if (error.request) {
+                    // Network error
+                    setSnackbarAlert({
+                        open: true,
+                        severity: "error",
+                        message: "Network error. Please check your connection.",
+                    });
+                } else {
+                    setSnackbarAlert({
+                        open: true,
+                        severity: "error",
+                        message:
+                            error.message || "An unexpected error occurred",
+                    });
+                }
             } else {
+                // Handle other errors
                 setSnackbarAlert({
                     open: true,
                     severity: "error",
-                    message: "Unexpected Error",
+                    message: "An unexpected error occurred. Please try again.",
                 });
             }
         }
@@ -149,20 +209,23 @@ export default function Page() {
                         </Typography>
                     </Box>
                 </FormControl>
-            </Paper>
+            </Paper>{" "}
             <Snackbar
                 open={snackbarAlert.open}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                autoHideDuration={4000}
+                autoHideDuration={
+                    snackbarAlert.severity === "error" ? 6000 : 4000
+                }
                 onClose={() =>
                     setSnackbarAlert((prev) => ({ ...prev, open: false }))
                 }
             >
                 <Alert
-                    severity={
-                        snackbarAlert.severity === "success"
-                            ? "success"
-                            : "error"
+                    severity={snackbarAlert.severity}
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                    onClose={() =>
+                        setSnackbarAlert((prev) => ({ ...prev, open: false }))
                     }
                 >
                     {snackbarAlert.message}
