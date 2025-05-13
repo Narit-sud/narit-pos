@@ -3,24 +3,24 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import CustomerForm from "./components/CustomerForm";
-import CustomerTable from "./components/CustomerTable";
+import SupplierForm from "./components/SupplierForm";
+import SupplierTable from "./components/SupplierTable";
 import PopupModal from "@/components/PopupModal";
 import { Add } from "@mui/icons-material";
 import { useState } from "react";
 
 export default function Page() {
-    const [customerFormPopup, setCustomerFormPopup] = useState<{
+    const [supplierFormPopup, setSupplierFormPopup] = useState<{
         open: boolean;
         mode: "edit" | "create" | "view";
     }>({ open: false, mode: "create" });
 
     const handleOpen = (mode: "edit" | "create") => {
-        setCustomerFormPopup({ open: true, mode });
+        setSupplierFormPopup({ open: true, mode });
     };
 
     const handleClose = () => {
-        setCustomerFormPopup({ open: false, mode: "create" });
+        setSupplierFormPopup({ open: false, mode: "create" });
     };
 
     return (
@@ -28,12 +28,12 @@ export default function Page() {
             elevation={3}
             sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
         >
-            {customerFormPopup.open && (
+            {supplierFormPopup.open && (
                 <PopupModal
-                    open={customerFormPopup.open}
+                    open={supplierFormPopup.open}
                     handleClose={handleClose}
                 >
-                    <CustomerForm
+                    <SupplierForm
                         mode="create"
                         handleCancelButton={handleClose}
                     />
@@ -46,7 +46,7 @@ export default function Page() {
                 sx={{ marginBottom: 2 }}
             >
                 <Typography variant="h4" fontWeight="bold">
-                    Customers
+                    Suppliers
                 </Typography>
                 <Button
                     variant="contained"
@@ -56,7 +56,7 @@ export default function Page() {
                     New
                 </Button>
             </Stack>
-            <CustomerTable />
+            <SupplierTable />
         </Paper>
     );
 }

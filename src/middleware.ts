@@ -5,8 +5,9 @@ import { getDecryptedCookie } from "./lib/cookie";
 
 /**
  * To check only login status, add the route to this array.
+ * This route will check if user has authToken cookie and {userId}, and provided value is valid
  */
-const afterLoginRoutes = [
+const loggedInRoutes = [
     "/app/store",
     "/api/store",
     "/api/auth/store-select",
@@ -15,6 +16,7 @@ const afterLoginRoutes = [
 
 /**
  * To check login status, and store permission, add the route to this array.
+ * This route will check if user has authToken cookie and {userId, storeId}, and provided value is valid
  */
 const protectedRoutes = ["/app"];
 
@@ -33,11 +35,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     const { pathname } = request.nextUrl;
     console.log("MIDDLEWARE: entered", pathname);
 
-    //======================================= AFTER-LOGIN ROUTES ==========================================
+    //======================================= LOGGED-IN ROUTES ==========================================
 
-    // if pathname is matched the afterLoginRoutes
-    if (afterLoginRoutes.some((route) => pathname === route)) {
-        console.log("MIDDLEWARE: entered afterLoginRoutes");
+    // if pathname is matched the loggedInRoutes
+    if (loggedInRoutes.some((route) => pathname === route)) {
+        console.log("MIDDLEWARE: entered loggedInRoutes");
         // get authToken
         try {
             const authToken = request.cookies.get("authToken");
@@ -50,7 +52,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             return NextResponse.next(); // token valid
         } catch (error) {
             // token invalid
-            console.error("MIDDLEWARE: rejected at afterLoginRoutes", error);
+            console.error("MIDDLEWARE: rejected at loggedInRoutes", error);
             return NextResponse.json(
                 { message: "User authentication failed" },
                 { status: 401 }

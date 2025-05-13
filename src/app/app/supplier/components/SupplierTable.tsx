@@ -6,18 +6,18 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import CustomerForm from "./CustomerForm";
+import SupplierForm from "./SupplierForm";
 import PopupModal from "@/components/PopupModal";
-import { useCustomer } from "../useCustomer";
+import { useSupplier } from "../useSupplier";
 import { useState } from "react";
-import { CustomerInterface } from "@/model/customer.interface";
+import { SupplierInterface } from "@/model/supplier.interface";
 
-export default function CustomerTable() {
-    const { customers } = useCustomer(); // get categories from context to display
+export default function SupplierTable() {
+    const { suppliers } = useSupplier(); // get categories from context to display
     const [open, setOpen] = useState(false); // state to control the modal open/close
-    const [selectedCustomer, setSelectedCustomer] = useState<
-        CustomerInterface | undefined
-    >(undefined); // state to store selected customer
+    const [selectedSupplier, setSelectedSupplier] = useState<
+        SupplierInterface | undefined
+    >(undefined); // state to store selected supplier
 
     const handleOpen = () => {
         setOpen(true); // open the modal
@@ -26,18 +26,18 @@ export default function CustomerTable() {
         setOpen(false); // close the modal
     };
 
-    const handleRowDoubleClick = (customer: CustomerInterface) => {
+    const handleRowDoubleClick = (supplier: SupplierInterface) => {
         handleOpen(); // open the modal
-        setSelectedCustomer(customer); // set selected customer to the clicked customer
+        setSelectedSupplier(supplier); // set selected supplier to the clicked supplier
     };
 
     return (
         <>
             <PopupModal open={open} handleClose={handleClose}>
-                <CustomerForm
+                <SupplierForm
                     mode="edit"
                     handleCancelButton={handleClose}
-                    customer={selectedCustomer}
+                    supplier={selectedSupplier}
                 />
             </PopupModal>
 
@@ -76,7 +76,7 @@ export default function CustomerTable() {
                     </TableHead>
 
                     <TableBody>
-                        {customers?.map((cat) => {
+                        {suppliers?.map((cat) => {
                             return (
                                 <TableRow
                                     hover

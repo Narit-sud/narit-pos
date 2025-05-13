@@ -7,18 +7,18 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
-    createNewCustomerInterface,
-    validateNewCustomerInterface,
-    type CustomerInterface,
-    type NewCustomerInterface,
-} from "@/model/customer.interface";
+    createNewSupplierInterface,
+    validateNewSupplierInterface,
+    type SupplierInterface,
+    type NewSupplierInterface,
+} from "@/model/supplier.interface";
 import { setProductFormPopup } from "@/lib/firstLetterUppercase";
 import { useState, useEffect } from "react";
-import { useCustomer } from "../useCustomer";
+import { useSupplier } from "../useSupplier";
 
 type Props = {
     mode: "create" | "edit" | "view";
-    customer?: CustomerInterface;
+    supplier?: SupplierInterface;
     handleCancelButton: () => void;
 };
 
@@ -30,16 +30,16 @@ type Props = {
  * @param category: CategoryInterface - the category object to be edited (optional)
  * @param handleCancelButton: () => void - function to handle cancel button click
  */
-export default function CustomerForm({
+export default function SupplierForm({
     mode = "create",
-    customer,
+    supplier,
     handleCancelButton,
 }: Props) {
-    const { createCustomer, updateCustomer } = useCustomer(); // get categories from context to display
-    const [editCustomer, setEditCustomer] = useState<CustomerInterface | null>(
+    const { createSupplier, updateSupplier } = useSupplier(); // get categories from context to display
+    const [editSupplier, setEditSupplier] = useState<SupplierInterface | null>(
         null
     );
-    const [newCustomer, setNewCustomer] = useState<NewCustomerInterface | null>(
+    const [newSupplier, setNewSupplier] = useState<NewSupplierInterface | null>(
         null
     );
     const [snackAlert, setSnackAlert] = useState<{
@@ -50,17 +50,17 @@ export default function CustomerForm({
     const [loading, setLoading] = useState<boolean>(false);
 
     function initialize() {
-        // if mode is "create" and customer is passed, set mode to "edit" instead
-        if (mode === "create" && customer) {
+        // if mode is "create" and supplier is passed, set mode to "edit" instead
+        if (mode === "create" && supplier) {
             mode = "edit";
         }
-        // if mode is "edit" and customer is passed, set editCategory to category
-        else if (mode === "edit" && customer) {
-            setEditCustomer(customer);
+        // if mode is "edit" and supplier is passed, set editCategory to category
+        else if (mode === "edit" && supplier) {
+            setEditSupplier(supplier);
         }
         // if mode is "create" and category is not passed, set newCategory to NewCategoryInterface object
         else if (mode === "create") {
-            setNewCustomer(createNewCustomerInterface({}));
+            setNewSupplier(createNewSupplierInterface({}));
         }
     }
 
@@ -68,49 +68,49 @@ export default function CustomerForm({
         const { name, value } = event.target;
 
         if (mode === "create") {
-            return setNewCustomer(
-                (prev) => ({ ...prev, [name]: value } as NewCustomerInterface)
+            return setNewSupplier(
+                (prev) => ({ ...prev, [name]: value } as NewSupplierInterface)
             );
         }
 
         // ===============================================================
 
         if (mode === "edit") {
-            return setEditCustomer(
-                (prev) => ({ ...prev, [name]: value } as CustomerInterface)
+            return setEditSupplier(
+                (prev) => ({ ...prev, [name]: value } as SupplierInterface)
             );
         }
     }
 
     async function handleSubmit() {
         setLoading(true);
-        if (mode === "create" && newCustomer) {
+        if (mode === "create" && newSupplier) {
             try {
-                const isCustomerValid =
-                    validateNewCustomerInterface(newCustomer);
-                if (!isCustomerValid.valid) {
+                const isSupplierValid =
+                    validateNewSupplierInterface(newSupplier);
+                if (!isSupplierValid.valid) {
                     setLoading(false);
                     setSnackAlert({
                         open: true,
-                        message: isCustomerValid.message,
+                        message: isSupplierValid.message,
                         severity: "error",
                     });
                     return;
                 }
-                await createCustomer(newCustomer);
+                await createSupplier(newSupplier);
                 setSnackAlert({
                     open: true,
-                    message: "Customer created successfully",
+                    message: "Supplier created successfully",
                     severity: "success",
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
-                console.error("Error creating customer:", error);
+                console.error("Error creating supplier:", error);
                 setSnackAlert({
                     open: true,
-                    message: "Failed to create customer. Please try again.",
+                    message: "Failed to create supplier. Please try again.",
                     severity: "error",
                 });
                 return setLoading(false);
@@ -119,33 +119,33 @@ export default function CustomerForm({
 
         // ===============================================================
 
-        if (mode === "edit" && editCustomer) {
+        if (mode === "edit" && editSupplier) {
             try {
-                const isCustomerValid =
-                    validateNewCustomerInterface(editCustomer);
-                if (!isCustomerValid.valid) {
+                const isSupplierValid =
+                    validateNewSupplierInterface(editSupplier);
+                if (!isSupplierValid.valid) {
                     setLoading(false);
                     setSnackAlert({
                         open: true,
-                        message: isCustomerValid.message,
+                        message: isSupplierValid.message,
                         severity: "error",
                     });
                     return;
                 }
-                await updateCustomer(editCustomer);
+                await updateSupplier(editSupplier);
                 setSnackAlert({
                     open: true,
-                    message: "Customer updated successfully",
+                    message: "Supplier updated successfully",
                     severity: "success",
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
-                console.error("Error updating customer:", error);
+                console.error("Error updating supplier:", error);
                 setSnackAlert({
                     open: true,
-                    message: "Failed to update customer. Please try again.",
+                    message: "Failed to update supplier. Please try again.",
                     severity: "error",
                 });
                 return setLoading(false);
@@ -181,7 +181,7 @@ export default function CustomerForm({
                 textAlign="center"
                 fontWeight="bold"
             >
-                {setProductFormPopup(mode)} Customer
+                {setProductFormPopup(mode)} Supplier
             </Typography>
             <FormControl fullWidth>
                 <Stack
@@ -198,8 +198,8 @@ export default function CustomerForm({
                         type="text"
                         name="name"
                         label="Name"
-                        placeholder="Enter customer name"
-                        value={editCustomer?.name}
+                        placeholder="Enter supplier name"
+                        value={editSupplier?.name}
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -208,8 +208,8 @@ export default function CustomerForm({
                         type="text"
                         name="surname"
                         label="Surname"
-                        placeholder="Enter customer surname"
-                        value={editCustomer?.surname}
+                        placeholder="Enter supplier surname"
+                        value={editSupplier?.surname}
                         onChange={handleChange}
                         disabled={loading}
                     />
@@ -217,8 +217,8 @@ export default function CustomerForm({
                         type="text"
                         name="phoneNumber"
                         label="Phone Number"
-                        placeholder="Enter customer phone number"
-                        value={editCustomer?.phoneNumber}
+                        placeholder="Enter supplier phone number"
+                        value={editSupplier?.phoneNumber}
                         onChange={handleChange}
                         disabled={loading}
                     />
@@ -226,8 +226,8 @@ export default function CustomerForm({
                         type="text"
                         name="address"
                         label="Address"
-                        placeholder="Enter customer address"
-                        value={editCustomer?.address}
+                        placeholder="Enter supplier address"
+                        value={editSupplier?.address}
                         onChange={handleChange}
                         disabled={loading}
                     />
@@ -263,13 +263,13 @@ export default function CustomerForm({
                     sx={{ textAlign: "right", userSelect: "none" }}
                 >
                     <Typography variant="body2" color="text.secondary">
-                        Created at: {editCustomer?.createdAt} by:{" "}
-                        {editCustomer?.createdBy}
+                        Created at: {editSupplier?.createdAt} by:{" "}
+                        {editSupplier?.createdBy}
                     </Typography>
 
                     <Typography variant="body2" color="text.secondary">
-                        Last update: {editCustomer?.updatedAt} by:{" "}
-                        {editCustomer?.updatedBy}
+                        Last update: {editSupplier?.updatedAt} by:{" "}
+                        {editSupplier?.updatedBy}
                     </Typography>
                 </Stack>
             )}

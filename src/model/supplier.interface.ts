@@ -1,4 +1,5 @@
 import { convertToThailandTime } from "@/lib/convertTime";
+import { v4 as uuidv4 } from "uuid";
 
 export interface SupplierInterface {
     id: string; // Unique identifier for the supplier
@@ -26,7 +27,7 @@ export function createNewSupplierInterface(
     supplier: Partial<NewSupplierInterface>
 ): NewSupplierInterface {
     return {
-        id: supplier.id || "",
+        id: supplier.id || uuidv4(),
         name: supplier.name?.trim() || "",
         surname: supplier.surname?.trim() || "",
         email: supplier.email?.trim() || "",
