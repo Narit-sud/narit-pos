@@ -11,7 +11,7 @@ import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signupService } from "./service";
 import { cleanSignupData } from "./utils/cleanSignupData";
 import { validateSignupData } from "./utils/validateSignupData";
@@ -21,6 +21,7 @@ export default function Page() {
     const [signupData, setSignupData] = useState<SignupInterface>(
         createSignupData({} as SignupInterface)
     );
+    const [isMobile, setIsMobile] = useState(false);
     const [snackbarAlert, setSnackbarAlert] = useState<{
         open: boolean;
         severity: "success" | "error";
@@ -30,7 +31,6 @@ export default function Page() {
         severity: "error",
         message: "",
     });
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === "phoneNumber") {
@@ -39,6 +39,23 @@ export default function Page() {
         }
         setSignupData((prev) => ({ ...prev, [name]: value.trim() }));
     };
+
+    // Check if window is available (client-side only)
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsMobile(window.innerWidth < 600);
+        };
+
+        // Initial check
+        checkScreenSize();
+
+        // Add event listener for window resize
+        window.addEventListener("resize", checkScreenSize);
+
+        // Clean up
+        return () => window.removeEventListener("resize", checkScreenSize);
+    }, []);
+
     const handleSubmit = async () => {
         const signupDataValid = validateSignupData(signupData);
         if (!signupDataValid.valid) {
@@ -195,10 +212,11 @@ export default function Page() {
                                     width: "100%",
                                 }}
                             >
+                                {" "}
                                 <Button
                                     variant="contained"
                                     onClick={handleSubmit}
-                                    fullWidth={window.innerWidth < 600}
+                                    fullWidth={isMobile}
                                     size="large"
                                     sx={{ py: 1.2, fontWeight: "bold" }}
                                 >
@@ -209,7 +227,7 @@ export default function Page() {
                                     onClick={() => {
                                         router.push("/");
                                     }}
-                                    fullWidth={window.innerWidth < 600}
+                                    fullWidth={isMobile}
                                     size="large"
                                     sx={{ py: 1.2 }}
                                 >
