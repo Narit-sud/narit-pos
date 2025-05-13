@@ -53,3 +53,32 @@ export async function createProductService(
         }
     }
 }
+
+export async function updateProductService(
+    updatedProduct: ProductInterface
+): Promise<void> {
+    try {
+        await axiosInstance.put(
+            `/product/${updatedProduct.id}`,
+            updatedProduct
+        );
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.log("updateProductService Error:", error);
+            if (error.response) {
+                throw new Error(
+                    error.response.data.message || "Failed to fetch store data"
+                );
+            } else if (error.request) {
+                // network errors
+                throw new Error("Network error. Please check your connection.");
+            } else {
+                // other Axios errors
+                throw new Error(error.message);
+            }
+        } else {
+            // non-Axios errors
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+}

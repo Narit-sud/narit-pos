@@ -105,7 +105,7 @@ export default function CustomerForm({
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
                 console.error("Error creating customer:", error);
                 setSnackAlert({
@@ -140,7 +140,7 @@ export default function CustomerForm({
                 });
                 setTimeout(() => {
                     handleCancelButton();
-                }, 2000);
+                }, 1000);
             } catch (error) {
                 console.error("Error updating customer:", error);
                 setSnackAlert({

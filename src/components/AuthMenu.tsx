@@ -74,7 +74,7 @@ export default function AuthMenu() {
                     fontWeight: "medium",
                 }}
             >
-                {auth.username}
+                {auth.name} {auth.surname}
             </Typography>
             <Menu
                 anchorEl={anchorEl}

@@ -97,6 +97,7 @@ export default function ProductTable() {
                         borderRadius: 2,
                         overflow: "hidden",
                         border: "1px solid rgba(224, 224, 224, 1)",
+                        userSelect: "none",
                     }}
                 >
                     <Table>

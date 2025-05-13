@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import StoreIcon from "@mui/icons-material/Store";
 import CategoryIcon from "@mui/icons-material/Category";
-import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -15,10 +15,10 @@ type List = { name: string; url: string; icon: ReactNode }[];
 
 export const list1: List = [
     { name: "Category", url: "/category", icon: <CategoryIcon /> },
-    { name: "Brand", url: "/brand", icon: <BrandingWatermarkIcon /> },
+    { name: "Brand", url: "/brand", icon: <StoreIcon /> },
     { name: "Product", url: "/product", icon: <InventoryIcon /> },
     { name: "Customer", url: "/customer", icon: <PeopleIcon /> },
-    { name: "Supplier", url: "/supplier", icon: <PeopleIcon /> },
+    { name: "Supplier", url: "/supplier", icon: <LocalShippingIcon /> },
 ];
 export const list2: List = [
     { name: "Order", url: "/order", icon: <ReceiptLongIcon /> },

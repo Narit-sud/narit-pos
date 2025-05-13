@@ -1,5 +1,9 @@
 "use client";
-import { createProductService, getProductService } from "./service";
+import {
+    createProductService,
+    getProductService,
+    updateProductService,
+} from "./service";
 import {
     useState,
     useEffect,
@@ -40,7 +44,7 @@ export function ProductContextProvider({ children }: Props) {
     }
 
     async function createProduct(
-        newProduct: NewProductInterface,
+        newProduct: NewProductInterface
     ): Promise<void> {
         try {
             await createProductService(newProduct);
@@ -51,8 +55,15 @@ export function ProductContextProvider({ children }: Props) {
     }
 
     async function updateProduct(
-        updatedProduct: ProductInterface,
-    ): Promise<void> {}
+        updatedProduct: ProductInterface
+    ): Promise<void> {
+        try {
+            await updateProductService(updatedProduct);
+            await loadProducts(); // Refresh product after update
+        } catch (error) {
+            throw error;
+        }
+    }
 
     useEffect(() => {
         loadProducts();

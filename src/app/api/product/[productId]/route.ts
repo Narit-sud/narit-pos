@@ -1,31 +1,61 @@
 import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
-import { updateProductSql } from "../sql";
+import {
+    getCurrentStockSql,
+    updateProductSql,
+    decrementStockSql,
+    incrementStockSql,
+} from "../sql";
 
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ productId: string }> }
 ) {
     const { productId } = await params;
-    const { name, detail, categoryId } = await request.json();
-    const { userId } = await getDecryptedCookie("authToken");
+    const {
+        name,
+        brandId,
+        detail,
+        stock: updatedStock,
+        price,
+        cost,
+    } = await request.json();
+    const { userId, storeId } = await getDecryptedCookie("authToken");
+    const client = await db.connect();
     try {
-        // update brand data in pv table
-        // get old stock qty from product_incoming and product_outgoing table
-        // update stock qty by updating product_incoming and product_outgoing table
-        const query = await db.query(updateProductSql, [
+        // get current stock of the product_variant table
+        const { currentStock } = (
+            await client.query(getCurrentStockSql, [productId])
+        ).rows[0];
+        // update product data
+        await db.query(updateProductSql, [
             name,
-            categoryId,
+            brandId,
+            price,
+            cost,
             detail,
             userId,
             productId,
+            storeId,
         ]);
-        if (!query.rowCount) {
-            return Response.json(
-                { error: "Product not found" },
-                { status: 404 }
-            );
+        // increase stock if current stock is greater than stock
+        if (currentStock < updatedStock) {
+            await client.query(incrementStockSql, [
+                productId,
+                updatedStock - currentStock,
+                (updatedStock - currentStock) * price,
+                storeId,
+            ]);
+        }
+        // decrease stock if current stock is less than stock
+        else if (currentStock > updatedStock) {
+            await client.query(decrementStockSql, [
+                productId,
+                currentStock - updatedStock,
+                (currentStock - updatedStock) * price,
+                storeId,
+            ]);
         }
         return Response.json(
             { message: "Product updated successfully" },

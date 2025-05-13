@@ -1,39 +1,35 @@
 "use client";
-import AppProviders from "../app/AppProviders";
-import { Box } from "@mui/material";
-import AppNavbar from "@/components/AppNavbar";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+
+import AppProviders from "@/app/app/AppProviders";
+import POSNavbar from "@/app/pos/components/POSNavbar";
+import POSSidebar from "@/app/pos/components/POSSidebar";
+
 import { useState } from "react";
 
 export default function PosLayout({ children }: { children: React.ReactNode }) {
-    const [open, setOpen] = useState(false);
-
-    const handleMenuButtonClick = () => {
-        setOpen(!open);
-    };
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <AppProviders>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100vh",
-                }}
-            >
-                {/* App Navbar - Simplified for POS */}
-                <AppNavbar handleMenuButtonClick={handleMenuButtonClick} />
-
-                {/* Main content */}
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        p: 2,
-                        overflow: "auto",
-                        backgroundColor: "background.default",
-                    }}
-                >
-                    {children}
+            <Box>
+                <POSNavbar handleMenuButtonClick={() => setSidebarOpen(true)} />
+                <POSSidebar
+                    isOpen={sidebarOpen}
+                    handleClose={() => setSidebarOpen(false)}
+                />
+                <Box sx={{ p: { xs: 1, sm: 8 }, mt: { xs: 7, sm: 5 } }}>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            padding: 4,
+                            userSelect: "none",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {children}
+                    </Paper>
                 </Box>
             </Box>
         </AppProviders>

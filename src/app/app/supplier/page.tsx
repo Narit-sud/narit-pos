@@ -6,7 +6,10 @@ import Typography from "@mui/material/Typography";
 import SupplierForm from "./components/SupplierForm";
 import SupplierTable from "./components/SupplierTable";
 import PopupModal from "@/components/PopupModal";
-import { Add } from "@mui/icons-material";
+
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import Add from "@mui/icons-material/Add";
+
 import { useState } from "react";
 
 export default function Page() {
@@ -25,8 +28,12 @@ export default function Page() {
 
     return (
         <Paper
-            elevation={3}
-            sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
+            elevation={2}
+            sx={{
+                p: { xs: 2, sm: 3 },
+                borderRadius: 2,
+                mb: 3,
+            }}
         >
             {supplierFormPopup.open && (
                 <PopupModal
@@ -45,9 +52,23 @@ export default function Page() {
                 justifyContent="space-between"
                 sx={{ marginBottom: 2 }}
             >
-                <Typography variant="h4" fontWeight="bold">
-                    Suppliers
-                </Typography>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    color="primary.main"
+                >
+                    <LocalShippingIcon sx={{ fontSize: { xs: 28, sm: 36 } }} />
+                    <Typography
+                        variant="h5"
+                        fontWeight="bold"
+                        sx={{
+                            fontSize: { xs: "1.5rem", sm: "2rem" },
+                        }}
+                    >
+                        Suppliers
+                    </Typography>
+                </Stack>
                 <Button
                     variant="contained"
                     startIcon={<Add />}

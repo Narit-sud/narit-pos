@@ -7,8 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 import { createCustomerSql } from "../customer/sql";
 import {
     addOwnerPermissionSql,
+    addDefaultPaymentMethodSql,
     createNewStoreSql,
     getStoreDataSql,
+    createDefaultCustomerSql,
+    createDefaultSupplierSql,
+    createDefaultBrandSql,
+    createDefaultCategorySql,
 } from "./sql";
 import { handleApiError } from "@/lib/handleApiError";
 
@@ -78,39 +83,22 @@ export async function POST(request: Request): Promise<Response> {
         const brandId = uuidv4();
 
         await client.query("BEGIN");
-        // create new store
         await client.query(createNewStoreSql, [storeId, newStore.name, userId]);
-        // add permission
         await client.query(addOwnerPermissionSql, [userId, storeId]);
-        // create initial category
-        await client.query(createCategorySql, [
+        await client.query(createDefaultCategorySql, [
             categoryId,
-            "Uncategorized",
-            "Default category",
             userId,
             storeId,
         ]);
-
-        await client.query(createBrandSql, [
+        await client.query(createDefaultBrandSql, [
             brandId,
-            "Unbranded",
             categoryId,
-            "Default brand",
             storeId,
             userId,
         ]);
-        // create initial customer
-        await client.query(createCustomerSql, [
-            uuidv4(),
-            "General",
-            "Default customer",
-            "",
-            "",
-            "",
-            storeId,
-            userId,
-        ]);
-        // TODO: create initial supplier
+        await client.query(createDefaultCustomerSql, [storeId, userId]);
+        await client.query(createDefaultSupplierSql, [storeId, userId]);
+        await client.query(addDefaultPaymentMethodSql, [storeId]);
         await client.query("COMMIT");
         // get and re-send  store data
         const query3 = await client.query(getStoreDataSql, [userId]);

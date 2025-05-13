@@ -24,16 +24,11 @@ export default function AppLayout({ children }: Props) {
                 handleClose={() => setSidebarOpen(false)}
             />
             <Box sx={{ p: { xs: 1, sm: 8 }, mt: { xs: 7, sm: 5 } }}>
-                <Paper
-                    elevation={3}
-                    sx={{ padding: 4, userSelect: "none", fontWeight: "bold" }}
-                >
-                    {renderProviders ? (
-                        <AppProviders>{children}</AppProviders>
-                    ) : (
-                        children
-                    )}
-                </Paper>
+                {renderProviders ? (
+                    <AppProviders>{children}</AppProviders>
+                ) : (
+                    children
+                )}
             </Box>
         </Box>
     );

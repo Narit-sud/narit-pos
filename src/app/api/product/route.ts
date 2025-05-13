@@ -1,3 +1,4 @@
+import { createProductSql, incrementStockSql } from "@/app/api/product/sql";
 import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import type { NewProductInterface } from "@/model/product.interface";
@@ -20,37 +21,7 @@ export async function POST(request: Request): Promise<Response> {
     } = (await request.json()) as NewProductInterface;
     const { userId, storeId } = await getDecryptedCookie("authToken");
     const productIncomingId = uuidv4();
-    // add product to product_variant_table
-    const sql1 = `
-        INSERT
-        INTO product_variant (
-            id,
-            "name",
-            product_brand_id,
-            price,
-            "cost",
-            detail,
-            created_at,
-            updated_at,
-            store_id,
-            status,
-            created_by,
-            updated_by
-        )
-        VALUES (
-            $1, -- id
-            $2, -- name
-            $3, -- brandId
-            $4, -- price
-            $5, -- cost
-            $6, --detail
-            now(), -- createdAt
-            now(), -- updatedAt
-            $7, -- storeId
-            1, -- status
-            $8, -- createdBy
-            $8 -- updatedBy
-        );`;
+
     // add record to procurement table
     const sql2 = `
         INSERT
@@ -103,8 +74,8 @@ export async function POST(request: Request): Promise<Response> {
     const client = await db.connect();
     try {
         await client.query("begin");
-        // product_variant table
-        await client.query(sql1, [
+        // create product
+        await client.query(createProductSql, [
             prodId,
             name,
             brandId,
@@ -114,15 +85,12 @@ export async function POST(request: Request): Promise<Response> {
             storeId,
             userId,
         ]);
+        // add product stock
         if (initialQuantity > 0) {
-            // procurement table
-            await client.query(sql2, [productIncomingId, userId, storeId]);
-            // procurement_product_variant table
-            await client.query(sql3, [
-                productIncomingId,
+            await client.query(incrementStockSql, [
                 prodId,
                 initialQuantity,
-                cost * initialQuantity,
+                initialQuantity * price,
                 storeId,
             ]);
         }

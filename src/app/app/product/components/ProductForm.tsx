@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import BrandSelect from "../../brand/components/BrandSelect";
 import { useProduct } from "../useProduct";
+import { useBrand } from "@/app/app/brand/useBrand";
 
 type Props = {
     mode: "create" | "edit" | "view";
@@ -36,7 +37,8 @@ export default function ProductForm({
     product,
     handleCancelButton,
 }: Props) {
-    const { createProduct } = useProduct(); // create product function from context
+    const { brands } = useBrand(); // get brands from context to display
+    const { createProduct, updateProduct } = useProduct(); // create product function from context
     const [editProduct, setEditProduct] = useState<
         ProductInterface | undefined
     >(product || undefined);
@@ -139,7 +141,14 @@ export default function ProductForm({
             }
             try {
                 await createProduct(newProduct);
-                return handleCancelButton();
+                setSnackAlert({
+                    open: true,
+                    message: "Product created successfully",
+                    severity: "success",
+                });
+                setTimeout(() => {
+                    return handleCancelButton();
+                }, 1000);
             } catch (error) {
                 console.error("Error creating product:", error);
                 setSnackAlert({
@@ -154,9 +163,28 @@ export default function ProductForm({
         // ===============================================================
 
         if (mode === "edit") {
-            const updatedProrduct = editProduct as ProductInterface;
-            console.log("updatedProrduct", updatedProrduct);
-            // TODO: implement update product function
+            setLoading(true);
+            const updatedProduct = editProduct as ProductInterface;
+            try {
+                await updateProduct(updatedProduct);
+                setSnackAlert({
+                    open: true,
+                    message: "Product updated successfully",
+                    severity: "success",
+                });
+                setTimeout(() => {
+                    return handleCancelButton();
+                }, 1000);
+            } catch (error) {
+                setLoading(false);
+                console.error("Error updating product:", error);
+                setSnackAlert({
+                    open: true,
+                    message: "Failed to update product. Please try again.",
+                    severity: "error",
+                });
+                return setLoading(false);
+            }
         }
     }
 
@@ -226,7 +254,9 @@ export default function ProductForm({
                         getValue={getBrandId}
                         createMode={true}
                         initialValue={
-                            mode === "edit" ? editProduct?.brandId : ""
+                            mode === "edit"
+                                ? editProduct?.brandId
+                                : brands[0]?.id
                         }
                     />
                     <TextField

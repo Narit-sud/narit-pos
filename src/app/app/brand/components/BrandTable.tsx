@@ -1,17 +1,8 @@
 "use client";
-import PopupModal from "@/components/PopupModal";
-import { BrandInterface } from "@/model/brand.interface";
-import CategoryIcon from "@mui/icons-material/Category";
-import EditIcon from "@mui/icons-material/Edit";
-import {
-    Box,
-    Card,
-    CardContent,
-    Chip,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid"; // Fixed import path for Grid
 import IconButton from "@mui/material/IconButton";
@@ -22,10 +13,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
-import { formatDistanceToNow } from "date-fns";
+import Typography from "@mui/material/Typography";
+import { useMediaQuery, useTheme } from "@mui/material";
+
+import EditIcon from "@mui/icons-material/Edit";
+import CategoryIcon from "@mui/icons-material/Category";
+
+import PopupModal from "@/components/PopupModal";
+import BrandForm from "./BrandForm";
+
 import { useEffect, useState } from "react";
 import { useBrand } from "../useBrand";
-import BrandForm from "./BrandForm";
+
+import { BrandInterface } from "@/model/brand.interface";
 
 export default function BrandTable() {
     const { brands } = useBrand(); // get brand from context to display
@@ -47,15 +47,6 @@ export default function BrandTable() {
     const handleEditBrand = (brand: BrandInterface) => {
         handleOpen(); // open the modal
         setSelectedBrand(brand); // set selected category to the clicked category
-    };
-
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true });
-        } catch {
-            return dateString;
-        }
     };
 
     useEffect(() => {
@@ -83,7 +74,7 @@ export default function BrandTable() {
                 >
                     <CircularProgress size={60} />
                 </Box>
-            )}{" "}
+            )}
             {!loading && brands && !isMobile && (
                 <TableContainer
                     sx={{
@@ -131,7 +122,7 @@ export default function BrandTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Created
+                                    Last update
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -179,10 +170,10 @@ export default function BrandTable() {
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
                                         <Tooltip
-                                            title={`Created by ${brand.createdBy}`}
+                                            title={`By ${brand.updatedBy}`}
                                         >
                                             <Typography variant="body2">
-                                                {formatDate(brand.createdAt)}
+                                                {brand.createdAt}
                                             </Typography>
                                         </Tooltip>
                                     </TableCell>
@@ -231,12 +222,16 @@ export default function BrandTable() {
                                         >
                                             {brand.name}
                                         </Typography>
-                                        <Chip
-                                            icon={<CategoryIcon />}
-                                            label={brand.category}
+                                        <IconButton
                                             size="small"
                                             color="primary"
-                                        />
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditBrand(brand);
+                                            }}
+                                        >
+                                            <EditIcon fontSize="small" />
+                                        </IconButton>
                                     </Box>
 
                                     {brand.detail && (
@@ -262,19 +257,15 @@ export default function BrandTable() {
                                             variant="caption"
                                             color="text.secondary"
                                         >
-                                            Created{" "}
-                                            {formatDate(brand.createdAt)}
+                                            Last update {brand.updatedAt} By{" "}
+                                            {brand.updatedBy}
                                         </Typography>
-                                        <IconButton
+                                        <Chip
+                                            icon={<CategoryIcon />}
+                                            label={brand.category}
                                             size="small"
                                             color="primary"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleEditBrand(brand);
-                                            }}
-                                        >
-                                            <EditIcon fontSize="small" />
-                                        </IconButton>
+                                        />
                                     </Box>
                                 </CardContent>
                             </Card>

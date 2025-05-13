@@ -1,18 +1,5 @@
 "use client";
-import PopupModal from "@/components/PopupModal";
-import { CategoryInterface } from "@/model/category.interface";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { formatDistanceToNow } from "date-fns";
-import { useEffect, useState } from "react";
-import { useCategory } from "../useCategory";
-import CategoryForm from "./CategoryForm";
 
-// Material UI imports
 import { useMediaQuery, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -23,10 +10,22 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
-// Icons
 import CategoryIcon from "@mui/icons-material/Category";
 import EditIcon from "@mui/icons-material/Edit";
+
+import PopupModal from "@/components/PopupModal";
+import CategoryForm from "./CategoryForm";
+
+import { CategoryInterface } from "@/model/category.interface";
+import { useEffect, useState } from "react";
+import { useCategory } from "../useCategory";
 
 export default function CategoryTable() {
     const { categories } = useCategory(); // get categories from context to display
@@ -48,15 +47,6 @@ export default function CategoryTable() {
     const handleEditCategory = (category: CategoryInterface) => {
         handleOpen(); // open the modal
         setSelectedCategory(category); // set selected category to the clicked category
-    };
-
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true });
-        } catch {
-            return dateString;
-        }
     };
 
     useEffect(() => {
@@ -84,7 +74,7 @@ export default function CategoryTable() {
                 >
                     <CircularProgress size={60} />
                 </Box>
-            )}{" "}
+            )}
             {!loading && categories && !isMobile && (
                 <TableContainer
                     sx={{
@@ -123,7 +113,7 @@ export default function CategoryTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Created
+                                    Last update
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -162,10 +152,10 @@ export default function CategoryTable() {
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
                                         <Tooltip
-                                            title={`Created by ${category.createdBy}`}
+                                            title={`By ${category.updatedBy}`}
                                         >
                                             <Typography variant="body2">
-                                                {formatDate(category.createdAt)}
+                                                {category.updatedAt}
                                             </Typography>
                                         </Tooltip>
                                     </TableCell>
@@ -189,7 +179,7 @@ export default function CategoryTable() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            )}{" "}
+            )}
             {!loading && categories && isMobile && (
                 <Grid container spacing={2}>
                     {categories.map((category) => (
@@ -261,14 +251,8 @@ export default function CategoryTable() {
                                             variant="caption"
                                             color="text.secondary"
                                         >
-                                            Created{" "}
-                                            {formatDate(category.createdAt)}
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                        >
-                                            By {category.createdBy}
+                                            Last update {category.updatedAt} By{" "}
+                                            {category.updatedBy}
                                         </Typography>
                                     </Box>
                                 </CardContent>

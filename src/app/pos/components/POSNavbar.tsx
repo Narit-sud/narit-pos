@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthContextProvider } from "@/app/app/useAuth";
-import AuthMenu from "@/components/AuthMenu";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
@@ -12,7 +11,7 @@ import Typography from "@mui/material/Typography";
 type Props = {
     handleMenuButtonClick: () => void;
 };
-export default function AppNavbar({ handleMenuButtonClick }: Props) {
+export default function POSNavbar({ handleMenuButtonClick }: Props) {
     return (
         <AppBar sx={{ px: { md: 2 } }}>
             <Grid container alignItems="center">
@@ -55,9 +54,7 @@ export default function AppNavbar({ handleMenuButtonClick }: Props) {
                     display="flex"
                     justifyContent="flex-end"
                 >
-                    <AuthContextProvider>
-                        <AuthMenu />
-                    </AuthContextProvider>
+                    TEST
                 </Grid>
             </Grid>
         </AppBar>
