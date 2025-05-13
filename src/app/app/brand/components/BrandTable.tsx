@@ -13,7 +13,7 @@ import {
     useTheme,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid/"; // Correct import path for Grid
+import Grid from "@mui/material/Grid"; // Fixed import path for Grid
 import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
