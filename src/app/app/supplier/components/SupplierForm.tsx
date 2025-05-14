@@ -199,7 +199,11 @@ export default function SupplierForm({
                         name="name"
                         label="Name"
                         placeholder="Enter supplier name"
-                        value={editSupplier?.name}
+                        value={
+                            mode === "create"
+                                ? newSupplier?.name
+                                : editSupplier?.name
+                        }
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -209,7 +213,24 @@ export default function SupplierForm({
                         name="surname"
                         label="Surname"
                         placeholder="Enter supplier surname"
-                        value={editSupplier?.surname}
+                        value={
+                            mode === "create"
+                                ? newSupplier?.surname
+                                : editSupplier?.surname
+                        }
+                        onChange={handleChange}
+                        disabled={loading}
+                    />
+                    <TextField
+                        type="text"
+                        name="email"
+                        label="Email"
+                        placeholder="Enter supplier email"
+                        value={
+                            mode === "create"
+                                ? newSupplier?.email
+                                : editSupplier?.email
+                        }
                         onChange={handleChange}
                         disabled={loading}
                     />
@@ -218,7 +239,11 @@ export default function SupplierForm({
                         name="phoneNumber"
                         label="Phone Number"
                         placeholder="Enter supplier phone number"
-                        value={editSupplier?.phoneNumber}
+                        value={
+                            mode === "create"
+                                ? newSupplier?.phoneNumber
+                                : editSupplier?.phoneNumber
+                        }
                         onChange={handleChange}
                         disabled={loading}
                     />
@@ -227,7 +252,11 @@ export default function SupplierForm({
                         name="address"
                         label="Address"
                         placeholder="Enter supplier address"
-                        value={editSupplier?.address}
+                        value={
+                            mode === "create"
+                                ? newSupplier?.address
+                                : editSupplier?.address
+                        }
                         onChange={handleChange}
                         disabled={loading}
                     />

@@ -58,8 +58,8 @@ export function validateNewSupplierInterface(
 ): { valid: boolean; message: string } {
     // Validate name and surname
     if (!supplier.name) {
-        // Name are required
-        return { valid: false, message: "Name are required" };
+        // Name is required
+        return { valid: false, message: "Name is required" };
     } else if (supplier.name.length < 3) {
         // Name must be at least 3 characters long
         return { valid: false, message: "Name must be at least 3 characters" };
@@ -67,7 +67,7 @@ export function validateNewSupplierInterface(
         // Name must not contain spaces
         return { valid: false, message: "Name must not contain spaces" };
     } else if (supplier.surname && supplier.surname.split(" ").length < 1) {
-        // Surnameame must not contain spaces
+        // Surname must not contain spaces
         return { valid: false, message: "Surname must not contain spaces" };
     }
 

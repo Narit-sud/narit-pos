@@ -100,7 +100,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     //======================================= PUBLIC ROUTES ==========================================
     if (publicRoutes.some((route) => pathname.startsWith(route))) {
         // if you want to select store, you have to have userId with you
-        if (pathname === "/auth/login") {
+        if (pathname === "/auth/login" || pathname === "/auth/signup") {
             try {
                 const { userId, storeId } = await getDecryptedCookie(
                     "authToken"
