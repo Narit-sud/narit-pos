@@ -63,7 +63,9 @@ export default function ProductForm({
         }
         // if mode is "create", set newProduct to NewProductInterface object
         else if (mode === "create") {
-            setNewProduct(createNewProductInterface({}));
+            setNewProduct(
+                createNewProductInterface({ brandId: brands[0]?.id })
+            );
         }
     }
 

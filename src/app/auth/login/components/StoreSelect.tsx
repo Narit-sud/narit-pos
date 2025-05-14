@@ -249,10 +249,7 @@ export default function StoreSelect() {
                             />
                             <Divider sx={{ my: 1 }} />
                             <Typography variant="body2" color="text.secondary">
-                                Created:{" "}
-                                {new Date(
-                                    storeData.createdAt
-                                ).toLocaleDateString()}
+                                Created: {storeData.createdAt}
                             </Typography>
                         </CardContent>
                         <CardActions>

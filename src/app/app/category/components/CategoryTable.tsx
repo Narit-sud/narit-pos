@@ -141,7 +141,7 @@ export default function CategoryTable() {
                                 >
                                     <TableCell
                                         sx={{
-                                            textAlign: "left",
+                                            textAlign: "center",
                                             fontWeight: "medium",
                                         }}
                                     >

@@ -236,21 +236,15 @@ export default function CustomerTable() {
                                         >
                                             {customer.name}
                                         </Typography>
-                                        <Chip
-                                            icon={<CategoryIcon />}
-                                            label={customer.category}
-                                            size="small"
-                                            color="primary"
-                                        />
                                     </Box>
 
-                                    {customer.detail && (
+                                    {customer.address && (
                                         <Typography
                                             variant="body2"
                                             color="text.secondary"
                                             sx={{ mt: 1 }}
                                         >
-                                            {customer.detail}
+                                            {customer.address}
                                         </Typography>
                                     )}
 
