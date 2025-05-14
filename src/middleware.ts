@@ -2,16 +2,28 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDecryptedCookie } from "./lib/cookie";
 
-const userIdRequiredRoute = [
+/**
+ * To check only login status, add the route to this array.
+ * This route will check if user has authToken cookie and {userId}, and provided value is valid
+ */
+const loggedInRoutes = [
     "/app/store",
     "/api/store",
     "/api/auth/store-select",
     "/auth/store-select",
 ];
 
-const userAndStoreIdRequiredRoute = ["/app"];
+/**
+ * To check login status, and store permission, add the route to this array.
+ * This route will check if user has authToken cookie and {userId, storeId}, and provided value is valid
+ */
+const storeSelectedRoutes = ["/app", "/pos"];
 
-const freeEnterRoutes = [
+// Routes that are publicly accessible
+/**
+ * To bypass the middleware, add the route to this array.
+ */
+const publicRoutes = [
     "/auth", // login, sighup, logout page
     "/api/auth", // login, sighup, logout routes
     "/_next/static/chunks",
@@ -20,12 +32,18 @@ const freeEnterRoutes = [
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
     const { pathname } = request.nextUrl;
-    if (userIdRequiredRoute.some((route) => pathname === route)) {
-        // exact match
+    console.log("MIDDLEWARE: entered", pathname);
+
+    //======================================= LOGGED-IN ROUTES ==========================================
+
+    // if pathname is matched the loggedInRoutes
+    if (loggedInRoutes.some((route) => pathname === route)) {
+        console.log("MIDDLEWARE: entered loggedInRoutes");
+        // get authToken
         try {
-            const { userId } = await getDecryptedCookie("authToken");
-            if (!userId) {
-                console.log("MIDDLEWARE: rejected, user not logged in.");
+            const authToken = request.cookies.get("authToken");
+            if (!authToken) {
+                console.log("MIDDLEWARE: rejected, no authToken");
                 return NextResponse.redirect(
                     new URL("/auth/login", request.url)
                 );
@@ -33,7 +51,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             return NextResponse.next(); // token valid
         } catch (error) {
             // token invalid
-            console.error("MIDDLEWARE: rejected, user's token invalid.", error);
+            console.error("MIDDLEWARE: rejected at loggedInRoutes", error);
             return NextResponse.json(
                 { message: "User authentication failed" },
                 { status: 401 }
@@ -41,51 +59,55 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         }
     }
 
-    if (
-        userAndStoreIdRequiredRoute.some((route) => pathname.startsWith(route))
-        // starts with
-    ) {
-        try {
-            const { userId, storeId } = await getDecryptedCookie("authToken");
-            if (!userId) {
-                console.log("MIDDLEWARE: rejected, user not logged in.");
+    //======================================= PROTECTED ROUTES ==========================================
+    if (storeSelectedRoutes.some((route) => pathname.startsWith(route))) {
+        console.log("MIDDLEWARE: entered protectedRoutes");
+        // get authToken
+        const authToken = request.cookies.get("authToken");
+        // if no token
+        if (!authToken) {
+            return NextResponse.redirect(new URL("/auth/login", request.url));
+        }
 
+        try {
+            // read token
+            const { userId, storeId } = await getDecryptedCookie("authToken");
+            // if no userId
+            if (!userId) {
+                console.log("MIDDLEWARE: rejected, no userId");
+                // send to login page
                 return NextResponse.redirect(
                     new URL("/auth/login", request.url)
                 );
             }
+            // if no storeId
             if (!storeId) {
-                console.log("MIDDLEWARE: rejected, user not selected store.");
+                console.log("MIDDLEWARE: rejected, no storeId");
+                // send to store select page
                 return NextResponse.redirect(
                     new URL("/auth/store-select", request.url)
                 );
             }
+            // if everything is ok
             return NextResponse.next(); // token valid
         } catch (error) {
-            return NextResponse.redirect(new URL("/auth/login", request.url)); // token invalid
+            // token invalid
+            return NextResponse.redirect(new URL("/auth/login", request.url));
         }
     }
 
-    if (freeEnterRoutes.some((route) => pathname.startsWith(route))) {
+    //======================================= PUBLIC ROUTES ==========================================
+    if (publicRoutes.some((route) => pathname.startsWith(route))) {
         // if you want to select store, you have to have userId with you
-        try {
-            const { userId, storeId } = await getDecryptedCookie("authToken");
-            // there is userId and storeId and user is tring to register or login
-            if (userId && storeId) {
-                if (pathname === "/auth/login" || pathname === "/auth/signup") {
-                    // redirect to app
-                    return NextResponse.redirect(new URL("/app", request.url));
-                }
-            } else if (userId && !storeId) {
-                // if userId and no storeId, redirect to store-select
-                if (pathname !== "/auth/store-select") {
-                    return NextResponse.redirect(
-                        new URL("/auth/store-select", request.url)
-                    );
-                }
+        if (pathname === "/auth/store-select") {
+            try {
+                const authToken = await getDecryptedCookie("authToken");
+                if (authToken) return NextResponse.next();
+            } catch (error) {
+                return NextResponse.redirect(
+                    new URL("/auth/login", request.url)
+                );
             }
-        } catch (error) {
-            return NextResponse.next();
         }
     }
     return NextResponse.next();
