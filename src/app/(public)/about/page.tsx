@@ -19,23 +19,33 @@ export default function Page() {
                     color="primary.main"
                 >
                     About Narit POS
-                </Typography>
-
+                </Typography>{" "}
                 <Box mb={4}>
                     <Alert severity="warning" sx={{ mb: 2 }}>
                         <AlertTitle>
-                            <strong>Important Disclaimer</strong>
+                            <strong>
+                                PROTOTYPE APPLICATION - NOT A REAL PRODUCT
+                            </strong>
                         </AlertTitle>
-                        This is a showcase project for demonstration purposes
-                        only. While the application will store user data in the
-                        database, please do not store any sensitive or personal
-                        information. This application is not intended for
-                        production use and does not implement all security
-                        measures that would be required for a commercial
-                        application.
+                        <Typography variant="body2" fontWeight="bold">
+                            This is a PROTOTYPE application created for
+                            demonstration and portfolio purposes only.
+                        </Typography>
+                        <Typography variant="body2" mt={1}>
+                            Narit POS is not a real commercial product. All
+                            features, pricing, and company information are
+                            fictional and created solely for showcasing
+                            development skills. While the application will store
+                            user data in the database, please do not store any
+                            real, sensitive, or personal information.
+                        </Typography>
+                        <Typography variant="body2" mt={1}>
+                            This application is not intended for actual business
+                            use and does not implement all security measures
+                            that would be required for a commercial application.
+                        </Typography>
                     </Alert>
                 </Box>
-
                 <Typography
                     variant="h5"
                     component="h2"
@@ -51,9 +61,7 @@ export default function Page() {
                     features for inventory management, sales processing,
                     customer management, and reporting.
                 </Typography>
-
                 <Divider sx={{ my: 3 }} />
-
                 <Typography
                     variant="h5"
                     component="h2"
@@ -64,9 +72,9 @@ export default function Page() {
                 </Typography>
                 <Typography variant="body1" mb={1}>
                     <strong>Developer:</strong> Narit
-                </Typography>
+                </Typography>{" "}
                 <Typography variant="body1" mb={1}>
-                    <strong>Date:</strong> May 2025
+                    <strong>Date:</strong> May 14, 2025
                 </Typography>
                 <Typography variant="body1" mb={3}>
                     <strong>Purpose:</strong> A demonstration project to
@@ -74,9 +82,7 @@ export default function Page() {
                     and Material UI, focusing on creating a responsive and
                     user-friendly point-of-sale system.
                 </Typography>
-
                 <Divider sx={{ my: 3 }} />
-
                 <Typography
                     variant="h5"
                     component="h2"
@@ -89,7 +95,6 @@ export default function Page() {
                     This project follows the Next.js App Router architecture
                     with a clear separation of concerns:
                 </Typography>
-
                 <Box sx={{ ml: 2, mb: 3 }}>
                     <Typography variant="body1" fontWeight="bold" mb={1}>
                         Frontend:
@@ -143,9 +148,7 @@ export default function Page() {
                         interfaces/types
                     </Typography>
                 </Box>
-
                 <Divider sx={{ my: 3 }} />
-
                 <Typography
                     variant="h5"
                     component="h2"
@@ -153,7 +156,7 @@ export default function Page() {
                     mb={2}
                 >
                     Technologies Used
-                </Typography>
+                </Typography>{" "}
                 <Box
                     sx={{
                         ml: 2,
@@ -168,16 +171,16 @@ export default function Page() {
                             Frontend:
                         </Typography>
                         <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
-                            • Next.js
+                            • Next.js 14
                         </Typography>
                         <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
-                            • React
+                            • React 18
                         </Typography>
                         <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
-                            • TypeScript
+                            • TypeScript 5
                         </Typography>
                         <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
-                            • Material UI
+                            • Material UI 5
                         </Typography>
                     </Box>
                     <Box>
@@ -197,20 +200,66 @@ export default function Page() {
                             • Axios
                         </Typography>
                     </Box>
-                </Box>
-
+                </Box>{" "}
                 <Divider sx={{ my: 3 }} />
-
+                <Typography
+                    variant="h5"
+                    component="h2"
+                    fontWeight="bold"
+                    mb={2}
+                >
+                    Recent Updates
+                </Typography>
+                <Typography variant="body1" mb={2}>
+                    Our latest update (May 14, 2025) includes:
+                </Typography>
+                <Box sx={{ ml: 2, mb: 3 }}>
+                    <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
+                        • Enhanced POS interface with faster checkout process
+                    </Typography>
+                    <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
+                        • Improved inventory management with automated stock
+                        alerts
+                    </Typography>
+                    <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
+                        • New customer loyalty features
+                    </Typography>
+                    <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
+                        • Optimized database performance
+                    </Typography>
+                    <Typography variant="body1" mb={1} sx={{ ml: 2 }}>
+                        • Added mobile-responsive design improvements
+                    </Typography>
+                </Box>
+                <Divider sx={{ my: 3 }} />{" "}
                 <Box textAlign="center" mt={4}>
                     <Typography variant="body1" color="text.secondary">
                         This project is intended for educational and
                         demonstration purposes only.
                     </Typography>
-                    <Link href="/" style={{ textDecoration: "none" }}>
-                        <Typography variant="body1" color="primary" mt={1}>
-                            Return to Home
-                        </Typography>
-                    </Link>
+                    <Box mt={2} display="flex" justifyContent="center" gap={2}>
+                        <Link href="/" style={{ textDecoration: "none" }}>
+                            <Typography variant="body2" color="primary">
+                                Home
+                            </Typography>
+                        </Link>
+                        <Link
+                            href="/privacy-policy"
+                            style={{ textDecoration: "none" }}
+                        >
+                            <Typography variant="body2" color="primary">
+                                Privacy Policy
+                            </Typography>
+                        </Link>
+                        <Link
+                            href="/terms-of-service"
+                            style={{ textDecoration: "none" }}
+                        >
+                            <Typography variant="body2" color="primary">
+                                Terms of Service
+                            </Typography>
+                        </Link>
+                    </Box>
                 </Box>
             </Paper>
         </Container>

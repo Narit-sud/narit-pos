@@ -1,4 +1,9 @@
 "use client";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
@@ -8,14 +13,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
-import Alert from "@mui/material/Alert";
 import Link from "next/link";
 
 // Icons
@@ -36,6 +37,7 @@ export default function Page() {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+                {" "}
                 <Typography
                     variant="h3"
                     component="h1"
@@ -45,20 +47,38 @@ export default function Page() {
                 >
                     Narit POS User Manual
                 </Typography>
-
+                <Box mb={4}>
+                    <Alert severity="warning" sx={{ mb: 2 }}>
+                        <AlertTitle>
+                            <strong>
+                                PROTOTYPE APPLICATION - NOT A REAL PRODUCT
+                            </strong>
+                        </AlertTitle>
+                        <Typography variant="body2">
+                            This user manual is for a{" "}
+                            <strong>fictional prototype application</strong>{" "}
+                            created for demonstration and portfolio purposes
+                            only. Narit POS is not a real product or service.
+                            All features, functionality, and support options
+                            described in this manual are simulated for
+                            demonstration purposes and not actually available
+                            for real-world use.
+                        </Typography>
+                    </Alert>
+                </Box>
                 <Box mb={4}>
                     <Alert severity="info" sx={{ mb: 2 }}>
                         <Typography variant="subtitle1" fontWeight="bold">
                             Welcome to Narit POS!
                         </Typography>
                         <Typography variant="body2">
-                            This manual will guide you through all aspects of
-                            using the Narit POS system. If you need additional
-                            assistance, please contact support.
+                            This manual was last updated on May 14, 2025. It
+                            will guide you through all aspects of using the
+                            Narit POS system. If you need additional assistance,
+                            please contact support.
                         </Typography>
                     </Alert>
                 </Box>
-
                 {/* Getting Started */}
                 <Accordion defaultExpanded>
                     <AccordionSummary
@@ -198,7 +218,6 @@ export default function Page() {
                         </Stepper>
                     </AccordionDetails>
                 </Accordion>
-
                 {/* Setup Workflow */}
                 <Accordion>
                     <AccordionSummary
@@ -417,7 +436,6 @@ export default function Page() {
                         </Stepper>
                     </AccordionDetails>
                 </Accordion>
-
                 {/* Daily Operations */}
                 <Accordion>
                     <AccordionSummary
@@ -557,7 +575,115 @@ export default function Page() {
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="new-features-content"
+                        id="new-features-header"
+                    >
+                        <Typography variant="h5" fontWeight="bold">
+                            New Features (May 2025)
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box mb={3}>
+                            <Typography variant="h6" fontWeight="bold" mb={2}>
+                                <InfoIcon
+                                    sx={{ mr: 1, verticalAlign: "middle" }}
+                                />
+                                Enhanced POS Interface
+                            </Typography>
+                            <Typography variant="body1" mb={1}>
+                                Our POS interface has been updated with the
+                                following improvements:
+                            </Typography>
+                            <List>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Quick Search Improvements"
+                                        secondary="Find products faster with improved search algorithms and auto-complete"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Express Checkout"
+                                        secondary="New one-click checkout option for common transactions"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Digital Receipts"
+                                        secondary="Send receipts via email or SMS directly from the POS"
+                                    />
+                                </ListItem>
+                            </List>
+                        </Box>
 
+                        <Box mb={3}>
+                            <Typography variant="h6" fontWeight="bold" mb={2}>
+                                <InventoryIcon
+                                    sx={{ mr: 1, verticalAlign: "middle" }}
+                                />
+                                Automated Inventory Alerts
+                            </Typography>
+                            <Typography variant="body1" mb={1}>
+                                New inventory management features:
+                            </Typography>
+                            <List>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Low Stock Notifications"
+                                        secondary="Automatic alerts when inventory falls below specified thresholds"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Inventory Forecast"
+                                        secondary="Predict when you'll need to restock based on sales patterns"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="One-Click Reorder"
+                                        secondary="Create purchase orders with a single click for low-stock items"
+                                    />
+                                </ListItem>
+                            </List>
+                        </Box>
+
+                        <Box>
+                            <Typography variant="h6" fontWeight="bold" mb={2}>
+                                <PeopleIcon
+                                    sx={{ mr: 1, verticalAlign: "middle" }}
+                                />
+                                Customer Loyalty Program
+                            </Typography>
+                            <Typography variant="body1" mb={1}>
+                                Our new customer loyalty features include:
+                            </Typography>
+                            <List>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Points System"
+                                        secondary="Customers earn points for purchases which can be redeemed for discounts"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Loyalty Tiers"
+                                        secondary="Reward your best customers with different levels of benefits"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="Birthday Rewards"
+                                        secondary="Automatically apply special offers on customer birthdays"
+                                    />
+                                </ListItem>
+                            </List>
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
                 {/* Account Management */}
                 <Accordion>
                     <AccordionSummary
@@ -630,19 +756,39 @@ export default function Page() {
                         </Box>
                     </AccordionDetails>
                 </Accordion>
-
-                <Divider sx={{ my: 4 }} />
-
+                <Divider sx={{ my: 4 }} />{" "}
                 <Box textAlign="center">
                     <Typography variant="body1" color="text.secondary" mb={2}>
                         If you need additional help, please contact our support
-                        team at support@naritpos.com
+                        team at support@naritpos.com or call our hotline at
+                        +1-800-NARIT-POS (available 24/7)
+                    </Typography>{" "}
+                    <Typography variant="body1" color="text.secondary" mb={2}>
+                        Manual last updated: May 14, 2025
                     </Typography>
-                    <Link href="/" style={{ textDecoration: "none" }}>
-                        <Typography variant="body1" color="primary">
-                            Return to Home
-                        </Typography>
-                    </Link>
+                    <Box mt={2} display="flex" justifyContent="center" gap={2}>
+                        <Link href="/" style={{ textDecoration: "none" }}>
+                            <Typography variant="body2" color="primary">
+                                Home
+                            </Typography>
+                        </Link>
+                        <Link
+                            href="/privacy-policy"
+                            style={{ textDecoration: "none" }}
+                        >
+                            <Typography variant="body2" color="primary">
+                                Privacy Policy
+                            </Typography>
+                        </Link>
+                        <Link
+                            href="/terms-of-service"
+                            style={{ textDecoration: "none" }}
+                        >
+                            <Typography variant="body2" color="primary">
+                                Terms of Service
+                            </Typography>
+                        </Link>
+                    </Box>
                 </Box>
             </Paper>
         </Container>

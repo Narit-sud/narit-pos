@@ -215,6 +215,15 @@ export default function CustomerForm({
                     />
                     <TextField
                         type="text"
+                        name="email"
+                        label="Email"
+                        placeholder="Enter customer email"
+                        value={editCustomer?.email}
+                        onChange={handleChange}
+                        disabled={loading}
+                    />
+                    <TextField
+                        type="text"
                         name="phoneNumber"
                         label="Phone Number"
                         placeholder="Enter customer phone number"

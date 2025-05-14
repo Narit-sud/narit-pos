@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-// Material UI imports
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-// Icons
 import DevicesIcon from "@mui/icons-material/Devices";
 import InsightsIcon from "@mui/icons-material/Insights";
 import InventoryIcon from "@mui/icons-material/Inventory";
@@ -52,7 +52,7 @@ const FeatureCard = ({
 
 export default function Home() {
     return (
-        <Box sx={{ bgcolor: "background.default" }}>
+        <Box sx={{ bgcolor: "background.default", userSelect: "none" }}>
             {/* Hero Section */}
             <Box
                 sx={{
@@ -76,8 +76,7 @@ export default function Home() {
                         <Box component="span" sx={{ color: "primary.main" }}>
                             Narit POS
                         </Box>
-                    </Typography>
-
+                    </Typography>{" "}
                     <Typography
                         variant="h6"
                         component="p"
@@ -91,7 +90,22 @@ export default function Home() {
                         A simple, fast, and powerful point of sale system
                         designed for small and medium businesses.
                     </Typography>
-
+                    <Alert
+                        severity="warning"
+                        sx={{ mb: 4, mx: "auto", maxWidth: "90%" }}
+                    >
+                        <AlertTitle>
+                            <strong>PROTOTYPE APPLICATION</strong>
+                        </AlertTitle>
+                        <Typography variant="body2">
+                            This is a <strong>prototype application</strong>{" "}
+                            created for demonstration and educational purposes
+                            only. It is not a real product and should not be
+                            used for actual business operations. Any resemblance
+                            to real products, services, or companies is purely
+                            coincidental.
+                        </Typography>
+                    </Alert>
                     <Stack
                         direction={{ xs: "column", sm: "row" }}
                         spacing={2}
@@ -127,7 +141,6 @@ export default function Home() {
                             Login
                         </Button>
                     </Stack>
-
                     {/* App Preview Image */}
                     <Box
                         sx={{
@@ -344,6 +357,7 @@ export default function Home() {
                             </Stack>
                         </Grid>
                         <Grid size={{ xs: 6, md: 2 }}>
+                            {" "}
                             <Typography
                                 variant="subtitle2"
                                 fontWeight="bold"
@@ -353,7 +367,7 @@ export default function Home() {
                             </Typography>
                             <Stack spacing={1}>
                                 <Link
-                                    href="#"
+                                    href="/privacy-policy"
                                     passHref
                                     style={{ textDecoration: "none" }}
                                 >
@@ -365,7 +379,7 @@ export default function Home() {
                                     </Typography>
                                 </Link>
                                 <Link
-                                    href="#"
+                                    href="/terms-of-service"
                                     passHref
                                     style={{ textDecoration: "none" }}
                                 >

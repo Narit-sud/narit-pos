@@ -25,6 +25,8 @@ const navItems = [
     { name: "Home", path: "/" },
     { name: "Manual", path: "/manual" },
     { name: "About", path: "/about" },
+    { name: "Privacy", path: "/privacy-policy" },
+    { name: "Terms", path: "/terms-of-service" },
 ];
 
 export default function HomeBar() {

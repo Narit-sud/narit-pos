@@ -100,6 +100,17 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     //======================================= PUBLIC ROUTES ==========================================
     if (publicRoutes.some((route) => pathname.startsWith(route))) {
         // if you want to select store, you have to have userId with you
+        if (pathname === "/auth/login") {
+            try {
+                const { userId, storeId } = await getDecryptedCookie(
+                    "authToken"
+                );
+                if (userId && storeId)
+                    return NextResponse.redirect(new URL("/app", request.url));
+            } catch (error) {
+                return NextResponse.next();
+            }
+        }
         if (pathname === "/auth/store-select") {
             try {
                 const authToken = await getDecryptedCookie("authToken");

@@ -17,8 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Narit POS",
-    description: "Narit's Point of Sale system",
+    title: "Narit POS - Prototype Application",
+    description:
+        "Prototype Point of Sale system for demonstration purposes only. Not a real product.",
 };
 
 export default function RootLayout({
