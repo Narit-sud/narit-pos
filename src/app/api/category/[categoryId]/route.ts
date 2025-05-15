@@ -2,6 +2,7 @@ import { getDecryptedCookie } from "@/lib/cookie";
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
 import { updateCategorySql } from "../sql";
+import { isDefaultCategory } from "@/lib/query/isDefaultEntry";
 
 export async function PUT(
     request: NextRequest,
@@ -9,8 +10,15 @@ export async function PUT(
 ) {
     const { categoryId } = await params;
     const { name, detail } = await request.json();
-    const { userId } = await getDecryptedCookie("authToken");
+
     try {
+        const { userId, storeId } = await getDecryptedCookie("authToken");
+        if (await isDefaultCategory(storeId as string, categoryId)) {
+            return Response.json(
+                { error: "Default category cannot be updated" },
+                { status: 400 }
+            );
+        }
         const query = await db.query(updateCategorySql, [
             name,
             detail,

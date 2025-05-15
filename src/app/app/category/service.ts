@@ -54,11 +54,7 @@ export async function updateCategoryService(
         );
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log(
-                "updateCategoryService Error:",
-                error.response?.data || error.response
-            );
+            throw new Error(error.response?.data?.error || "Update failed");
         }
-        throw error;
     }
 }

@@ -57,7 +57,7 @@ export function BrandContextProvider({ children }: Props) {
             await updateBrandService(updatedBrand);
             await loadBrands();
         } catch (error) {
-            console.error("Error updating brand:", error);
+            throw error;
         }
     }
 
@@ -66,7 +66,9 @@ export function BrandContextProvider({ children }: Props) {
     }, []);
 
     return (
-        <BrandContext.Provider value={{ brands, createBrand, loadBrands,updateBrand }}>
+        <BrandContext.Provider
+            value={{ brands, createBrand, loadBrands, updateBrand }}
+        >
             {children}
         </BrandContext.Provider>
     );

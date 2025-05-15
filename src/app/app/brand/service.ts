@@ -63,11 +63,7 @@ export async function updateBrandService(
         await axiosInstance.put(`/brand/${updatedBrand.id}`, updatedBrand);
     } catch (error) {
         if (isAxiosError(error)) {
-            console.log(
-                "updateBrandService Error:",
-                error.response?.data || error.response
-            );
+            throw new Error(error.response?.data?.error || "Update failed");
         }
-        throw error;
     }
 }

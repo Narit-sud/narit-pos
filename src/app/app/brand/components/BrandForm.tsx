@@ -152,12 +152,14 @@ export default function BrandForm({
                     handleCancelButton();
                 }, 1000);
             } catch (error) {
-                setLoading(false);
-                setSnackAlert({
-                    open: true,
-                    message: "Failed to update brand. Please try again.",
-                    severity: "error",
-                });
+                if (error instanceof Error) {
+                    setLoading(false);
+                    setSnackAlert({
+                        open: true,
+                        message: error.message,
+                        severity: "error",
+                    });
+                }
             }
         }
     }
@@ -170,7 +172,7 @@ export default function BrandForm({
         <>
             <Snackbar
                 open={snackAlert.open}
-                autoHideDuration={4000}
+                autoHideDuration={3000}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => setSnackAlert({ ...snackAlert, open: false })}
             >
@@ -178,8 +180,9 @@ export default function BrandForm({
                     onClose={() =>
                         setSnackAlert({ ...snackAlert, open: false })
                     }
+                    variant="filled"
                     severity={snackAlert.severity}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "380px" }}
                 >
                     {snackAlert.message}
                 </Alert>

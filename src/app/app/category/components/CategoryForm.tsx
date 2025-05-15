@@ -102,12 +102,14 @@ export default function CategoryForm({
                 }, 1000);
             } catch (error) {
                 console.error("Error updating category:", error);
-                setSnackAlert({
-                    open: true,
-                    message: "Error updating category",
-                    severity: "error",
-                });
-                return setLoading(false);
+                if (error instanceof Error) {
+                    setSnackAlert({
+                        open: true,
+                        message: error.message,
+                        severity: "error",
+                    });
+                    return setLoading(false);
+                }
             }
         }
 
@@ -151,7 +153,7 @@ export default function CategoryForm({
         <>
             <Snackbar
                 open={snackAlert.open}
-                autoHideDuration={4000}
+                autoHideDuration={3000}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => setSnackAlert({ ...snackAlert, open: false })}
             >
@@ -159,8 +161,9 @@ export default function CategoryForm({
                     onClose={() =>
                         setSnackAlert({ ...snackAlert, open: false })
                     }
+                    variant="filled"
                     severity={snackAlert.severity}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "380px" }}
                 >
                     {snackAlert.message}
                 </Alert>

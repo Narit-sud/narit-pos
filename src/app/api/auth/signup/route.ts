@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/encrypt";
 import { signupSql } from "./sql";
 import { constraints } from "@/app/api/auth/signup/constraints";
-import { handleBackendError } from "@/lib/handleBackendError";
+import { handleConstraintError } from "@/lib/query/handleConstraintError";
 
 export async function POST(request: Request): Promise<Response> {
     const signupData = await request.json();
@@ -31,6 +31,6 @@ export async function POST(request: Request): Promise<Response> {
             { status: 201 }
         );
     } catch (error) {
-        return handleBackendError(error, constraints, "api/auth/signup");
+        return handleConstraintError(error, constraints, "api/auth/signup");
     }
 }

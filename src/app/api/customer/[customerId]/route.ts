@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { getDecryptedCookie } from "@/lib/cookie";
 import { CustomerInterface } from "@/model/customer.interface";
 import { updateCustomerSql } from "../sql";
+import { handleConstraintError } from "@/lib/query/handleConstraintError";
+import { constraints } from "@/app/api/customer/constraints";
 
 export async function PUT(request: Request): Promise<Response> {
     const { userId, storeId } = await getDecryptedCookie("authToken");
@@ -26,10 +28,10 @@ export async function PUT(request: Request): Promise<Response> {
             { status: 200 }
         );
     } catch (error) {
-        console.error("api/customer/[customerId]/route.ts/PUT", error);
-        return Response.json(
-            { message: "Error fetching store data", error },
-            { status: 500 }
+        return handleConstraintError(
+            error,
+            constraints,
+            "api/customer/[customerId]/route.ts"
         );
     }
 }

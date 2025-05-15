@@ -6,7 +6,7 @@ import { ConstraintErrorInterface } from "@/model/constraintError.interface";
  * @param errorLocation - Location where the error occurred (for logging)
  * @returns Response object with appropriate error message and status code
  */
-export function handleBackendError(
+export function handleConstraintError(
     error: any,
     possibleConstraintErrors: ConstraintErrorInterface[],
     errorLocation: string

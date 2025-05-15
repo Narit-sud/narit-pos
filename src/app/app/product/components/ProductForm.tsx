@@ -206,7 +206,7 @@ export default function ProductForm({
         >
             <Snackbar
                 open={snackAlert.open}
-                autoHideDuration={4000}
+                autoHideDuration={3000}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => setSnackAlert({ ...snackAlert, open: false })}
             >
@@ -214,8 +214,9 @@ export default function ProductForm({
                     onClose={() =>
                         setSnackAlert({ ...snackAlert, open: false })
                     }
+                    variant="filled"
                     severity={snackAlert.severity}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "380px" }}
                 >
                     {snackAlert.message}
                 </Alert>
