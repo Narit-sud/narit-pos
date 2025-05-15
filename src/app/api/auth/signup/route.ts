@@ -1,35 +1,36 @@
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/encrypt";
+import { signupSql } from "./sql";
+import { constraints } from "@/app/api/auth/signup/constraints";
+import { handleBackendError } from "@/lib/handleBackendError";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
     const signupData = await request.json();
     const { id, name, surname, username, password, email, phoneNumber } =
         signupData;
     const hashedPassword = hashPassword(password);
-    const query = `
-    INSERT INTO 
-        "user"
-        (id, "name", surname, username, "password", email, phone_number)
-    VALUES
-        ($1, $2, $3, $4, $5, $6, $7);`;
-    const result = await db.query(query, [
-        id,
-        name.trim(),
-        surname.trim(),
-        username.trim(),
-        hashedPassword,
-        email.trim(),
-        phoneNumber.trim(),
-    ]);
-    console.log("password hashed as:", hashedPassword);
-    if (!result.rowCount) {
+
+    try {
+        const query = await db.query(signupSql, [
+            id,
+            name.trim(),
+            surname.trim(),
+            username.trim(),
+            hashedPassword,
+            email.trim(),
+            phoneNumber.trim(),
+        ]);
+        if (!query.rowCount) {
+            return Response.json(
+                { message: "Signup new user failed" },
+                { status: 400 }
+            );
+        }
         return Response.json(
-            { message: "Signup new user failed" },
-            { status: 400 },
+            { message: "Signup new user success" },
+            { status: 201 }
         );
+    } catch (error) {
+        return handleBackendError(error, constraints, "api/auth/signup");
     }
-    return Response.json(
-        { message: "Signup new user success" },
-        { status: 201 },
-    );
 }

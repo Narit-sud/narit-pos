@@ -32,18 +32,17 @@ const publicRoutes = [
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
     const { pathname } = request.nextUrl;
-    console.log("MIDDLEWARE: entered", pathname);
 
     //======================================= LOGGED-IN ROUTES ==========================================
 
     // if pathname is matched the loggedInRoutes
     if (loggedInRoutes.some((route) => pathname === route)) {
-        console.log("MIDDLEWARE: entered loggedInRoutes");
+        console.log("MIDDLEWARE: entered loggedInRoutes", pathname);
         // get authToken
         try {
             const authToken = request.cookies.get("authToken");
             if (!authToken) {
-                console.log("MIDDLEWARE: rejected, no authToken");
+                console.log("MIDDLEWARE: rejected, no authToken", pathname);
                 return NextResponse.redirect(
                     new URL("/auth/login", request.url)
                 );
@@ -51,7 +50,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             return NextResponse.next(); // token valid
         } catch (error) {
             // token invalid
-            console.error("MIDDLEWARE: rejected at loggedInRoutes", error);
+            console.error(
+                "MIDDLEWARE: rejected at loggedInRoutes",
+                pathname,
+                error
+            );
             return NextResponse.json(
                 { message: "User authentication failed" },
                 { status: 401 }
@@ -61,7 +64,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
     //======================================= PROTECTED ROUTES ==========================================
     if (storeSelectedRoutes.some((route) => pathname.startsWith(route))) {
-        console.log("MIDDLEWARE: entered protectedRoutes");
+        console.log("MIDDLEWARE: entered protectedRoutes", pathname);
         // get authToken
         const authToken = request.cookies.get("authToken");
         // if no token
@@ -74,7 +77,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             const { userId, storeId } = await getDecryptedCookie("authToken");
             // if no userId
             if (!userId) {
-                console.log("MIDDLEWARE: rejected, no userId");
+                console.log("MIDDLEWARE: rejected, no userId", pathname);
                 // send to login page
                 return NextResponse.redirect(
                     new URL("/auth/login", request.url)
@@ -82,7 +85,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             }
             // if no storeId
             if (!storeId) {
-                console.log("MIDDLEWARE: rejected, no storeId");
+                console.log("MIDDLEWARE: rejected, no storeId", pathname);
                 // send to store select page
                 return NextResponse.redirect(
                     new URL("/auth/store-select", request.url)

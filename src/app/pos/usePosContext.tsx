@@ -95,11 +95,11 @@ export function PosProvider({ children }: PosProviderProps) {
 
             updatedCartItems[existingItemIndex] = {
                 ...existingItem,
-                quantity: existingItem.quantity + item.quantity,
+                quantity: Number(existingItem.quantity) + Number(item.quantity),
                 totalPrice:
-                    (existingItem.quantity + item.quantity) * item.unitPrice,
+                    Number(existingItem.quantity + item.quantity) *
+                    Number(item.unitPrice),
             };
-
             setCartItems(updatedCartItems);
         } else {
             // Add new item
@@ -139,7 +139,10 @@ export function PosProvider({ children }: PosProviderProps) {
     };
 
     const getCartTotal = () => {
-        return cartItems.reduce((total, item) => total + item.totalPrice, 0);
+        return cartItems.reduce(
+            (total, item) => Number(total) + Number(item.totalPrice),
+            0
+        );
     };
 
     const getChangeAmount = () => {

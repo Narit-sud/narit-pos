@@ -88,7 +88,7 @@ export default function Page() {
 
             setTimeout(() => {
                 router.push("/auth/login");
-            }, 3000);
+            }, 1000);
         } catch (error) {
             console.error("Signup error:", error);
 

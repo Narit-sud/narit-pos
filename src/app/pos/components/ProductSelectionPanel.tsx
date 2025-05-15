@@ -112,6 +112,7 @@ export default function ProductSelectionPanel() {
             onClose={closeProductPanel}
             fullWidth
             maxWidth="sm"
+            sx={{ userSelect: "none" }}
         >
             <DialogTitle sx={{ fontWeight: "bold" }}>
                 Add Product to Cart

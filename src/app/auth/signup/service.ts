@@ -22,7 +22,7 @@ export async function signupService(
 
                 if (status === 409) {
                     throw new Error(
-                        "Username or email already exists. Please use different credentials."
+                        `${errorMessage} Please use different credentials.`
                     );
                 } else if (status === 400) {
                     throw new Error(errorMessage);
