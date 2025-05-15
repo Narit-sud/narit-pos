@@ -16,6 +16,7 @@ import { loginService } from "./service";
 
 export default function Page() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const [loginData, setLoginData] = useState<LoginInterface>(
         createLoginData({} as LoginInterface)
     );
@@ -33,8 +34,10 @@ export default function Page() {
         setLoginData((prev) => ({ ...prev, [name]: value.trim() }));
     };
     const handleSubmit = async () => {
+        setLoading(true);
         // Validate login data
         if (!loginData.username || !loginData.password) {
+            setLoading(false);
             setSnackbarAlert({
                 open: true,
                 severity: "error",
@@ -59,64 +62,18 @@ export default function Page() {
             });
             setTimeout(() => {
                 router.push("/auth/store-select");
-            }, 2000);
+            }, 1000);
         } catch (error) {
-            console.error("Login error:", error);
-
-            if (isAxiosError(error)) {
-                // Handle API response errors
-                if (error.response) {
-                    const status = error.response.status;
-                    const errorMessage =
-                        error.response.data?.message || error.message;
-
-                    if (status === 401) {
-                        setSnackbarAlert({
-                            open: true,
-                            severity: "error",
-                            message: "Invalid username or password",
-                        });
-                    } else if (status === 404) {
-                        setSnackbarAlert({
-                            open: true,
-                            severity: "error",
-                            message: "User not found",
-                        });
-                    } else {
-                        setSnackbarAlert({
-                            open: true,
-                            severity: "error",
-                            message:
-                                errorMessage ||
-                                "Login failed. Please try again.",
-                        });
-                    }
-                } else if (error.request) {
-                    // Network error
-                    setSnackbarAlert({
-                        open: true,
-                        severity: "error",
-                        message: "Network error. Please check your connection.",
-                    });
-                } else {
-                    setSnackbarAlert({
-                        open: true,
-                        severity: "error",
-                        message:
-                            error.message || "An unexpected error occurred",
-                    });
-                }
-            } else {
-                // Handle other errors
+            setLoading(false);
+            if (error instanceof Error) {
                 setSnackbarAlert({
                     open: true,
                     severity: "error",
-                    message: "An unexpected error occurred. Please try again.",
+                    message: error.message,
                 });
             }
         }
     };
-
     return (
         <Box
             sx={{
@@ -167,6 +124,7 @@ export default function Page() {
                             onChange={handleChange}
                             required
                             size="medium"
+                            disabled={loading}
                         />
                         <TextField
                             fullWidth
@@ -178,6 +136,7 @@ export default function Page() {
                             onChange={handleChange}
                             required
                             size="medium"
+                            disabled={loading}
                         />
                         <Button
                             type="button"
@@ -186,6 +145,7 @@ export default function Page() {
                             size="large"
                             sx={{ mt: 1, py: 1.2, fontWeight: "bold" }}
                             fullWidth
+                            disabled={loading}
                         >
                             Login
                         </Button>
@@ -209,13 +169,11 @@ export default function Page() {
                         </Typography>
                     </Box>
                 </FormControl>
-            </Paper>{" "}
+            </Paper>
             <Snackbar
                 open={snackbarAlert.open}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                autoHideDuration={
-                    snackbarAlert.severity === "error" ? 6000 : 4000
-                }
+                autoHideDuration={4000}
                 onClose={() =>
                     setSnackbarAlert((prev) => ({ ...prev, open: false }))
                 }
