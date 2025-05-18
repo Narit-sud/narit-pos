@@ -28,6 +28,7 @@ export default function ProductSelectionPanel() {
     const [quantity, setQuantity] = useState(1);
     const [unitPrice, setUnitPrice] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [itemComment, setItemComment] = useState("");
 
     // Initialize values when the panel opens and a product is selected
     useEffect(() => {
@@ -35,6 +36,7 @@ export default function ProductSelectionPanel() {
             setQuantity(1);
             setUnitPrice(selectedProduct.price);
             setTotalPrice(selectedProduct.price);
+            setItemComment("");
         }
     }, [selectedProduct, isProductPanelOpen]);
 
@@ -101,6 +103,7 @@ export default function ProductSelectionPanel() {
             quantity,
             unitPrice,
             totalPrice,
+            comment: itemComment.trim() || undefined,
         });
     };
 
@@ -231,6 +234,30 @@ export default function ProductSelectionPanel() {
                                     </InputAdornment>
                                 ),
                             }}
+                        />
+                    </Grid>
+                </Grid>
+
+                {/* Item Comment */}
+                <Grid
+                    container
+                    spacing={2}
+                    alignItems="flex-start"
+                    sx={{ mt: 2 }}
+                >
+                    <Grid size={{ xs: 4, sm: 4, md: 4 }}>
+                        <Typography variant="subtitle2">Item Note:</Typography>
+                    </Grid>
+                    <Grid size={{ xs: 8, sm: 8, md: 8 }}>
+                        <TextField
+                            value={itemComment}
+                            onChange={(e) => setItemComment(e.target.value)}
+                            placeholder="Special requests for this item..."
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            multiline
+                            rows={2}
                         />
                     </Grid>
                 </Grid>

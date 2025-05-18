@@ -1,11 +1,12 @@
 "use client";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
+import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,6 +18,9 @@ import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import BusinessIcon from "@mui/icons-material/Business";
 
 import PopupModal from "@/components/PopupModal";
 import SupplierForm from "./SupplierForm";
@@ -104,6 +108,7 @@ export default function SupplierTable() {
                                         color: "white",
                                     }}
                                 >
+                                    {" "}
                                     Name
                                 </TableCell>
                                 <TableCell
@@ -113,7 +118,7 @@ export default function SupplierTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Surname
+                                    Contact Information
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -122,25 +127,7 @@ export default function SupplierTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Email
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    Phone Number
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    Address
+                                    Created
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -172,36 +159,81 @@ export default function SupplierTable() {
                                             fontWeight: "medium",
                                         }}
                                     >
-                                        {supplier.name}
+                                        {supplier.name} {supplier.surname || ""}
+                                        {supplier.address && (
+                                            <Typography
+                                                variant="caption"
+                                                display="block"
+                                                color="text.secondary"
+                                            >
+                                                {supplier.address}
+                                            </Typography>
+                                        )}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {supplier.surname || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {supplier.email || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {supplier.phoneNumber || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {supplier.address || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {
-                                            <Tooltip title="Edit Supplier">
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleEditSupplier(
-                                                            supplier
-                                                        );
+                                        <Stack
+                                            direction="column"
+                                            spacing={1}
+                                            alignItems="center"
+                                        >
+                                            {supplier.email && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
                                                     }}
                                                 >
-                                                    <EditIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
+                                                    <EmailIcon
+                                                        fontSize="small"
+                                                        color="primary"
+                                                    />
+                                                    <Typography variant="body2">
+                                                        {supplier.email}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                            {supplier.phoneNumber && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <PhoneIcon
+                                                        fontSize="small"
+                                                        color="secondary"
+                                                    />
+                                                    <Typography variant="body2">
+                                                        {supplier.phoneNumber}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                        </Stack>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
+                                            {formatDate(supplier.createdAt)}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Tooltip title="Edit Supplier">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditSupplier(
+                                                        supplier
+                                                    );
+                                                }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -213,11 +245,13 @@ export default function SupplierTable() {
                 <Grid container spacing={2}>
                     {suppliers.map((supplier) => (
                         <Grid size={{ xs: 12 }} key={supplier.id}>
+                            {" "}
                             <Card
                                 sx={{
                                     cursor: "pointer",
                                     "&:hover": { boxShadow: 6 },
                                     transition: "box-shadow 0.3s ease-in-out",
+                                    borderRadius: 2,
                                 }}
                                 onClick={() => handleEditSupplier(supplier)}
                             >
@@ -226,15 +260,48 @@ export default function SupplierTable() {
                                         sx={{
                                             display: "flex",
                                             justifyContent: "space-between",
-                                            alignItems: "center",
+                                            alignItems: "flex-start",
                                         }}
                                     >
-                                        <Typography
-                                            variant="h6"
-                                            component="div"
-                                        >
-                                            {supplier.name}
-                                        </Typography>
+                                        <Box>
+                                            <Typography
+                                                variant="h6"
+                                                component="div"
+                                            >
+                                                {supplier.name}{" "}
+                                                {supplier.surname || ""}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    gap: 1,
+                                                    mt: 1,
+                                                    flexWrap: "wrap",
+                                                }}
+                                            >
+                                                {supplier.email && (
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 0.5,
+                                                        }}
+                                                    >
+                                                        <EmailIcon
+                                                            fontSize="small"
+                                                            color="primary"
+                                                        />
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                        >
+                                                            {supplier.email}
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        </Box>
                                     </Box>
 
                                     {supplier.address && (
@@ -243,35 +310,76 @@ export default function SupplierTable() {
                                             color="text.secondary"
                                             sx={{ mt: 1 }}
                                         >
+                                            <BusinessIcon
+                                                fontSize="small"
+                                                sx={{
+                                                    verticalAlign: "middle",
+                                                    mr: 0.5,
+                                                }}
+                                            />
                                             {supplier.address}
                                         </Typography>
                                     )}
+
+                                    <Divider sx={{ my: 2 }} />
 
                                     <Box
                                         sx={{
                                             display: "flex",
                                             justifyContent: "space-between",
-                                            mt: 2,
-                                            pt: 1,
-                                            borderTop: "1px solid #eee",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                        >
-                                            Created{" "}
-                                            {formatDate(supplier.createdAt)}
-                                        </Typography>
+                                        <Box>
+                                            {supplier.phoneNumber && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <PhoneIcon
+                                                        fontSize="small"
+                                                        color="secondary"
+                                                    />
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                    >
+                                                        {supplier.phoneNumber}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: 1,
+                                                    mt: 0.5,
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                >
+                                                    Created{" "}
+                                                    {formatDate(
+                                                        supplier.createdAt
+                                                    )}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
                                         <IconButton
-                                            size="small"
+                                            size="medium"
                                             color="primary"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleEditSupplier(supplier);
                                             }}
+                                            sx={{ ml: 1 }}
                                         >
-                                            <EditIcon fontSize="small" />
+                                            <EditIcon />
                                         </IconButton>
                                     </Box>
                                 </CardContent>

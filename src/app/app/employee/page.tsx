@@ -1,3 +1,5 @@
+import EmployeeTable from "@/app/app/employee/components/EmployeeTable";
+
 export default function Page() {
-    return <div>Employee</div>;
+    return <EmployeeTable />;
 }

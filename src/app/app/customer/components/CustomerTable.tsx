@@ -1,11 +1,12 @@
 "use client";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid"; // Fixed import path for Grid
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,7 +18,9 @@ import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
-import CategoryIcon from "@mui/icons-material/Category";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
 
 import PopupModal from "@/components/PopupModal";
 import CustomerForm from "./CustomerForm";
@@ -105,6 +108,7 @@ export default function CustomerTable() {
                                         color: "white",
                                     }}
                                 >
+                                    {" "}
                                     Name
                                 </TableCell>
                                 <TableCell
@@ -114,7 +118,7 @@ export default function CustomerTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Surname
+                                    Contact Information
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -123,25 +127,7 @@ export default function CustomerTable() {
                                         color: "white",
                                     }}
                                 >
-                                    Email
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    Phone Number
-                                </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: "bold",
-                                        textAlign: "center",
-                                        color: "white",
-                                    }}
-                                >
-                                    Address
+                                    Created
                                 </TableCell>
                                 <TableCell
                                     sx={{
@@ -173,36 +159,82 @@ export default function CustomerTable() {
                                             fontWeight: "medium",
                                         }}
                                     >
-                                        {customer.name}
+                                        {customer.name} {customer.surname || ""}
+                                        {customer.address && (
+                                            <Typography
+                                                variant="caption"
+                                                display="block"
+                                                color="text.secondary"
+                                            >
+                                                {customer.address}
+                                            </Typography>
+                                        )}
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
-                                        {customer.surname || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {customer.email || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {customer.phoneNumber || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {customer.address || "-"}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: "center" }}>
-                                        {
-                                            <Tooltip title="Edit Customer">
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleEditCustomer(
-                                                            customer
-                                                        );
+                                        <Stack
+                                            direction="column"
+                                            spacing={1}
+                                            alignItems="center"
+                                        >
+                                            {customer.email && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
                                                     }}
                                                 >
-                                                    <EditIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
+                                                    <EmailIcon
+                                                        fontSize="small"
+                                                        color="primary"
+                                                    />
+                                                    <Typography variant="body2">
+                                                        {customer.email}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                            {customer.phoneNumber && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <PhoneIcon
+                                                        fontSize="small"
+                                                        color="secondary"
+                                                    />
+                                                    <Typography variant="body2">
+                                                        {customer.phoneNumber}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                        </Stack>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
+                                            Created{" "}
+                                            {formatDate(customer.createdAt)}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: "center" }}>
+                                        <Tooltip title="Edit Customer">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditCustomer(
+                                                        customer
+                                                    );
+                                                }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -214,11 +246,13 @@ export default function CustomerTable() {
                 <Grid container spacing={2}>
                     {customers.map((customer) => (
                         <Grid size={{ xs: 12 }} key={customer.id}>
+                            {" "}
                             <Card
                                 sx={{
                                     cursor: "pointer",
                                     "&:hover": { boxShadow: 6 },
                                     transition: "box-shadow 0.3s ease-in-out",
+                                    borderRadius: 2,
                                 }}
                                 onClick={() => handleEditCustomer(customer)}
                             >
@@ -227,15 +261,48 @@ export default function CustomerTable() {
                                         sx={{
                                             display: "flex",
                                             justifyContent: "space-between",
-                                            alignItems: "center",
+                                            alignItems: "flex-start",
                                         }}
                                     >
-                                        <Typography
-                                            variant="h6"
-                                            component="div"
-                                        >
-                                            {customer.name}
-                                        </Typography>
+                                        <Box>
+                                            <Typography
+                                                variant="h6"
+                                                component="div"
+                                            >
+                                                {customer.name}{" "}
+                                                {customer.surname || ""}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    gap: 1,
+                                                    mt: 1,
+                                                    flexWrap: "wrap",
+                                                }}
+                                            >
+                                                {customer.email && (
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 0.5,
+                                                        }}
+                                                    >
+                                                        <EmailIcon
+                                                            fontSize="small"
+                                                            color="primary"
+                                                        />
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                        >
+                                                            {customer.email}
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        </Box>
                                     </Box>
 
                                     {customer.address && (
@@ -248,31 +315,65 @@ export default function CustomerTable() {
                                         </Typography>
                                     )}
 
+                                    <Divider sx={{ my: 2 }} />
+
                                     <Box
                                         sx={{
                                             display: "flex",
                                             justifyContent: "space-between",
-                                            mt: 2,
-                                            pt: 1,
-                                            borderTop: "1px solid #eee",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                        >
-                                            Created{" "}
-                                            {formatDate(customer.createdAt)}
-                                        </Typography>
+                                        <Box>
+                                            {customer.phoneNumber && (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <PhoneIcon
+                                                        fontSize="small"
+                                                        color="secondary"
+                                                    />
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                    >
+                                                        {customer.phoneNumber}
+                                                    </Typography>
+                                                </Box>
+                                            )}
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: 1,
+                                                    mt: 0.5,
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                >
+                                                    Created{" "}
+                                                    {formatDate(
+                                                        customer.createdAt
+                                                    )}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
                                         <IconButton
-                                            size="small"
+                                            size="medium"
                                             color="primary"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleEditCustomer(customer);
                                             }}
+                                            sx={{ ml: 1 }}
                                         >
-                                            <EditIcon fontSize="small" />
+                                            <EditIcon />
                                         </IconButton>
                                     </Box>
                                 </CardContent>

@@ -8,12 +8,10 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemText,
-    ListItemSecondaryAction,
     Divider,
     Badge,
     Tooltip,
-    Fab,
+    TextField,
 } from "@mui/material";
 import {
     Delete as DeleteIcon,
@@ -31,6 +29,8 @@ export default function Cart() {
         updateCartItem,
         openChargePanel,
         getCartTotal,
+        orderComment,
+        setOrderComment,
     } = usePosContext();
 
     // Format currency
@@ -213,6 +213,23 @@ export default function Cart() {
                                                     </IconButton>
                                                 </Tooltip>
                                             </Box>
+
+                                            {item.comment && (
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                    sx={{
+                                                        display: "block",
+                                                        fontStyle: "italic",
+                                                        mt: 0.5,
+                                                        bgcolor: "grey.50",
+                                                        p: 0.5,
+                                                        borderRadius: 1,
+                                                    }}
+                                                >
+                                                    Note: {item.comment}
+                                                </Typography>
+                                            )}
                                         </Box>
                                     </ListItem>
                                     <Divider />
@@ -224,7 +241,18 @@ export default function Cart() {
 
                 <Box sx={{ mt: 3 }}>
                     <Divider sx={{ mb: 2 }} />
-
+                    <TextField
+                        variant="outlined"
+                        label="Order Comment"
+                        placeholder="Add special instructions or notes here"
+                        size="small"
+                        fullWidth
+                        multiline
+                        rows={2}
+                        value={orderComment}
+                        onChange={(e) => setOrderComment(e.target.value)}
+                        sx={{ mb: 2 }}
+                    />
                     <Box
                         sx={{
                             display: "flex",

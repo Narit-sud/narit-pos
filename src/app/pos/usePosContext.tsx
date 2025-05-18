@@ -2,15 +2,9 @@
 import { ProductInterface } from "@/model/product.interface";
 import { CustomerInterface } from "@/model/customer.interface";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { useProduct } from "../app/product/useProduct";
-import { useCustomer } from "../app/customer/useCustomer";
-
-export type CartItemInterface = {
-    product: ProductInterface;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
-};
+import { CartItemInterface } from "@/model/cartItem.interface";
+import { SaleInterface } from "@/model/sale.interface";
+import { createSaleService } from "@/app/pos/service";
 
 type PaymentMethod = "cash" | "transfer";
 
@@ -19,10 +13,11 @@ type PosContextType = {
     selectedProduct: ProductInterface | null;
     isProductPanelOpen: boolean;
     isChargePanelOpen: boolean;
-    selectedCustomer: CustomerInterface | null;
+    selectedCustomer: string | null;
     paymentMethod: PaymentMethod;
     amountPaid: number;
     changeAmount: number;
+    orderComment: string;
 
     // Methods
     openProductPanel: (product: ProductInterface) => void;
@@ -36,6 +31,7 @@ type PosContextType = {
     selectCustomer: (customer: CustomerInterface) => void;
     setPaymentMethod: (method: PaymentMethod) => void;
     setAmountPaid: (amount: number) => void;
+    setOrderComment: (comment: string) => void;
     getCartTotal: () => number;
     getChangeAmount: () => number;
     processPayment: () => Promise<void>;
@@ -48,10 +44,6 @@ type PosProviderProps = {
 };
 
 export function PosProvider({ children }: PosProviderProps) {
-    // Get products and customers from their contexts
-    const { products } = useProduct();
-    const { customers } = useCustomer();
-
     // Cart state
     const [cartItems, setCartItems] = useState<CartItemInterface[]>([]);
 
@@ -62,13 +54,13 @@ export function PosProvider({ children }: PosProviderProps) {
 
     // Charge panel state
     const [isChargePanelOpen, setIsChargePanelOpen] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] =
-        useState<CustomerInterface | null>(
-            customers.length > 0 ? customers[0] : null
-        );
+    const [selectedCustomer, setSelectedCustomer] = useState<string | null>(
+        null
+    ); // customer ID
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
     const [amountPaid, setAmountPaid] = useState(0);
     const [changeAmount, setChangeAmount] = useState(0);
+    const [orderComment, setOrderComment] = useState("");
 
     // Product selection panel functions
     const openProductPanel = (product: ProductInterface) => {
@@ -135,7 +127,7 @@ export function PosProvider({ children }: PosProviderProps) {
     };
 
     const selectCustomer = (customer: CustomerInterface) => {
-        setSelectedCustomer(customer);
+        setSelectedCustomer(customer.id);
     };
 
     const getCartTotal = () => {
@@ -153,6 +145,13 @@ export function PosProvider({ children }: PosProviderProps) {
     const processPayment = async () => {
         // This would typically connect to your API to process the payment
         // and create an order record in your database
+        const newSale: SaleInterface = {
+            items: cartItems,
+            customerId: selectedCustomer,
+            paymentMethod,
+            detail: orderComment,
+            total: getCartTotal(),
+        };
         console.log("Processing payment:", {
             cartItems,
             customer: selectedCustomer,
@@ -160,13 +159,23 @@ export function PosProvider({ children }: PosProviderProps) {
             amountPaid,
             changeAmount: getChangeAmount(),
             total: getCartTotal(),
+            comment: orderComment,
         });
+        try {
+            await createSaleService(newSale);
+            alert("Payment processed successfully");
+        } catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            }
+        }
 
         // Reset the POS for a new transaction
         clearCart();
         closeChargePanel();
         setAmountPaid(0);
         setPaymentMethod("cash");
+        setOrderComment("");
 
         // You would typically show a success message or receipt here
     };
@@ -180,6 +189,7 @@ export function PosProvider({ children }: PosProviderProps) {
         paymentMethod,
         amountPaid,
         changeAmount,
+        orderComment,
 
         openProductPanel,
         closeProductPanel,
@@ -192,6 +202,7 @@ export function PosProvider({ children }: PosProviderProps) {
         selectCustomer,
         setPaymentMethod,
         setAmountPaid,
+        setOrderComment,
         getCartTotal,
         getChangeAmount,
         processPayment,

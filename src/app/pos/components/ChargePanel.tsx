@@ -39,6 +39,7 @@ export default function ChargePanel() {
         selectedCustomer,
         selectCustomer,
         processPayment,
+        orderComment,
     } = usePosContext();
 
     const { customers } = useCustomer();
@@ -133,11 +134,29 @@ export default function ChargePanel() {
                                     >
                                         <ListItemText
                                             primary={item.product.name}
-                                            secondary={`${
-                                                item.quantity
-                                            } x ${formatCurrency(
-                                                item.unitPrice
-                                            )}`}
+                                            secondary={
+                                                <>
+                                                    {`${
+                                                        item.quantity
+                                                    } x ${formatCurrency(
+                                                        item.unitPrice
+                                                    )}`}
+                                                    {item.comment && (
+                                                        <Typography
+                                                            variant="caption"
+                                                            display="block"
+                                                            sx={{
+                                                                fontStyle:
+                                                                    "italic",
+                                                                mt: 0.5,
+                                                                color: "text.secondary",
+                                                            }}
+                                                        >
+                                                            Note: {item.comment}
+                                                        </Typography>
+                                                    )}
+                                                </>
+                                            }
                                         />
                                         <Typography
                                             variant="body2"
@@ -184,6 +203,31 @@ export default function ChargePanel() {
                                 {formatCurrency(getCartTotal())}
                             </Typography>
                         </Box>
+
+                        {orderComment && (
+                            <>
+                                <Divider sx={{ my: 1.5 }} />
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 2,
+                                        bgcolor: "grey.50",
+                                        borderColor: "grey.300",
+                                    }}
+                                >
+                                    <Typography
+                                        variant="subtitle2"
+                                        color="textSecondary"
+                                        gutterBottom
+                                    >
+                                        Order Comment:
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {orderComment}
+                                    </Typography>
+                                </Paper>
+                            </>
+                        )}
                     </Grid>
 
                     {/* Right side - Payment Info */}
@@ -208,7 +252,7 @@ export default function ChargePanel() {
                             </InputLabel>
                             <Select
                                 labelId="customer-select-label"
-                                value={selectedCustomer?.id || ""}
+                                value={selectedCustomer || ""}
                                 onChange={handleCustomerChange}
                                 label="Customer"
                             >
