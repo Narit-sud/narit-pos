@@ -52,7 +52,7 @@ export default function Page() {
                 <Button
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={() => handleOpen("create")}
+                    // onClick={() => handleOpen("create")}
                 >
                     New
                 </Button>

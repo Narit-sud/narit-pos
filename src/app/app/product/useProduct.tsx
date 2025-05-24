@@ -15,11 +15,12 @@ import type {
     ProductInterface,
     NewProductInterface,
 } from "@/model/product.interface";
+import { NewProduct } from "@/class/Product.class";
 
 type ProductContextType = {
     products: ProductInterface[];
     loadProducts: () => Promise<void>;
-    createProduct: (newProduct: NewProductInterface) => Promise<void>;
+    createProduct: (newProduct: NewProduct) => Promise<void>;
     updateProduct: (updatedProduct: ProductInterface) => Promise<void>;
 };
 
@@ -43,9 +44,7 @@ export function ProductContextProvider({ children }: Props) {
         }
     }
 
-    async function createProduct(
-        newProduct: NewProductInterface
-    ): Promise<void> {
+    async function createProduct(newProduct: NewProduct): Promise<void> {
         try {
             await createProductService(newProduct);
             await loadProducts(); // Refresh product after creation

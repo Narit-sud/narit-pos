@@ -12,7 +12,7 @@ import {
     type CustomerInterface,
     type NewCustomerInterface,
 } from "@/model/customer.interface";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import { useState, useEffect } from "react";
 import { useCustomer } from "../useCustomer";
 
@@ -181,7 +181,7 @@ export default function CustomerForm({
                 textAlign="center"
                 fontWeight="bold"
             >
-                {setProductFormPopup(mode)} Customer
+                {firstLetterUppercase(mode)} Customer
             </Typography>
             <FormControl fullWidth>
                 <Stack

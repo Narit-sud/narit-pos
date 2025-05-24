@@ -1,5 +1,5 @@
 "use client";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import {
     NewProductInterface,
     ProductInterface,
@@ -227,7 +227,7 @@ export default function ProductForm({
                 fontWeight="bold"
                 textAlign="center"
             >
-                {setProductFormPopup(mode)} Product
+                {firstLetterUppercase(mode)} Product
             </Typography>
             <FormControl fullWidth>
                 <Stack

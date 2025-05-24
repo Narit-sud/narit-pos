@@ -5,6 +5,7 @@ import {
     NewProductInterface,
     ProductInterface,
 } from "@/model/product.interface";
+import { NewProduct } from "@/class/Product.class";
 
 export async function getProductService(): Promise<ProductInterface[]> {
     try {
@@ -29,7 +30,7 @@ export async function getProductService(): Promise<ProductInterface[]> {
 }
 
 export async function createProductService(
-    newProduct: NewProductInterface
+    newProduct: NewProduct
 ): Promise<void> {
     try {
         await axiosInstance.post("/product", newProduct);

@@ -12,7 +12,7 @@ import {
     type SupplierInterface,
     type NewSupplierInterface,
 } from "@/model/supplier.interface";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import { useState, useEffect } from "react";
 import { useSupplier } from "../useSupplier";
 
@@ -181,7 +181,7 @@ export default function SupplierForm({
                 textAlign="center"
                 fontWeight="bold"
             >
-                {setProductFormPopup(mode)} Supplier
+                {firstLetterUppercase(mode)} Supplier
             </Typography>
             <FormControl fullWidth>
                 <Stack

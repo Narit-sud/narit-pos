@@ -1,5 +1,5 @@
 "use client";
-import { setProductFormPopup } from "@/lib/firstLetterUppercase";
+import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import {
     createNewBrandInterface,
     type BrandInterface,
@@ -69,7 +69,7 @@ export default function BrandForm({
 
         if (mode === "create") {
             return setNewBrand(
-                (prev) => ({ ...prev, [name]: value }) as NewBrandInterface
+                (prev) => ({ ...prev, [name]: value } as NewBrandInterface)
             );
         }
 
@@ -77,7 +77,7 @@ export default function BrandForm({
 
         if (mode === "edit") {
             return setEditBrand(
-                (prev) => ({ ...prev, [name]: value }) as BrandInterface
+                (prev) => ({ ...prev, [name]: value } as BrandInterface)
             );
         }
     }
@@ -85,7 +85,7 @@ export default function BrandForm({
     function getCategoryId(categoryId: string): void {
         if (mode === "create") {
             return setNewBrand(
-                (prev) => ({ ...prev, categoryId }) as NewBrandInterface
+                (prev) => ({ ...prev, categoryId } as NewBrandInterface)
             );
         }
 
@@ -93,7 +93,7 @@ export default function BrandForm({
 
         if (mode === "edit") {
             return setEditBrand(
-                (prev) => ({ ...prev, categoryId }) as BrandInterface
+                (prev) => ({ ...prev, categoryId } as BrandInterface)
             );
         }
     }
@@ -188,7 +188,7 @@ export default function BrandForm({
                 </Alert>
             </Snackbar>
             <Typography sx={{ mb: 1, userSelect: "none" }} variant="h5">
-                {setProductFormPopup(mode)} Brand
+                {firstLetterUppercase(mode)} Brand
             </Typography>
             <FormControl fullWidth>
                 <Stack

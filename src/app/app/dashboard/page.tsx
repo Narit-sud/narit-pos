@@ -1,3 +1,5 @@
+import { Product } from "@/class/Product.class";
 export default function Page() {
-    return <div>Dashboard page</div>;
+    const newProduct = new Product({ id: "1234" });
+    return <div>{newProduct.toJsonString()}</div>;
 }
