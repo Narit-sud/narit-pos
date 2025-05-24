@@ -30,7 +30,7 @@ export async function getProductService(): Promise<ProductInterface[]> {
 }
 
 export async function createProductService(
-    newProduct: NewProduct
+    newProduct: NewProduct | NewProductInterface
 ): Promise<void> {
     try {
         await axiosInstance.post("/product", newProduct);

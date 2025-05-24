@@ -20,7 +20,9 @@ import { NewProduct } from "@/class/Product.class";
 type ProductContextType = {
     products: ProductInterface[];
     loadProducts: () => Promise<void>;
-    createProduct: (newProduct: NewProduct) => Promise<void>;
+    createProduct: (
+        newProduct: NewProduct | NewProductInterface
+    ) => Promise<void>;
     updateProduct: (updatedProduct: ProductInterface) => Promise<void>;
 };
 
@@ -44,7 +46,9 @@ export function ProductContextProvider({ children }: Props) {
         }
     }
 
-    async function createProduct(newProduct: NewProduct): Promise<void> {
+    async function createProduct(
+        newProduct: NewProduct | NewProductInterface
+    ): Promise<void> {
         try {
             await createProductService(newProduct);
             await loadProducts(); // Refresh product after creation
