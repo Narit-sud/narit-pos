@@ -2,7 +2,6 @@
 import AppNavbar from "@/components/AppNavbar";
 import AppSidebar from "@/components/AppSidebar";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import AppProviders from "./AppProviders";

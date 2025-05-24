@@ -29,7 +29,6 @@ import { useEffect, useState } from "react";
 import { useSupplier } from "../useSupplier";
 
 import { SupplierInterface } from "@/model/supplier.interface";
-import { formatDistanceToNow } from "date-fns";
 
 export default function SupplierTable() {
     const { suppliers } = useSupplier(); // get suppliers from context to display
@@ -51,15 +50,6 @@ export default function SupplierTable() {
     const handleEditSupplier = (supplier: SupplierInterface) => {
         handleOpen(); // open the modal
         setSelectedSupplier(supplier); // set selected supplier to the clicked supplier
-    };
-
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true });
-        } catch {
-            return dateString;
-        }
     };
 
     useEffect(() => {
@@ -217,7 +207,7 @@ export default function SupplierTable() {
                                             variant="caption"
                                             color="text.secondary"
                                         >
-                                            {formatDate(supplier.createdAt)}
+                                            {supplier.createdAt}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
@@ -363,10 +353,7 @@ export default function SupplierTable() {
                                                     variant="caption"
                                                     color="text.secondary"
                                                 >
-                                                    Created{" "}
-                                                    {formatDate(
-                                                        supplier.createdAt
-                                                    )}
+                                                    Created {supplier.createdAt}
                                                 </Typography>
                                             </Box>
                                         </Box>

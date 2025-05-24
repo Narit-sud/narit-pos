@@ -16,6 +16,7 @@ import {
     createDefaultCategorySql,
 } from "./sql";
 import { handleApiError } from "@/lib/handleApiError";
+import { convertToThailandTime } from "@/lib/convertTime";
 
 /**
  * /api/store/GET
@@ -34,6 +35,12 @@ export async function GET() {
                 { status: 200 }
             );
         }
+        const stores = query.rows.map((store) => ({
+            id: store.id,
+            name: store.name,
+            createdAt: convertToThailandTime(store.created_at),
+            updatedAt: convertToThailandTime(store.updated_at),
+        }));
         return Response.json(
             {
                 message: "Get store data success",

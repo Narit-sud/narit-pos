@@ -9,7 +9,6 @@ import TableViewIcon from "@mui/icons-material/TableView";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";

@@ -69,7 +69,7 @@ export default function BrandForm({
 
         if (mode === "create") {
             return setNewBrand(
-                (prev) => ({ ...prev, [name]: value } as NewBrandInterface)
+                (prev) => ({ ...prev, [name]: value }) as NewBrandInterface
             );
         }
 
@@ -77,7 +77,7 @@ export default function BrandForm({
 
         if (mode === "edit") {
             return setEditBrand(
-                (prev) => ({ ...prev, [name]: value } as BrandInterface)
+                (prev) => ({ ...prev, [name]: value }) as BrandInterface
             );
         }
     }
@@ -85,7 +85,7 @@ export default function BrandForm({
     function getCategoryId(categoryId: string): void {
         if (mode === "create") {
             return setNewBrand(
-                (prev) => ({ ...prev, categoryId } as NewBrandInterface)
+                (prev) => ({ ...prev, categoryId }) as NewBrandInterface
             );
         }
 
@@ -93,7 +93,7 @@ export default function BrandForm({
 
         if (mode === "edit") {
             return setEditBrand(
-                (prev) => ({ ...prev, categoryId } as BrandInterface)
+                (prev) => ({ ...prev, categoryId }) as BrandInterface
             );
         }
     }
@@ -234,6 +234,7 @@ export default function BrandForm({
                         variant="contained"
                         disabled={loading}
                         onClick={handleSubmit}
+                        color={mode === "edit" ? "warning" : "primary"}
                     >
                         {mode === "create" ? "Create" : "Update"}
                     </Button>
@@ -241,6 +242,7 @@ export default function BrandForm({
                         variant="outlined"
                         disabled={loading}
                         onClick={handleCancelButton}
+                        color={mode === "edit" ? "warning" : "primary"}
                     >
                         Cencel
                     </Button>

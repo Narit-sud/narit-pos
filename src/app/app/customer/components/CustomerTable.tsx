@@ -18,7 +18,6 @@ import Typography from "@mui/material/Typography";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
-import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 
@@ -29,7 +28,6 @@ import { useEffect, useState } from "react";
 import { useCustomer } from "../useCustomer";
 
 import { CustomerInterface } from "@/model/customer.interface";
-import { formatDistanceToNow } from "date-fns";
 
 export default function CustomerTable() {
     const { customers } = useCustomer(); // get customer from context to display
@@ -51,15 +49,6 @@ export default function CustomerTable() {
     const handleEditCustomer = (customer: CustomerInterface) => {
         handleOpen(); // open the modal
         setSelectedCustomer(customer); // set selected category to the clicked category
-    };
-
-    const formatDate = (dateString: string) => {
-        try {
-            const date = new Date(dateString);
-            return formatDistanceToNow(date, { addSuffix: true });
-        } catch {
-            return dateString;
-        }
     };
 
     useEffect(() => {
@@ -108,7 +97,6 @@ export default function CustomerTable() {
                                         color: "white",
                                     }}
                                 >
-                                    {" "}
                                     Name
                                 </TableCell>
                                 <TableCell
@@ -217,8 +205,7 @@ export default function CustomerTable() {
                                             variant="caption"
                                             color="text.secondary"
                                         >
-                                            Created{" "}
-                                            {formatDate(customer.createdAt)}
+                                            Created {customer.createdAt}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ textAlign: "center" }}>
@@ -357,10 +344,7 @@ export default function CustomerTable() {
                                                     variant="caption"
                                                     color="text.secondary"
                                                 >
-                                                    Created{" "}
-                                                    {formatDate(
-                                                        customer.createdAt
-                                                    )}
+                                                    Created {customer.createdAt}
                                                 </Typography>
                                             </Box>
                                         </Box>

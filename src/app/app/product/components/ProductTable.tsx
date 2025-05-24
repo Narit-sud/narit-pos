@@ -1,12 +1,11 @@
 "use client";
-import PopupModal from "@/components/PopupModal";
-import { ProductInterface } from "@/model/product.interface";
+
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CategoryIcon from "@mui/icons-material/Category";
 import EditIcon from "@mui/icons-material/Edit";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import StoreIcon from "@mui/icons-material/Store";
-import { useMediaQuery, useTheme } from "@mui/material";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -24,9 +23,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+
 import { useEffect, useState } from "react";
 import { useProduct } from "../useProduct";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 import ProductForm from "./ProductForm";
+import PopupModal from "@/components/PopupModal";
+import { ProductInterface } from "@/model/product.interface";
 
 export default function ProductTable() {
     const { products } = useProduct(); // get products from context to display
