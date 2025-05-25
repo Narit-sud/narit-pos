@@ -3,7 +3,7 @@ import { firstLetterUppercase } from "@/lib/firstLetterUppercase";
 import {
     NewProductInterface,
     ProductInterface,
-    createNewProductInterface,
+    buildNewProduct,
 } from "@/model/product.interface";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -63,9 +63,7 @@ export default function ProductForm({
         }
         // if mode is "create", set newProduct to NewProductInterface object
         else if (mode === "create") {
-            setNewProduct(
-                createNewProductInterface({ brandId: brands[0]?.id })
-            );
+            setNewProduct(buildNewProduct({ brandId: brands[0]?.id }));
         }
     }
 
@@ -299,7 +297,7 @@ export default function ProductForm({
                         }
                         value={
                             mode === "create"
-                                ? newProduct?.initialQuantity
+                                ? newProduct?.stock
                                 : editProduct?.stock
                         }
                         onChange={handleChange}

@@ -7,7 +7,7 @@ import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ProductForm from "./components/ProductFormV2";
+import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductTable";
 
 import Add from "@mui/icons-material/Add";
