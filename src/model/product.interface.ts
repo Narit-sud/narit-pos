@@ -77,7 +77,7 @@ export function buildUpdateProduct(
     };
 }
 
-export function validateProduct(product: NewProductInterface): string[] | void {
+export function validateProduct(product: NewProductInterface): void {
     const errors: string[] = [];
     // validate name
     if (!product.name || product.name.trim() === "") {
@@ -96,7 +96,10 @@ export function validateProduct(product: NewProductInterface): string[] | void {
     if (product.cost > 10000000) {
         errors.push("Cost must not exceed 10,000,000.");
     }
-    if (isNaN(Number(product.cost))) {
+    if (
+        isNaN(Number(product.cost)) ||
+        (typeof product.cost === "string" && product.cost === "")
+    ) {
         errors.push("Cost must be a valid number.");
     }
     // validate price
@@ -106,14 +109,20 @@ export function validateProduct(product: NewProductInterface): string[] | void {
     if (product.price > 10000000) {
         errors.push("Price must not exceed 10,000,000.");
     }
-    if (isNaN(Number(product.price))) {
+    if (
+        isNaN(Number(product.price)) ||
+        (typeof product.price === "string" && product.price === "")
+    ) {
         errors.push("Price must be a valid number.");
     }
     // validate stock
     if (product.stock < 0) {
         errors.push("Stock must be a non-negative number.");
     }
-    if (isNaN(Number(product.stock))) {
+    if (
+        isNaN(Number(product.stock)) ||
+        (typeof product.stock === "string" && product.stock === "")
+    ) {
         errors.push("Stock must be a valid number.");
     }
     if (product.stock > 10000000) {
@@ -123,5 +132,18 @@ export function validateProduct(product: NewProductInterface): string[] | void {
     if (!product.brandId || product.brandId.trim() === "") {
         errors.push("Brand ID is required.");
     }
-    return errors.length > 0 ? errors : undefined;
+
+    if (errors.length > 0) throw new Error(errors.join(", "));
+    // return errors.length > 0 ? errors : true;
+}
+
+export function isUpdateProduct(
+    product: Partial<ProductInterface>
+): product is UpdateProductInterface {
+    return (
+        "createdAt" in product &&
+        "updatedAt" in product &&
+        "createdBy" in product &&
+        "updatedBy" in product
+    );
 }

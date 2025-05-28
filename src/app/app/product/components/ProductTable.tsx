@@ -28,7 +28,7 @@ import { useEffect, useState } from "react";
 import { useProduct } from "../useProduct";
 import { useMediaQuery, useTheme } from "@mui/material";
 
-import ProductForm from "./ProductForm";
+import ProductForm from "./ProductFormV2";
 import PopupModal from "@/components/PopupModal";
 import { ProductInterface } from "@/model/product.interface";
 
